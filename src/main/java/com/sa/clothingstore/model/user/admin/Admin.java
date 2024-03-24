@@ -1,4 +1,4 @@
-package com.sa.clothingstore.model.user.Admin;
+package com.sa.clothingstore.model.user.admin;
 
 import com.sa.clothingstore.model.user.BaseUser;
 import jakarta.persistence.Entity;

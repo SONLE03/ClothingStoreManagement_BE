@@ -24,9 +24,6 @@ public class Image {
     private UUID id;
     @Column(name = "url")
     private String url;
-    @Column(name = "size")
-    private BigDecimal size;
-
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "product_image",

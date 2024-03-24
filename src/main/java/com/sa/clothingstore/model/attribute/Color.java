@@ -2,6 +2,7 @@ package com.sa.clothingstore.model.attribute;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
@@ -18,6 +19,6 @@ public class Color {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "color_name")
+    @Column(name = "color_name", unique = true)
     private String name;
 }
