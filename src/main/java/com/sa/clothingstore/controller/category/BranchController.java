@@ -6,6 +6,7 @@ import com.sa.clothingstore.common.exception.GlobalExceptionHandler;
 import com.sa.clothingstore.model.category.Branch;
 import com.sa.clothingstore.service.category.branch.BranchService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +26,14 @@ public class BranchController {
         return branchService.getAllBranch();
     }
     @PostMapping
-    public void createBranch(@RequestBody BranchRequest branchRequest, HttpServletResponse response) throws IOException {
+    public void createBranch(@RequestBody @Valid BranchRequest branchRequest, HttpServletResponse response) throws IOException {
         branchService.createBranch(branchRequest);
         response.setStatus(201);
         response.getWriter().write("Branch was created successfully");
         response.flushBuffer();
     }
     @PutMapping(path = "{id}")
-    public void modifyBranch(@PathVariable UUID id, @RequestBody BranchRequest branchRequest, HttpServletResponse response) throws IOException{
+    public void modifyBranch(@PathVariable UUID id, @RequestBody @Valid BranchRequest branchRequest, HttpServletResponse response) throws IOException{
         branchService.modifyBranch(id, branchRequest);
         response.getWriter().write("Branch was modified successfully");
         response.flushBuffer();

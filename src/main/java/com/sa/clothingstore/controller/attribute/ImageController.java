@@ -4,6 +4,7 @@ import com.sa.clothingstore.dto.request.attribute.ImageRequest;
 import com.sa.clothingstore.model.attribute.Image;
 import com.sa.clothingstore.service.attribute.image.ImageService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,14 +23,14 @@ public class ImageController {
         return imageService.getAllImage();
     }
     @PostMapping
-    public void createImage(@RequestBody ImageRequest imageRequest, HttpServletResponse response) throws IOException {
+    public void createImage(@RequestBody @Valid ImageRequest imageRequest, HttpServletResponse response) throws IOException {
         imageService.createImage(imageRequest);
         response.setStatus(201);
         response.getWriter().write("Image was created successfully");
         response.flushBuffer();
     }
     @PutMapping(path = "{id}")
-    public void modifyImage(@PathVariable UUID id, @RequestBody ImageRequest imageRequest, HttpServletResponse response) throws IOException{
+    public void modifyImage(@PathVariable UUID id, @RequestBody @Valid ImageRequest imageRequest, HttpServletResponse response) throws IOException{
         imageService.modifyImage(id, imageRequest);
         response.getWriter().write("Size was created successfully");
         response.flushBuffer();
