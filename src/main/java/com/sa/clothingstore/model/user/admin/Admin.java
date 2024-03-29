@@ -1,6 +1,6 @@
 package com.sa.clothingstore.model.user.admin;
 
-import com.sa.clothingstore.model.user.BaseUser;
+import com.sa.clothingstore.model.user.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Table;
@@ -13,8 +13,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Setter
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "admin")
-public class Admin extends BaseUser {
-    public Admin(BaseUser baseUser){
-        super(baseUser);
+public class Admin extends User {
+    public Admin(User user){
+        super(user);
     }
 }

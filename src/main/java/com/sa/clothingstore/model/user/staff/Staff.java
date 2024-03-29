@@ -1,6 +1,6 @@
 package com.sa.clothingstore.model.user.staff;
 
-import com.sa.clothingstore.model.user.BaseUser;
+import com.sa.clothingstore.model.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -10,12 +10,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Setter
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "staff")
-public class Staff extends BaseUser {
+public class Staff extends User {
     @ManyToOne
     @JoinColumn(name = "staff_role")
     private StaffRole staffRole;
-    public Staff(BaseUser baseUser, StaffRole staffRole){
-        super(baseUser);
+    public Staff(User user, StaffRole staffRole){
+        super(user);
         this.staffRole = staffRole;
     }
 

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Getter
@@ -23,7 +24,10 @@ public class Token {
     @Column(name = "refresh_token")
     private String refreshToken;
 
+    @Column(name = "expired")
+    private Date expiredDate;
+
     @ManyToOne
     @JoinColumn(name = "user_Id")
-    private BaseUser baseUser;
+    private User user;
 }

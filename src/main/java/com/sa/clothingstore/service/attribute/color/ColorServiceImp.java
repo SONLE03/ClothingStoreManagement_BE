@@ -1,22 +1,18 @@
 package com.sa.clothingstore.service.attribute.color;
 
-import com.sa.clothingstore.common.exception.ObjectAlreadyExistsException;
-import com.sa.clothingstore.common.exception.ObjectNotFoundException;
+import com.sa.clothingstore.exception.ObjectAlreadyExistsException;
+import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.dto.request.attribute.ColorRequest;
-import com.sa.clothingstore.dto.request.attribute.ImageRequest;
 import com.sa.clothingstore.dto.response.attribute.ColorResponse;
-import com.sa.clothingstore.dto.response.attribute.ImageResponse;
 import com.sa.clothingstore.model.attribute.Color;
-import com.sa.clothingstore.model.attribute.Image;
 import com.sa.clothingstore.repository.attribute.ColorRepository;
-import com.sa.clothingstore.repository.attribute.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class ColorServiceImp implements ColorService{

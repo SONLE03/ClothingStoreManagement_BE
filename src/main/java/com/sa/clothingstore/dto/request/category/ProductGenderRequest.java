@@ -11,6 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ProductGenderRequest {
-    @NotEmpty(message = "Thiếu thông tin")
+    @NotEmpty(message = "Missing product gender name")
     private String name;
 }

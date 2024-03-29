@@ -1,4 +1,4 @@
-package com.sa.clothingstore.common.exception;
+package com.sa.clothingstore.exception;
 
 import lombok.Getter;
 import lombok.Setter;

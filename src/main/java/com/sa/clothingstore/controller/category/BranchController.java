@@ -1,15 +1,11 @@
 package com.sa.clothingstore.controller.category;
 
 import com.sa.clothingstore.dto.request.category.BranchRequest;
-import com.sa.clothingstore.dto.response.category.BranchResponse;
-import com.sa.clothingstore.common.exception.GlobalExceptionHandler;
 import com.sa.clothingstore.model.category.Branch;
 import com.sa.clothingstore.service.category.branch.BranchService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
