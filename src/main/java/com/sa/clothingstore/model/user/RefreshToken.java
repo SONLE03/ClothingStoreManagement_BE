@@ -14,20 +14,20 @@ import java.util.UUID;
 @Builder
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-@Table(name = "token")
-public class Token {
+@Table(name = "refresh_token")
+public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
     private UUID id;
 
     @Column(name = "refresh_token")
-    private String refreshToken;
+    private String token;
 
     @Column(name = "expired")
     private Date expiredDate;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user_Id")
     private User user;
 }
