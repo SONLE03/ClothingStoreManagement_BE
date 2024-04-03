@@ -10,6 +10,6 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class ImageRequest {
-    @NotEmpty(message = "Thiếu đường dẫn")
+    @NotEmpty(message = "Missing URL")
     private String url;
 }

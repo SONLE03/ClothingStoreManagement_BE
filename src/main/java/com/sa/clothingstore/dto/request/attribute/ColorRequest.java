@@ -11,6 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ColorRequest {
-    @NotEmpty(message = "Thiếu tên màu")
+    @NotEmpty(message = "Missing color name")
     private String name;
 }

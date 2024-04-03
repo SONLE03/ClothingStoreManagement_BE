@@ -2,7 +2,7 @@ package com.sa.clothingstore.service.category.branch;
 
 import com.sa.clothingstore.dto.request.category.BranchRequest;
 import com.sa.clothingstore.dto.response.category.BranchResponse;
-import com.sa.clothingstore.common.exception.ObjectNotFoundException;
+import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.category.Branch;
 import com.sa.clothingstore.repository.category.BranchRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.sa.clothingstore.model.user.customer;
 
-import com.sa.clothingstore.model.user.BaseUser;
+import com.sa.clothingstore.model.user.User;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,10 +13,10 @@ import java.util.Set;
 @Setter
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "customer")
-public class Customer extends BaseUser {
+public class Customer extends User {
     @OneToMany(mappedBy = "customer")
     Set<CustomerAddress> customerAddressSet;
-    public Customer (BaseUser user){
+    public Customer (User user){
         super(user);
     }
 }

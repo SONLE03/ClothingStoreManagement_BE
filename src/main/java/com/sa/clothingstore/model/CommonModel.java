@@ -18,11 +18,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommonModel {
-    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP default NOW()")
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP default NOW()")
     @JsonFormat(timezone = "GMT+7")
     private Timestamp createdAt;
 
-    @Column(name = "updated_at", nullable = false, columnDefinition = "TIMESTAMP default NOW()")
+    @Column(name = "updated_at", columnDefinition = "TIMESTAMP default NOW()")
     @JsonFormat(timezone = "GMT+7")
     private Timestamp updatedAt;
 

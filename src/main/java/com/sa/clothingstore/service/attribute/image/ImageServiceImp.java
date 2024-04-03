@@ -1,11 +1,9 @@
 package com.sa.clothingstore.service.attribute.image;
 
-import com.sa.clothingstore.common.exception.ObjectNotFoundException;
+import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.dto.request.attribute.ImageRequest;
 import com.sa.clothingstore.dto.response.attribute.ImageResponse;
-import com.sa.clothingstore.dto.response.category.BranchResponse;
 import com.sa.clothingstore.model.attribute.Image;
-import com.sa.clothingstore.model.category.Branch;
 import com.sa.clothingstore.repository.attribute.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

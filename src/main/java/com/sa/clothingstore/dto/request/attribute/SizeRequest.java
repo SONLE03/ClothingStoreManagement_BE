@@ -11,6 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SizeRequest {
-    @NotEmpty(message = "Thiếu tên kích thước")
+    @NotEmpty(message = "Missing size name")
     private String name;
 }

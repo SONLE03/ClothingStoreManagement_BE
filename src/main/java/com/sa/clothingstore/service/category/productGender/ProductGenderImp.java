@@ -1,11 +1,9 @@
 package com.sa.clothingstore.service.category.productGender;
 
-import com.sa.clothingstore.common.exception.ObjectAlreadyExistsException;
-import com.sa.clothingstore.common.exception.ObjectNotFoundException;
+import com.sa.clothingstore.exception.ObjectAlreadyExistsException;
+import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.dto.request.category.ProductGenderRequest;
-import com.sa.clothingstore.dto.response.attribute.ColorResponse;
 import com.sa.clothingstore.dto.response.category.ProductGenderResponse;
-import com.sa.clothingstore.model.attribute.Color;
 import com.sa.clothingstore.model.category.ProductGender;
 import com.sa.clothingstore.repository.category.ProductGenderRepository;
 import lombok.RequiredArgsConstructor;

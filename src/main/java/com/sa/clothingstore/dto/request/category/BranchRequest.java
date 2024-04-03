@@ -8,6 +8,6 @@ import lombok.*;
 @Getter
 @Setter
 public class BranchRequest {
-    @NotEmpty(message = "Thiếu tên nhãn hàng")
+    @NotEmpty(message = "Missing branch name")
     private String name;
 }

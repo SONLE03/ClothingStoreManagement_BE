@@ -1,14 +1,10 @@
 package com.sa.clothingstore.service.attribute.size;
 
-import com.sa.clothingstore.common.exception.ObjectAlreadyExistsException;
-import com.sa.clothingstore.common.exception.ObjectNotFoundException;
-import com.sa.clothingstore.dto.request.attribute.ColorRequest;
+import com.sa.clothingstore.exception.ObjectAlreadyExistsException;
+import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.dto.request.attribute.SizeRequest;
-import com.sa.clothingstore.dto.response.attribute.ColorResponse;
 import com.sa.clothingstore.dto.response.attribute.SizeResponse;
-import com.sa.clothingstore.model.attribute.Color;
 import com.sa.clothingstore.model.attribute.Size;
-import com.sa.clothingstore.repository.attribute.ColorRepository;
 import com.sa.clothingstore.repository.attribute.SizeRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
