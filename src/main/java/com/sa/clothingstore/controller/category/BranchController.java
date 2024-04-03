@@ -2,10 +2,12 @@ package com.sa.clothingstore.controller.category;
 
 import com.sa.clothingstore.dto.request.category.BranchRequest;
 import com.sa.clothingstore.model.category.Branch;
+import com.sa.clothingstore.model.user.User;
 import com.sa.clothingstore.service.category.branch.BranchService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -18,6 +20,7 @@ import java.util.UUID;
 public class BranchController {
     private final BranchService branchService;
     @GetMapping
+    @PreAuthorize("hasRole('CUSTOMER')")
     public List<Branch> getAll() {
         return branchService.getAllBranch();
     }

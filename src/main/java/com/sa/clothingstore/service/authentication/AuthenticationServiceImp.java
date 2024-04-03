@@ -18,6 +18,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.stereotype.Service;
@@ -71,7 +72,7 @@ public class AuthenticationServiceImp implements AuthenticationService{
     }
     @Override
     public CookieResponse signout(){
-        Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Object principle = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principle.toString() != "anonymousUser") {
             UUID userId = ((User) principle).getId();
             refreshTokenService.deleteByUserId(userId);
@@ -102,7 +103,7 @@ public class AuthenticationServiceImp implements AuthenticationService{
         ResponseCookie jwtCookie = jwtService.generateJwtCookie(user);
         RefreshToken refreshToken = refreshTokenService.generateRefreshToken(user.getId());
         ResponseCookie jwtRefreshCookie = jwtService.generateRefreshJwtCookie(refreshToken.getToken());
-        AuthenticationResponse authenticationResponse = new AuthenticationResponse(jwtCookie, jwtRefreshCookie, user.getRole().toString());
+        AuthenticationResponse authenticationResponse = new AuthenticationResponse(jwtCookie, jwtRefreshCookie, user.getRole().toString(), Arrays.asList(user.getAuthorities().toArray()));
         return authenticationResponse;
     }
 }
