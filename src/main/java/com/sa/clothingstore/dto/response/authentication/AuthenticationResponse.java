@@ -3,6 +3,9 @@ package com.sa.clothingstore.dto.response.authentication;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.util.Collection;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

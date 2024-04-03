@@ -11,12 +11,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "staff")
 public class Staff extends User {
-    @ManyToOne
-    @JoinColumn(name = "staff_role")
-    private StaffRole staffRole;
-    public Staff(User user, StaffRole staffRole){
+    public Staff(User user){
         super(user);
-        this.staffRole = staffRole;
     }
 
 }

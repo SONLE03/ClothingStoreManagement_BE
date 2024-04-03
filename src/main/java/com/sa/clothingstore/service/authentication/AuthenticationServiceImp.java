@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -50,6 +51,7 @@ public class AuthenticationServiceImp implements AuthenticationService{
         user.setPhone(registerRequest.getPhone());
         user.setFullName(registerRequest.getFullname());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setEnabled(true);
         user.setRole(Role.CUSTOMER);
         return userRepository.save(user);
     }
@@ -103,5 +105,4 @@ public class AuthenticationServiceImp implements AuthenticationService{
         AuthenticationResponse authenticationResponse = new AuthenticationResponse(jwtCookie, jwtRefreshCookie, user.getRole().toString());
         return authenticationResponse;
     }
-
 }

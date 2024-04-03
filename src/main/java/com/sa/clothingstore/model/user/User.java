@@ -10,12 +10,14 @@ import org.hibernate.type.SqlTypes;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -48,8 +50,8 @@ public class User implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "image_id")
     private Image image;
-    @Column(name = "isActive", columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private boolean isActive;
+
+    private boolean enabled;
     public User(@NotNull User user){
         this.id = user.getId();
         this.fullName = user.getFullName();
@@ -59,11 +61,12 @@ public class User implements UserDetails {
         this.dateOfBirth = user.dateOfBirth;
         this.image = user.getImage();
         this.role = user.getRole();
+        this.enabled = user.enabled;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override
@@ -88,6 +91,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }

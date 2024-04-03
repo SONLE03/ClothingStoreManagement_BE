@@ -3,39 +3,70 @@ package com.sa.clothingstore.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
+import java.util.stream.Collectors;
 import java.io.IOException;
-import java.net.BindException;
+import org.springframework.validation.FieldError;
+import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-//
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<String> handleException(Exception ex) {
-//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unknow error");
-//    }
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<String> handleException(BadCredentialsException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-    }
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleException(MethodArgumentNotValidException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-    }
-    @ExceptionHandler(IOException.class)
-    public ResponseEntity<String> handleIOException(IOException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lack of information");
+
+    // Global
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handleException(Exception ex) {
+        return "Unknow error";
     }
 
+    // Auth exception
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public String handleException(AuthenticationException authenticationException){
+        return authenticationException.getMessage();
+    }
+    @ExceptionHandler(DisabledException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public String handleException(DisabledException ex) {
+        return "The account has been banned";
+    }
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public String handleException(UsernameNotFoundException ex) {
+        return "The username not found";
+    }
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public String handleException(BadCredentialsException ex) {
+        return "Invalid username or password";
+    }
+
+    // Validate data
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public List<String> handleException(MethodArgumentNotValidException ex) {
+        return ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(FieldError::getDefaultMessage)
+                .collect(Collectors.toList());
+    }
+
+    // Business exception
     @ExceptionHandler(ObjectNotFoundException.class)
-    public ResponseEntity<String> handleNotFoundException(ObjectNotFoundException objectNotFoundException){
-        return new ResponseEntity<>(objectNotFoundException.getMessage(), HttpStatus.NOT_FOUND);
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleNotFoundException(ObjectNotFoundException objectNotFoundException){
+        return objectNotFoundException.getMessage();
     }
     @ExceptionHandler(ObjectAlreadyExistsException.class)
-    public ResponseEntity<String> handleNotFoundException(ObjectAlreadyExistsException objectAlreadyExistsException){
-        return new ResponseEntity<>(objectAlreadyExistsException.getMessage(), HttpStatus.BAD_REQUEST);
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleNotFoundException(ObjectAlreadyExistsException objectAlreadyExistsException){
+        return objectAlreadyExistsException.getMessage();
     }
 }
