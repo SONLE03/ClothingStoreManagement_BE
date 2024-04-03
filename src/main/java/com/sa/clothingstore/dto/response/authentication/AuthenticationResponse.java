@@ -14,9 +14,12 @@ import java.util.List;
 public class AuthenticationResponse extends CookieResponse {
     @JsonProperty("role")
     private String role;
+    @JsonProperty("authority")
+    private List<?> authorities;
 
-    public AuthenticationResponse(Object accessCookie, Object refreshCookie, String role){
+    public AuthenticationResponse(Object accessCookie, Object refreshCookie, String role, List<?> authorities){
         super(accessCookie, refreshCookie);
         this.role = role;
+        this.authorities = authorities;
     }
 }
