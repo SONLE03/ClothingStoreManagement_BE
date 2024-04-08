@@ -4,6 +4,7 @@ import com.sa.clothingstore.dto.request.authentication.AuthenticationRequest;
 import com.sa.clothingstore.dto.request.authentication.RegisterRequest;
 import com.sa.clothingstore.dto.response.authentication.AuthenticationResponse;
 import com.sa.clothingstore.dto.response.authentication.CookieResponse;
+import com.sa.clothingstore.dto.response.user.UserResponse;
 import com.sa.clothingstore.exception.ObjectAlreadyExistsException;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.user.RefreshToken;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -99,6 +101,13 @@ public class AuthenticationServiceImp implements AuthenticationService{
         return null;
     }
 
+    @Override
+    public User me() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        return currentUser;
+    }
+
     private AuthenticationResponse generateToken(User user){
         ResponseCookie jwtCookie = jwtService.generateJwtCookie(user);
         RefreshToken refreshToken = refreshTokenService.generateRefreshToken(user.getId());
@@ -106,4 +115,6 @@ public class AuthenticationServiceImp implements AuthenticationService{
         AuthenticationResponse authenticationResponse = new AuthenticationResponse(jwtCookie, jwtRefreshCookie, user.getRole().toString(), Arrays.asList(user.getAuthorities().toArray()));
         return authenticationResponse;
     }
+
+
 }

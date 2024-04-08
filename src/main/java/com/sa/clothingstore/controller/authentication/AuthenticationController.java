@@ -16,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/auth")
@@ -25,7 +26,12 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
-
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(HttpStatus.OK)
+    public User authenticatedUser(){
+        return authenticationService.me();
+    }
     @PostMapping("/signup")
     public ResponseEntity<User> register(@RequestBody @Valid RegisterRequest registerRequest) {
         User registeredUser = authenticationService.signup(registerRequest);

@@ -1,4 +1,4 @@
-package com.sa.clothingstore.model.address;
+package com.sa.clothingstore.model.user.customer;
 
 import com.sa.clothingstore.model.user.customer.CustomerAddress;
 import jakarta.persistence.*;

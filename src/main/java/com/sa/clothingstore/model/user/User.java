@@ -3,6 +3,9 @@ package com.sa.clothingstore.model.user;
 import com.sa.clothingstore.model.CommonModel;
 
 import com.sa.clothingstore.model.attribute.Image;
+import com.sa.clothingstore.model.user.admin.Admin;
+import com.sa.clothingstore.model.user.customer.Customer;
+import com.sa.clothingstore.model.user.staff.Staff;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -27,8 +30,9 @@ import static com.sa.clothingstore.model.user.Role.convertIntegerToRole;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "user")
-public class User implements UserDetails {
+public class User extends CommonModel implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
@@ -47,13 +51,11 @@ public class User implements UserDetails {
     @JdbcTypeCode(SqlTypes.INTEGER)
     @Enumerated(EnumType.ORDINAL)
     private Role role;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "image_id")
     private Image image;
-
     private boolean enabled;
     public User(@NotNull User user){
-        this.id = user.getId();
         this.fullName = user.getFullName();
         this.phone = user.getPhone();
         this.email = user.getEmail();

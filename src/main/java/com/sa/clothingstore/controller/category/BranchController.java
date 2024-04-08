@@ -20,7 +20,6 @@ import java.util.UUID;
 public class BranchController {
     private final BranchService branchService;
     @GetMapping
-    @PreAuthorize("hasRole('CUSTOMER')")
     public List<Branch> getAll() {
         return branchService.getAllBranch();
     }

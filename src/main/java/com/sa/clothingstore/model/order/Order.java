@@ -1,8 +1,7 @@
 package com.sa.clothingstore.model.order;
 
 import com.sa.clothingstore.model.CommonModel;
-import com.sa.clothingstore.model.address.Address;
-import com.sa.clothingstore.model.cart.CartItem;
+import com.sa.clothingstore.model.user.customer.Address;
 import com.sa.clothingstore.model.event.Coupon;
 import com.sa.clothingstore.model.payment.PaymentMethod;
 import com.sa.clothingstore.model.user.customer.Customer;
