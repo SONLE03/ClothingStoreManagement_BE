@@ -1,6 +1,7 @@
 package com.sa.clothingstore.controller.user;
 
 import com.sa.clothingstore.dto.request.user.UserRequest;
+import com.sa.clothingstore.model.user.Role;
 import com.sa.clothingstore.model.user.User;
 import com.sa.clothingstore.service.user.impl.AdminServiceImp;
 import com.sa.clothingstore.service.user.service.StaffService;
@@ -13,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-@RequestMapping("/api/staff")
+@RequestMapping("/api/user/staff")
 @RestController
 @AllArgsConstructor
 public class StaffController {
@@ -24,7 +25,7 @@ public class StaffController {
     }
     @PostMapping()
     public void createStaff(@RequestBody @Valid UserRequest userRequest, HttpServletResponse response) throws IOException {
-        staffService.createUser(userRequest);
+        staffService.createUser(userRequest, Role.STAFF);
         response.setStatus(201);
         response.getWriter().write("Staff was created successfully");
         response.flushBuffer();

@@ -3,9 +3,6 @@ package com.sa.clothingstore.model.user;
 import com.sa.clothingstore.model.CommonModel;
 
 import com.sa.clothingstore.model.attribute.Image;
-import com.sa.clothingstore.model.user.admin.Admin;
-import com.sa.clothingstore.model.user.customer.Customer;
-import com.sa.clothingstore.model.user.staff.Staff;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -17,10 +14,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.sa.clothingstore.model.user.Role.STAFF;
-import static com.sa.clothingstore.model.user.Role.convertIntegerToRole;
 
 
 @Entity
@@ -55,6 +48,10 @@ public class User extends CommonModel implements UserDetails {
     @JoinColumn(name = "image_id")
     private Image image;
     private boolean enabled;
+
+    @OneToOne(mappedBy = "user")
+    private ForgotPassword passwordResetToken;
+
     public User(@NotNull User user){
         this.fullName = user.getFullName();
         this.phone = user.getPhone();

@@ -29,7 +29,7 @@ public abstract class UserServiceFactory  {
     protected abstract User updateUser(User user, UserRequest userRequest);
 
     @Transactional
-    public User create(UserRequest userRequest){
+    public User create(UserRequest userRequest, Role role){
         userRepository.findByEmail(userRequest.getEmail()).ifPresent(user -> {
             throw new ObjectAlreadyExistsException("Email already existed");
         });
@@ -45,10 +45,16 @@ public abstract class UserServiceFactory  {
                 .password(passwordEncoder.encode(userRequest.getPassword()))
                 .dateOfBirth(userRequest.getDateOfBirth())
                 .enabled(userRequest.getEnable() == Status.ACTIVE.ordinal())
-                .role(Role.convertIntegerToRole(userRequest.getRole()))
+                .role(role)
                 .image(image)
                 .build();
-        user.setCommonCreate(userDetailService.getIdLogin());
+//        if(userRequest.getRole() != 2){ // Two is role customer
+//            user.setCommonCreate(userDetailService.getIdLogin());
+//        }
+//        // Or
+////        if(Role.convertIntegerToRole(userRequest.getRole()) != Role.CUSTOMER){
+////            user.setCommonCreate(userDetailService.getIdLogin());
+////        }
         return createUser(user, userRequest);
     }
 

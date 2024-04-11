@@ -1,6 +1,7 @@
 package com.sa.clothingstore.controller.user;
 
 import com.sa.clothingstore.dto.request.user.UserRequest;
+import com.sa.clothingstore.model.user.Role;
 import com.sa.clothingstore.model.user.User;
 import com.sa.clothingstore.service.user.service.CustomerService;
 import com.sa.clothingstore.service.user.service.StaffService;
@@ -13,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-@RequestMapping("/api/customer")
+@RequestMapping("/api/user/customer")
 @RestController
 @AllArgsConstructor
 public class CustomerController {
@@ -24,7 +25,7 @@ public class CustomerController {
     }
     @PostMapping()
     public void createCustomer(@RequestBody @Valid UserRequest userRequest, HttpServletResponse response) throws IOException {
-        customerService.createUser(userRequest);
+        customerService.createUser(userRequest, Role.CUSTOMER);
         response.setStatus(201);
         response.getWriter().write("Customer was created successfully");
         response.flushBuffer();

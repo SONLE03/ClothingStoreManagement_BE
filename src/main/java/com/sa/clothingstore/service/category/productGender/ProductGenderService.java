@@ -5,10 +5,11 @@ import com.sa.clothingstore.dto.response.category.ProductGenderResponse;
 import com.sa.clothingstore.model.category.ProductGender;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ProductGenderService {
     List<com.sa.clothingstore.model.category.ProductGender> getAllProductGender();
     ProductGenderResponse createProductGender(ProductGenderRequest productGenderRequest);
-    ProductGender modifyProductGender(Integer id, ProductGenderRequest productGenderRequest);
-    void deleteProductGender(Integer id);
+    ProductGender modifyProductGender(UUID id, ProductGenderRequest productGenderRequest);
+    void deleteProductGender(UUID id);
 }

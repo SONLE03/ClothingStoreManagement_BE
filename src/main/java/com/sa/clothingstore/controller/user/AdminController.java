@@ -2,6 +2,7 @@ package com.sa.clothingstore.controller.user;
 
 import com.sa.clothingstore.dto.request.user.UserRequest;
 import com.sa.clothingstore.dto.response.user.UserResponse;
+import com.sa.clothingstore.model.user.Role;
 import com.sa.clothingstore.model.user.User;
 import com.sa.clothingstore.service.user.impl.AdminServiceImp;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,7 +15,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-@RequestMapping("/api/admin")
+@RequestMapping("/api/user/admin")
 @RestController
 @AllArgsConstructor
 public class AdminController {
@@ -25,7 +26,7 @@ public class AdminController {
     }
     @PostMapping()
     public void createAdmin(@RequestBody @Valid UserRequest userRequest, HttpServletResponse response) throws IOException{
-        adminService.createUser(userRequest);
+        adminService.createUser(userRequest, Role.ADMIN);
         response.setStatus(201);
         response.getWriter().write("Admin was created successfully");
         response.flushBuffer();

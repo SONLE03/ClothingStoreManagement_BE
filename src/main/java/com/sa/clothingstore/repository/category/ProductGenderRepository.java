@@ -8,6 +8,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface ProductGenderRepository extends JpaRepository<ProductGender, Integer> {
+public interface ProductGenderRepository extends JpaRepository<ProductGender, UUID> {
     Optional<ProductGender> findByName(String name);
 }

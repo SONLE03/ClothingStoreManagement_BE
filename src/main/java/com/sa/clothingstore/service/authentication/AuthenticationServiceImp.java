@@ -75,7 +75,7 @@ public class AuthenticationServiceImp implements AuthenticationService{
     @Override
     public CookieResponse signout(){
         Object principle = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principle.toString() != "anonymousUser") {
+        if (!principle.toString().equals("anonymousUser")) {
             UUID userId = ((User) principle).getId();
             refreshTokenService.deleteByUserId(userId);
         }

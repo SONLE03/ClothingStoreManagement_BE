@@ -13,6 +13,8 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "customer")
 public class Customer extends User {

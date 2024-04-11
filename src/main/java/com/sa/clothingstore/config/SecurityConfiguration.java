@@ -41,9 +41,10 @@ public class SecurityConfiguration {
                     .authorizeHttpRequests(authorize -> authorize
                             .requestMatchers("/api/auth/**")
                             .permitAll()
-                            .requestMatchers("/api/admin/**").permitAll()
-                            .requestMatchers("/branch/**").permitAll()
-//                            .requestMatchers("/branch").hasAnyRole("CUSTOMER", "ADMIN")
+                            .requestMatchers("/api/user/admin/**").permitAll()
+                            .requestMatchers("/api/user/staff/**").permitAll()
+                            .requestMatchers("/api/user/customer/**").permitAll()
+                            .requestMatchers("/api/user/forgotPassword/**").permitAll()
                             .anyRequest()
                             .authenticated()
                     )

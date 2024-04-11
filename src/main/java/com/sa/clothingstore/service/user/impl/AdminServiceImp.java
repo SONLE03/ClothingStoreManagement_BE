@@ -2,6 +2,7 @@ package com.sa.clothingstore.service.user.impl;
 
 import com.sa.clothingstore.dto.request.user.UserRequest;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
+import com.sa.clothingstore.model.user.Role;
 import com.sa.clothingstore.model.user.User;
 import com.sa.clothingstore.repository.user.UserRepository;
 import com.sa.clothingstore.service.user.factory.AdminServiceFatory;
@@ -26,8 +27,8 @@ public class AdminServiceImp implements AdminService {
         return users;
     }
     @Override
-    public void createUser(UserRequest userRequest) {
-        userRepository.save(adminServiceFatory.create(userRequest));
+    public void createUser(UserRequest userRequest, Role role) {
+        userRepository.save(adminServiceFatory.create(userRequest, role));
     }
 
     @Override

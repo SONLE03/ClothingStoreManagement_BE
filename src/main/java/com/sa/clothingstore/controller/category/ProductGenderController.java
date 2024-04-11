@@ -32,13 +32,13 @@ public class ProductGenderController {
         response.flushBuffer();
     }
     @PutMapping(path = "{id}")
-    public void modifyProductGender(@PathVariable Integer id, @RequestBody @Valid ProductGenderRequest productGenderRequest, HttpServletResponse response) throws IOException{
+    public void modifyProductGender(@PathVariable UUID id, @RequestBody @Valid ProductGenderRequest productGenderRequest, HttpServletResponse response) throws IOException{
         productGenderService.modifyProductGender(id, productGenderRequest);
         response.getWriter().write("Product Gender was modified successfully");
         response.flushBuffer();
     }
     @DeleteMapping(path = "{id}")
-    public void deleteProductGender(@PathVariable Integer id, HttpServletResponse response) throws IOException{
+    public void deleteProductGender(@PathVariable UUID id, HttpServletResponse response) throws IOException{
         productGenderService.deleteProductGender(id);
         response.getWriter().write("Product Gender was delete successfully");
         response.flushBuffer();

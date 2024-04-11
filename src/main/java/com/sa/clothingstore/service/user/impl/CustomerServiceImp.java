@@ -4,6 +4,7 @@ import com.sa.clothingstore.dto.request.user.AddressRequest;
 import com.sa.clothingstore.dto.request.user.UserRequest;
 import com.sa.clothingstore.dto.response.user.AddressResponse;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
+import com.sa.clothingstore.model.user.Role;
 import com.sa.clothingstore.model.user.User;
 import com.sa.clothingstore.model.user.customer.Customer;
 import com.sa.clothingstore.model.user.customer.CustomerAddress;
@@ -36,8 +37,8 @@ public class CustomerServiceImp implements CustomerService {
         return users;
     }
     @Override
-    public void createUser(UserRequest userRequest) {
-        userRepository.save(customerServiceFactory.create(userRequest));
+    public void createUser(UserRequest userRequest, Role role) {
+        userRepository.save(customerServiceFactory.create(userRequest, role));
     }
 
     @Override

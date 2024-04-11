@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @Setter
@@ -15,9 +17,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(name = "category")
 public class Category extends CommonModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private UUID id;
 
     @Column(name = "category_name")
     private String name;
