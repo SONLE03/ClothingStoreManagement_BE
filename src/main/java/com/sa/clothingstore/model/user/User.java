@@ -14,10 +14,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.sa.clothingstore.model.user.Role.STAFF;
-import static com.sa.clothingstore.model.user.Role.convertIntegerToRole;
 
 
 @Entity
@@ -27,8 +23,9 @@ import static com.sa.clothingstore.model.user.Role.convertIntegerToRole;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "user")
-public class User implements UserDetails {
+public class User extends CommonModel implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
@@ -47,13 +44,15 @@ public class User implements UserDetails {
     @JdbcTypeCode(SqlTypes.INTEGER)
     @Enumerated(EnumType.ORDINAL)
     private Role role;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "image_id")
     private Image image;
-
     private boolean enabled;
+
+    @OneToOne(mappedBy = "user")
+    private ForgotPassword passwordResetToken;
+
     public User(@NotNull User user){
-        this.id = user.getId();
         this.fullName = user.getFullName();
         this.phone = user.getPhone();
         this.email = user.getEmail();

@@ -16,9 +16,9 @@ import java.util.UUID;
 @Table(name = "product_gender")
 public class ProductGender {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private UUID id;
 
     @Column(name = "gender_name")
     private String name;

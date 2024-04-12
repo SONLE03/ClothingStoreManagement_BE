@@ -69,4 +69,14 @@ public class GlobalExceptionHandler {
     public String handleNotFoundException(ObjectAlreadyExistsException objectAlreadyExistsException){
         return objectAlreadyExistsException.getMessage();
     }
+    @ExceptionHandler(PasswordException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handlePasswordException(PasswordException passwordException){
+        return passwordException.getMessage();
+    }
+    @ExceptionHandler(OtpException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleOtpException(OtpException otpException){
+        return otpException.getMessage();
+    }
 }

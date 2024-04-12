@@ -1,6 +1,5 @@
 package com.sa.clothingstore.model.user.customer;
 
-import com.sa.clothingstore.model.address.Address;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

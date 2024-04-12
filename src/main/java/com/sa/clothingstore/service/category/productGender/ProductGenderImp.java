@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +41,7 @@ public class ProductGenderImp implements ProductGenderService {
     }
 
     @Override
-    public ProductGender modifyProductGender(Integer id, ProductGenderRequest productGenderRequest) {
+    public ProductGender modifyProductGender(UUID id, ProductGenderRequest productGenderRequest) {
         ProductGender productGender = productGenderRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Product Gender not found")
                 );
@@ -53,7 +54,7 @@ public class ProductGenderImp implements ProductGenderService {
     }
 
     @Override
-    public void deleteProductGender(Integer id) {
+    public void deleteProductGender(UUID id) {
         ProductGender productGender = productGenderRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Product Gender not found")
                 );

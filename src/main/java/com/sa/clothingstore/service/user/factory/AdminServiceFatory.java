@@ -1,0 +1,28 @@
+package com.sa.clothingstore.service.user.factory;
+
+import com.sa.clothingstore.model.user.admin.Admin;
+import com.sa.clothingstore.repository.attribute.ImageRepository;
+import com.sa.clothingstore.repository.user.UserRepository;
+import com.sa.clothingstore.service.user.service.UserDetailService;
+import jakarta.transaction.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+import com.sa.clothingstore.model.user.User;
+import com.sa.clothingstore.dto.request.user.UserRequest;
+@Component
+public class AdminServiceFatory extends UserServiceFactory{
+    public AdminServiceFatory(PasswordEncoder passwordEncoder, ImageRepository imageRepository, UserDetailService userDetailService, UserRepository userRepository) {
+        super(passwordEncoder, imageRepository, userDetailService, userRepository);
+    }
+    @Override
+    @Transactional
+    protected User createUser(User user, UserRequest userRequest) {
+        return new Admin(user);
+    }
+    @Override
+    @Transactional
+    protected User updateUser(User user, UserRequest userRequest) {
+        return new Admin(user);
+    }
+
+}
