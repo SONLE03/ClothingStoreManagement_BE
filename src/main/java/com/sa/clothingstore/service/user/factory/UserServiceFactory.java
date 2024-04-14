@@ -16,6 +16,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -27,6 +29,7 @@ public abstract class UserServiceFactory  {
     protected abstract User createUser(User user, UserRequest userRequest);
 
     protected abstract User updateUser(User user, UserRequest userRequest);
+    protected abstract List<User> getAllUsersByRole(Integer role);
 
     @Transactional
     public User create(UserRequest userRequest, Role role){
@@ -36,8 +39,6 @@ public abstract class UserServiceFactory  {
         userRepository.findByPhone(userRequest.getPhone()).ifPresent(user -> {
             throw new ObjectAlreadyExistsException("Phone already existed");
         });
-        Image image = Image.builder().url(userRequest.getImage()).build();
-        imageRepository.save(image);
         User user = User.builder()
                 .fullName(userRequest.getFullname())
                 .email(userRequest.getEmail())
@@ -46,15 +47,14 @@ public abstract class UserServiceFactory  {
                 .dateOfBirth(userRequest.getDateOfBirth())
                 .enabled(userRequest.getEnable() == Status.ACTIVE.ordinal())
                 .role(role)
-                .image(image)
                 .build();
-//        if(userRequest.getRole() != 2){ // Two is role customer
-//            user.setCommonCreate(userDetailService.getIdLogin());
-//        }
-//        // Or
-////        if(Role.convertIntegerToRole(userRequest.getRole()) != Role.CUSTOMER){
-////            user.setCommonCreate(userDetailService.getIdLogin());
-////        }
+        user.setCommonCreate(userDetailService.getIdLogin());
+        String imagePath = userRequest.getImage();
+        if(imagePath != null){
+            Image image = Image.builder().url(userRequest.getImage()).build();
+            imageRepository.save(image);
+            user.setImage(image);
+        }
         return createUser(user, userRequest);
     }
 
@@ -86,5 +86,10 @@ public abstract class UserServiceFactory  {
         user.setCommonUpdate(userDetailService.getIdLogin());
 
         return updateUser(user, userRequest);
+    }
+
+    public List<User> getAllUsers(Integer role){
+        return userRepository.findByRole(Role.convertIntegerToRole(role))
+                .orElseThrow(() -> new ObjectNotFoundException("No users were found with this role"));
     }
 }

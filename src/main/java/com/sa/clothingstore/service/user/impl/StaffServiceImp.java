@@ -21,10 +21,8 @@ public class StaffServiceImp implements StaffService {
     private final StaffServiceFactory staffServiceFactory;
     private final UserRepository userRepository;
     @Override
-    public List<User> getAll(){
-        Optional<List<User>> usersOptional = userRepository.findByRole(1);
-        List<User> users = usersOptional.orElseThrow(() -> new ObjectNotFoundException("No users found with role staff"));
-        return users;
+    public List<User> getAllUsersByRole(Integer role){
+        return staffServiceFactory.getAllUsers(role);
     }
     @Override
     public void createUser(UserRequest userRequest, Role role) {

@@ -21,10 +21,8 @@ public class AdminServiceImp implements AdminService {
     private final UserRepository userRepository;
 
     @Override
-    public List<User> getAll(){
-        Optional<List<User>> usersOptional = userRepository.findByRole(0);
-        List<User> users = usersOptional.orElseThrow(() -> new ObjectNotFoundException("No users found with role admin"));
-        return users;
+    public List<User> getAllUsersByRole(Integer role){
+        return adminServiceFatory.getAllUsers(role);
     }
     @Override
     public void createUser(UserRequest userRequest, Role role) {
@@ -35,4 +33,5 @@ public class AdminServiceImp implements AdminService {
     public void updateUser(UUID userId, UserRequest userRequest) {
         userRepository.save(adminServiceFatory.update(userId, userRequest));
     }
+
 }

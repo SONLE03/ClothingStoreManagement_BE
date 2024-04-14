@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
-    List<User> getAll();
+    List<User> getAllUsersByRole(Integer role);
     void createUser(UserRequest userRequest, Role role);
     void updateUser(UUID userId, UserRequest userRequest);
 }

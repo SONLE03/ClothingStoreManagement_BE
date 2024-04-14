@@ -1,8 +1,10 @@
 package com.sa.clothingstore.controller.authentication;
+import com.sa.clothingstore.constant.APIConstant;
 import com.sa.clothingstore.dto.request.authentication.AuthenticationRequest;
 import com.sa.clothingstore.dto.request.authentication.RegisterRequest;
 import com.sa.clothingstore.dto.response.authentication.AuthenticationResponse;
 import com.sa.clothingstore.dto.response.authentication.CookieResponse;
+import com.sa.clothingstore.dto.response.user.UserResponse;
 import com.sa.clothingstore.model.user.RefreshToken;
 import com.sa.clothingstore.model.user.User;
 import com.sa.clothingstore.service.token.JwtService;
@@ -19,27 +21,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api/auth")
+@RequestMapping(APIConstant.AUTH)
 @RestController
 @AllArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
-    @GetMapping("/me")
+    @GetMapping(APIConstant.AUTH_ME)
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
-    public User authenticatedUser(){
+    public UserResponse authenticatedUser(){
         return authenticationService.me();
     }
-    @PostMapping("/signup")
+    @PostMapping(APIConstant.SIGNUP)
     public ResponseEntity<User> register(@RequestBody @Valid RegisterRequest registerRequest) {
         User registeredUser = authenticationService.signup(registerRequest);
 
         return ResponseEntity.ok(registeredUser);
     }
 
-    @PostMapping("/signin")
+    @PostMapping(APIConstant.LOGIN)
     public ResponseEntity<?> authenticate(@RequestBody @Valid AuthenticationRequest authenticationRequest) {
         AuthenticationResponse authenticationResponse = authenticationService.authenticate(authenticationRequest);
         return ResponseEntity.ok()
@@ -47,7 +49,7 @@ public class AuthenticationController {
                 .header(HttpHeaders.SET_COOKIE, authenticationResponse.getRefreshCookie().toString())
                 .body(authenticationResponse);
     }
-    @PostMapping("/signout")
+    @PostMapping(APIConstant.LOGOUT)
     public ResponseEntity<?> logoutUser() {
         CookieResponse cookieResponse = authenticationService.signout();
         return ResponseEntity.ok()
@@ -56,7 +58,7 @@ public class AuthenticationController {
             .body("You've been signed out!");
 
     }
-    @PostMapping("/refreshtoken")
+    @PostMapping(APIConstant.REFRESH_TOKEN)
     public ResponseEntity<?> refreshToken(HttpServletRequest httpServletRequest){
         String refreshToken = jwtService.getJwtRefreshFromCookies(httpServletRequest);
 

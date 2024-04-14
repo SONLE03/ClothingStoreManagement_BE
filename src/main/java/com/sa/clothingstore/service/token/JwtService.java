@@ -90,8 +90,8 @@ public class JwtService {
     public String generateTokenFromUsername(String username) {
         return Jwts.builder()
                 .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpiration))
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(key(), SignatureAlgorithm.HS256)
                 .compact();
     }

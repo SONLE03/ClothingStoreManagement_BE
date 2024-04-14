@@ -16,6 +16,6 @@ public interface AuthenticationService {
     AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest);
     CookieResponse signout();
     Optional<ResponseCookie> refreshToken(HttpServletRequest request);
-    User me();
+    UserResponse me();
 
 }

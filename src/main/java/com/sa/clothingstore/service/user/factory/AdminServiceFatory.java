@@ -9,6 +9,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import com.sa.clothingstore.model.user.User;
 import com.sa.clothingstore.dto.request.user.UserRequest;
+
+import java.util.List;
+
 @Component
 public class AdminServiceFatory extends UserServiceFactory{
     public AdminServiceFatory(PasswordEncoder passwordEncoder, ImageRepository imageRepository, UserDetailService userDetailService, UserRepository userRepository) {
@@ -22,7 +25,8 @@ public class AdminServiceFatory extends UserServiceFactory{
     @Override
     @Transactional
     protected User updateUser(User user, UserRequest userRequest) {
-        return new Admin(user);
+        return user;
     }
-
+    @Override
+    protected List<User> getAllUsersByRole(Integer role) { return getAllUsers(role); }
 }

@@ -1,4 +1,5 @@
 package com.sa.clothingstore.config;
+import com.sa.clothingstore.constant.APIConstant;
 import com.sa.clothingstore.model.user.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,12 +40,8 @@ public class SecurityConfiguration {
             http.cors(withDefaults())
                     .csrf(cors -> cors.disable())
                     .authorizeHttpRequests(authorize -> authorize
-                            .requestMatchers("/api/auth/**")
-                            .permitAll()
-                            .requestMatchers("/api/user/admin/**").permitAll()
-                            .requestMatchers("/api/user/staff/**").permitAll()
-                            .requestMatchers("/api/user/customer/**").permitAll()
-                            .requestMatchers("/api/user/forgotPassword/**").permitAll()
+                            .requestMatchers(APIConstant.AUTH + "/**").permitAll()
+                            .requestMatchers(APIConstant.EMAIL + "/**").permitAll()
                             .anyRequest()
                             .authenticated()
                     )
