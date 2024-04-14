@@ -6,8 +6,7 @@ import com.sa.clothingstore.dto.response.user.AddressResponse;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.user.Role;
 import com.sa.clothingstore.model.user.User;
-import com.sa.clothingstore.model.user.customer.Customer;
-import com.sa.clothingstore.model.user.customer.CustomerAddress;
+import com.sa.clothingstore.model.user.customer.Address;
 import com.sa.clothingstore.repository.user.UserRepository;
 import com.sa.clothingstore.repository.user.customer.AddressRepository;
 import com.sa.clothingstore.repository.user.customer.CustomerRepository;
@@ -19,7 +18,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -31,10 +29,8 @@ public class CustomerServiceImp implements CustomerService {
     private final CustomerRepository customerRepository;
     private final ModelMapper modelMapper;
     @Override
-    public List<User> getAll(){
-        Optional<List<User>> usersOptional = userRepository.findByRole(2);
-        List<User> users = usersOptional.orElseThrow(() -> new ObjectNotFoundException("No users found with role customer"));
-        return users;
+    public List<User> getAllUsersByRole(Integer role){
+        return customerServiceFactory.getAllUsers(role);
     }
     @Override
     public void createUser(UserRequest userRequest, Role role) {
@@ -46,14 +42,37 @@ public class CustomerServiceImp implements CustomerService {
         userRepository.save(customerServiceFactory.update(userId, userRequest));
     }
 
+
     @Override
     @Transactional
-    public AddressResponse createOtherAddress(UUID userId, AddressRequest addressRequest) {
-        Customer customer = customerRepository.findById(userId)
-                .orElseThrow(() -> new ObjectNotFoundException("Customer not found"));
-        CustomerAddress address = modelMapper.map(addressRequest, CustomerAddress.class);
-        customer.getCustomerAddressSet().add(address);
-        customerRepository.save(customer);
-        return modelMapper.map(address, AddressResponse.class);
+    public void createAddress(UUID userId, AddressRequest addressRequest) {
+        if(!customerRepository.existsById(userId)){
+            throw new ObjectNotFoundException("Customer not found");
+        }
+        Address address = Address.builder()
+                .postalCode(addressRequest.getPostalCode())
+                .ward(addressRequest.getWard())
+                .specificAddress(addressRequest.getSpecificAddress())
+                .district(addressRequest.getDistrict())
+                .province(addressRequest.getProvince())
+                .phone(addressRequest.getPhone())
+                .isDefault(addressRequest.isDefault())
+                .id(userId)
+                .build();
+        addressRepository.save(address);
+    }
+    @Override
+    @Transactional
+    public void updateAddress(UUID addressId, AddressRequest addressRequest){
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new ObjectNotFoundException("Customer address not found"));
+        address.setPostalCode(addressRequest.getPostalCode());
+        address.setWard(addressRequest.getWard());
+        address.setSpecificAddress(addressRequest.getSpecificAddress());
+        address.setDistrict(addressRequest.getDistrict());
+        address.setProvince(addressRequest.getProvince());
+        address.setPhone(addressRequest.getPhone());
+        address.setDefault(addressRequest.isDefault());
+        addressRepository.save(address);
     }
 }

@@ -12,6 +12,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class StaffServiceFactory extends UserServiceFactory{
     public StaffServiceFactory(PasswordEncoder passwordEncoder, ImageRepository imageRepository, UserDetailService userDetailService, UserRepository userRepository) {
@@ -25,6 +27,8 @@ public class StaffServiceFactory extends UserServiceFactory{
     @Override
     @Transactional
     protected User updateUser(User user, UserRequest userRequest) {
-        return new Staff(user);
+        return user;
     }
+    @Override
+    protected List<User> getAllUsersByRole(Integer role) { return getAllUsers(role); }
 }

@@ -1,27 +1,33 @@
 package com.sa.clothingstore.service.user.impl;
 
+import com.sa.clothingstore.dto.request.user.ChangePasswordRequest;
 import com.sa.clothingstore.dto.response.user.UserResponse;
-import com.sa.clothingstore.exception.ObjectNotFoundException;
+import com.sa.clothingstore.exception.OtpException;
 import com.sa.clothingstore.exception.PasswordException;
+import com.sa.clothingstore.model.user.ForgotPassword;
 import com.sa.clothingstore.model.user.User;
+import com.sa.clothingstore.repository.user.ForgotPasswordRepository;
 import com.sa.clothingstore.repository.user.UserRepository;
 import com.sa.clothingstore.service.user.service.UserDetailService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
-import java.util.Optional;
+import java.time.Instant;
+import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class UserDetailServiceImp implements UserDetailService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
+    private final ForgotPasswordRepository forgotPasswordRepository;
     @Override
     public UserDetails userDetails() {
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -52,7 +58,10 @@ public class UserDetailServiceImp implements UserDetailService {
         }
         return userDetails.getUsername();
     }
-
+    @Override
+    public Integer getRoleById(UUID userId){
+        return userRepository.getRoleById(userId);
+    }
     @Override
     public Integer getRoleLogin() {
         User userDetails = (User) userDetails();
@@ -63,21 +72,29 @@ public class UserDetailServiceImp implements UserDetailService {
     }
 
     @Override
-    public UserResponse getProfile(UUID userId) {
-        return null;
+    public User getProfile(UUID userId) {
+        return userRepository.getById(userId);
     }
 
     @Override
-    public void changePassword(String oldPassword, String newPassword, Principal connectedUser){
-        User user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
-        Optional<User> optional = userRepository.findById(user.getId());
-        if (optional.isEmpty()) {
-            throw new ObjectNotFoundException("User not found");
+    public String verifyOtp(Integer otp, String email){
+        User user =  userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Please provide an valid email"));
+        ForgotPassword fp = forgotPasswordRepository.findByOtpAndUser(otp, user)
+                .orElseThrow(() -> new OtpException("Invalid OTP for email: " + email));
+        if(fp.getExpiryDate().before(Date.from(Instant.now()))){
+            forgotPasswordRepository.delete(fp);
+            new OtpException("OTP has expiried!");
         }
-        if (!passwordEncoder.matches(oldPassword, optional.get().getPassword())) {
-            throw new PasswordException("Incorrect old password");
+        return "OTP verified!";
+    }
+
+    @Override
+    public String changePassword(ChangePasswordRequest changePasswordRequest, String email){
+        if(!Objects.equals(changePasswordRequest.password(), changePasswordRequest.repeatPassword())){
+            new PasswordException("Please enter the password again!");
         }
-        optional.get().setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(optional.get());
+        userRepository.updatePassword(email, passwordEncoder.encode(changePasswordRequest.password()));
+        return "Password has been changed!";
     }
 }

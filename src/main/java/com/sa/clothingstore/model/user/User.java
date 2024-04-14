@@ -5,6 +5,7 @@ import com.sa.clothingstore.model.CommonModel;
 import com.sa.clothingstore.model.attribute.Image;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.jetbrains.annotations.NotNull;
@@ -27,8 +28,9 @@ import java.util.*;
 @Table(name = "user")
 public class User extends CommonModel implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "id", columnDefinition = "BINARY(16)")
     private UUID id;
     @Column(name = "fullname")
     private String fullName;

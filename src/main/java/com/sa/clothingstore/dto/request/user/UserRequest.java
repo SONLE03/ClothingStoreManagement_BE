@@ -15,7 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserRequest extends AddressRequest{
+public class UserRequest{
     @NotEmpty(message = "Missing email")
     @Email(message = "Invalid email")
     private String email;
@@ -31,5 +31,4 @@ public class UserRequest extends AddressRequest{
     private int enable;
     private Date dateOfBirth;
     private String image;
-
 }

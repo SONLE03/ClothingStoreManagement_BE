@@ -15,6 +15,7 @@ import com.sa.clothingstore.service.token.JwtService;
 import com.sa.clothingstore.service.token.RefreshTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,11 +34,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthenticationServiceImp implements AuthenticationService{
     private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
-
+    private final ModelMapper modelMapper;
     private final AuthenticationManager authenticationManager;
 
 
@@ -102,10 +102,10 @@ public class AuthenticationServiceImp implements AuthenticationService{
     }
 
     @Override
-    public User me() {
+    public UserResponse me() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
-        return currentUser;
+        return modelMapper.map(currentUser, UserResponse.class);
     }
 
     private AuthenticationResponse generateToken(User user){

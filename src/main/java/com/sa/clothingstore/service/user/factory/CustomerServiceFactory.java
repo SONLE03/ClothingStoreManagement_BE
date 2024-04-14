@@ -12,6 +12,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class CustomerServiceFactory extends UserServiceFactory{
     private final AddressRepository addressRepository;
@@ -20,24 +22,16 @@ public class CustomerServiceFactory extends UserServiceFactory{
         super(passwordEncoder, imageRepository, userDetailService, userRepository);
         this.addressRepository = addressRepository;
     }
-    private Address createAddress(UserRequest userRequest){
-        Address address = Address.builder()
-                .specificAddress(userRequest.getSpecificAddress())
-                .ward(userRequest.getWard())
-                .province(userRequest.getProvince())
-                .district(userRequest.getDistrict())
-                .postalCode(userRequest.getPostalCode())
-                .build();
-        return addressRepository.save(address);
-    }
     @Override
     @Transactional
     protected User createUser(User user, UserRequest userRequest) {
-        return new Customer(user, createAddress(userRequest));
+        return new Customer(user);
     }
     @Override
     @Transactional
     protected User updateUser(User user, UserRequest userRequest) {
-        return new Customer(user);
+        return user;
     }
+    @Override
+    protected List<User> getAllUsersByRole(Integer role) { return getAllUsers(role); }
 }

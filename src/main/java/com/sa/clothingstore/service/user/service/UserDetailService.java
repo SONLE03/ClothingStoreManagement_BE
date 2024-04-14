@@ -1,9 +1,9 @@
 package com.sa.clothingstore.service.user.service;
 
-import com.sa.clothingstore.dto.response.user.UserResponse;
+import com.sa.clothingstore.dto.request.user.ChangePasswordRequest;
+import com.sa.clothingstore.model.user.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.security.Principal;
 import java.util.UUID;
 
 public interface UserDetailService {
@@ -14,6 +14,8 @@ public interface UserDetailService {
     String getUsernameLogin();
 
     Integer getRoleLogin();
-    UserResponse getProfile(UUID userId);
-    void changePassword(String oldPassword, String newPassword, Principal connectedUser);
+    Integer getRoleById(UUID userId);
+    User getProfile(UUID userId);
+    String verifyOtp(Integer otp, String email);
+    String changePassword(ChangePasswordRequest changePasswordRequest, String email);
 }

@@ -22,6 +22,5 @@ public class RegisterRequest {
     @NotEmpty(message = "Missing user full name")
     private String fullname;
     @NotEmpty(message = "Missing password")
-    @Min(value = 8, message = "Password must be at least 8 characters")
     private String password;
 }

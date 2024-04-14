@@ -1,11 +1,9 @@
 package com.sa.clothingstore.model.user.customer;
 
-import com.sa.clothingstore.model.user.customer.CustomerAddress;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -21,6 +19,8 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
     private UUID id;
+    @Column(name = "phone")
+    private String phone;
     @Column(name = "province")
     private String province;
     @Column(name = "district")
@@ -31,7 +31,9 @@ public class Address {
     private String specificAddress;
     @Column(name = "postal_code")
     private String postalCode;
-
-    @OneToMany(mappedBy = "address")
-    Set<CustomerAddress> customerAddressSet;
+    @Column(name = "is_default")
+    private boolean isDefault;
+    @ManyToOne
+    @JoinColumn(name = "customer")
+    private Customer customer;
 }

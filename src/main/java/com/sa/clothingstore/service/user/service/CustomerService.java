@@ -7,5 +7,6 @@ import java.util.UUID;
 
 
 public interface CustomerService extends UserService {
-    AddressResponse createOtherAddress(UUID userId, AddressRequest addressRequest);
+    void createAddress(UUID userId, AddressRequest addressRequest);
+    void updateAddress(UUID addressId, AddressRequest addressRequest);
 }
