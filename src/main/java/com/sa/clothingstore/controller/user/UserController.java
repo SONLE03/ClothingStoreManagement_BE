@@ -57,10 +57,11 @@ public class UserController {
     public String verifyOtp(@PathVariable Integer otp, @PathVariable String email){
         return userDetailService.verifyOtp(otp, email);
     }
-    @PostMapping(APIConstant.CREATEUSER)
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public String createUser(@RequestBody @Valid UserRequest userRequest, @PathVariable Integer role){
-        roleToServiceMap.get(role).createUser(userRequest, Role.convertIntegerToRole(role));
+    public String createUser(@RequestBody @Valid UserRequest userRequest){
+        int userRole = userRequest.getRole();
+        roleToServiceMap.get(userRole).createUser(userRequest, Role.convertIntegerToRole(userRole));
         return "User created successfully";
     }
     @PutMapping(APIConstant.USER_ID)

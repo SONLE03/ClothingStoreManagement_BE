@@ -1,11 +1,13 @@
 package com.sa.clothingstore.controller.attribute;
 
+import com.sa.clothingstore.constant.APIConstant;
 import com.sa.clothingstore.dto.request.attribute.ImageRequest;
 import com.sa.clothingstore.model.attribute.Image;
 import com.sa.clothingstore.service.attribute.image.ImageService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/image")
+@RequestMapping(APIConstant.IMAGES)
 public class ImageController {
     private final ImageService imageService;
     @GetMapping
@@ -23,22 +25,21 @@ public class ImageController {
         return imageService.getAllImage();
     }
     @PostMapping
-    public void createImage(@RequestBody @Valid ImageRequest imageRequest, HttpServletResponse response) throws IOException {
+    @ResponseStatus(HttpStatus.CREATED)
+    public String createImage(@RequestBody @Valid ImageRequest imageRequest) {
         imageService.createImage(imageRequest);
-        response.setStatus(201);
-        response.getWriter().write("Image was created successfully");
-        response.flushBuffer();
+        return "Image was created successfully";
     }
-    @PutMapping(path = "{id}")
-    public void modifyImage(@PathVariable UUID id, @RequestBody @Valid ImageRequest imageRequest, HttpServletResponse response) throws IOException{
+    @PutMapping(APIConstant.IMAGE_ID)
+    @ResponseStatus(HttpStatus.OK)
+    public String modifyImage(@PathVariable UUID id, @RequestBody @Valid ImageRequest imageRequest) {
         imageService.modifyImage(id, imageRequest);
-        response.getWriter().write("Size was created successfully");
-        response.flushBuffer();
+        return "Size was created successfully";
     }
     @DeleteMapping(path = "{id}")
-    public void deleteImage(@PathVariable UUID id, HttpServletResponse response) throws IOException{
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteImage(@PathVariable UUID id) {
         imageService.deleteImage(id);
-        response.getWriter().write("Size was created successfully");
-        response.flushBuffer();
+        return "Size was created successfully";
     }
 }

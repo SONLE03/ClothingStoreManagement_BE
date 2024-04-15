@@ -1,11 +1,13 @@
 package com.sa.clothingstore.controller.attribute;
 
+import com.sa.clothingstore.constant.APIConstant;
 import com.sa.clothingstore.dto.request.attribute.ColorRequest;
 import com.sa.clothingstore.model.attribute.Color;
 import com.sa.clothingstore.service.attribute.color.ColorService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/color")
+@RequestMapping(APIConstant.COLORS)
 public class ColorController {
     private final ColorService colorService;
     @GetMapping
@@ -23,22 +25,21 @@ public class ColorController {
         return colorService.getAllColor();
     }
     @PostMapping
-    public void createColor(@RequestBody @Valid ColorRequest colorRequest, HttpServletResponse response) throws IOException {
+    @ResponseStatus(HttpStatus.CREATED)
+    public String createColor(@RequestBody @Valid ColorRequest colorRequest) {
         colorService.createColor(colorRequest);
-        response.setStatus(201);
-        response.getWriter().write("Color was created successfully");
-        response.flushBuffer();
+        return "Color was created successfully";
     }
-    @PutMapping(path = "{id}")
-    public void modifyColor(@PathVariable Integer id, @RequestBody @Valid ColorRequest colorRequest, HttpServletResponse response) throws IOException{
+    @PutMapping(APIConstant.COLOR_ID)
+    @ResponseStatus(HttpStatus.OK)
+    public String modifyColor(@PathVariable Integer id, @RequestBody @Valid ColorRequest colorRequest) {
         colorService.modifyColor(id, colorRequest);
-        response.getWriter().write("Color was modified successfully");
-        response.flushBuffer();
+        return "Color was modified successfully";
     }
-    @DeleteMapping(path = "{id}")
-    public void deleteColor(@PathVariable Integer id, HttpServletResponse response) throws IOException{
+    @DeleteMapping(APIConstant.COLOR_ID)
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteColor(@PathVariable Integer id) {
         colorService.deleteColor(id);
-        response.getWriter().write("Color was deleted successfully");
-        response.flushBuffer();
+        return "Color was deleted successfully";
     }
 }

@@ -1,5 +1,6 @@
 package com.sa.clothingstore.controller.category;
 
+import com.sa.clothingstore.constant.APIConstant;
 import com.sa.clothingstore.dto.request.category.BranchRequest;
 import com.sa.clothingstore.model.category.Branch;
 import com.sa.clothingstore.model.user.User;
@@ -7,6 +8,7 @@ import com.sa.clothingstore.service.category.branch.BranchService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,30 +18,29 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/branch")
+@RequestMapping(APIConstant.BRANCHS)
 public class BranchController {
     private final BranchService branchService;
     @GetMapping
     public List<Branch> getAll() {
         return branchService.getAllBranch();
     }
-    @PostMapping
-    public void createBranch(@RequestBody @Valid BranchRequest branchRequest, HttpServletResponse response) throws IOException {
+    @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
+    public String createBranch(@RequestBody @Valid BranchRequest branchRequest) {
         branchService.createBranch(branchRequest);
-        response.setStatus(201);
-        response.getWriter().write("Branch was created successfully");
-        response.flushBuffer();
+        return "Branch was created successfully";
     }
-    @PutMapping(path = "{id}")
-    public void modifyBranch(@PathVariable UUID id, @RequestBody @Valid BranchRequest branchRequest, HttpServletResponse response) throws IOException{
+    @PutMapping(APIConstant.BRANCH_ID)
+    @ResponseStatus(HttpStatus.OK)
+    public String modifyBranch(@PathVariable UUID id, @RequestBody @Valid BranchRequest branchRequest){
         branchService.modifyBranch(id, branchRequest);
-        response.getWriter().write("Branch was modified successfully");
-        response.flushBuffer();
+        return "Branch was modified successfully";
     }
-    @DeleteMapping(path = "{id}")
-    public void deleteBranch(@PathVariable UUID id, HttpServletResponse response) throws IOException{
+    @DeleteMapping(APIConstant.BRANCH_ID)
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteBranch(@PathVariable UUID id){
         branchService.deleteBranch(id);
-        response.getWriter().write("Branch was delete successfully");
-        response.flushBuffer();
+        return "Branch was delete successfully";
     }
 }

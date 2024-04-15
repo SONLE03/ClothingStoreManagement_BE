@@ -8,7 +8,9 @@ import com.sa.clothingstore.model.category.ProductGender;
 import com.sa.clothingstore.repository.category.CategoryRepository;
 import com.sa.clothingstore.repository.category.ProductGenderRepository;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +21,7 @@ import java.util.UUID;
 public class CategoryServiceImp implements CategoryService{
     private final CategoryRepository categoryRepository;
     private final ProductGenderRepository productGenderRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public List<Category> getAllCategory() {
@@ -30,18 +33,36 @@ public class CategoryServiceImp implements CategoryService{
         if(!productGenderRepository.existsById(categoryRequest.getProductGender())){
             new ObjectNotFoundException("Product gender not found");
         }
-        Optional<ProductGender> productGender = productGenderRepository.findById(categoryRequest.getProductGender());
-
-        return null;
+        var productGender = productGenderRepository.getById(categoryRequest.getProductGender());
+        Category category = Category.builder()
+                .name(categoryRequest.getName())
+                .productGender(productGender)
+                .build();
+        categoryRepository.save(category);
+        return modelMapper.map(category, CategoryResponse.class);
     }
 
     @Override
-    public Category modifyCategory(UUID id, CategoryRequest categoryRequest) {
-        return null;
+    public Category modifyCategory(UUID categoryId, CategoryRequest categoryRequest) {
+        if(!categoryRepository.existsById(categoryId)){
+            new ObjectNotFoundException("Category not found");
+        }
+        if(!productGenderRepository.existsById(categoryRequest.getProductGender())){
+            new ObjectNotFoundException("Product gender not found");
+        }
+        var productGender = productGenderRepository.getById(categoryRequest.getProductGender());
+        Category category = categoryRepository.getById(categoryId);
+        category.setName(categoryRequest.getName());
+        category.setProductGender(productGender);
+        categoryRepository.save(category);
+        return category;
     }
 
     @Override
-    public void deleteCategory(UUID id) {
-
+    public void deleteCategory(UUID categoryId) {
+        if(!categoryRepository.existsById(categoryId)){
+            new ObjectNotFoundException("Category not found");
+        }
+        categoryRepository.deleteById(categoryId);
     }
 }

@@ -26,9 +26,12 @@ public class UserRequest{
     @NotEmpty(message = "Missing password")
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$", message = "Password must contain at least one digit, one lowercase letter, one uppercase letter")
     private String password;
-    @Min(value = 0, message = "Role must be at least 0")
-    @Max(value = 1, message = "Role must be at most 1")
+    @Min(value = 0, message = "Value must be at least 0")
+    @Max(value = 1, message = "Value must be at most 1")
     private int enable;
+    @Min(value = 0, message = "Role must be at least 0")
+    @Max(value = 2, message = "Role must be at most 2")
+    private int role;
     private Date dateOfBirth;
     private String image;
 }
