@@ -1,5 +1,6 @@
 package com.sa.clothingstore.controller.attribute;
 
+import com.sa.clothingstore.constant.APIConstant;
 import com.sa.clothingstore.dto.request.attribute.SizeRequest;
 import com.sa.clothingstore.model.attribute.Color;
 import com.sa.clothingstore.model.attribute.Size;
@@ -7,6 +8,7 @@ import com.sa.clothingstore.service.attribute.size.SizeService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/size")
+@RequestMapping(APIConstant.SIZES)
 public class SizeController {
     private final SizeService sizeService;
     @GetMapping
@@ -23,22 +25,21 @@ public class SizeController {
         return sizeService.getAllSize();
     }
     @PostMapping
-    public void createSize(@RequestBody @Valid SizeRequest SizeRequest, HttpServletResponse response) throws IOException {
+    @ResponseStatus(HttpStatus.OK)
+    public String createSize(@RequestBody @Valid SizeRequest SizeRequest)  {
         sizeService.createSize(SizeRequest);
-        response.setStatus(201);
-        response.getWriter().write("Size was created successfully");
-        response.flushBuffer();
+        return "Size was created successfully";
     }
-    @PutMapping(path = "{id}")
-    public void modifySize(@PathVariable Integer id, @RequestBody @Valid SizeRequest SizeRequest, HttpServletResponse response) throws IOException{
+    @PutMapping(APIConstant.SIZE_ID)
+    @ResponseStatus(HttpStatus.OK)
+    public String modifySize(@PathVariable Integer id, @RequestBody @Valid SizeRequest SizeRequest){
         sizeService.modifySize(id, SizeRequest);
-        response.getWriter().write("Size was modified successfully");
-        response.flushBuffer();
+        return "Size was modified successfully";
     }
-    @DeleteMapping(path = "{id}")
-    public void deleteSize(@PathVariable Integer id, HttpServletResponse response) throws IOException{
+    @DeleteMapping(APIConstant.SIZE_ID)
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteSize(@PathVariable Integer id) {
         sizeService.deleteSize(id);
-        response.getWriter().write("Size was deleted successfully");
-        response.flushBuffer();
+        return "Size was deleted successfully";
     }
 }

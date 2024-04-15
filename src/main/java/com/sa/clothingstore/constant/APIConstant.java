@@ -20,13 +20,35 @@ public class APIConstant {
     public static final String GETALL = "/all/{role}";
     public static final String CREATEADDRESS = "/{userId}/address";
     public static final String UPDATEADDRESS = "/{addressId}";
-    public static final String CREATEUSER = "/{role}";
     public static final String VERIFYOTP = "verifyOtp/{otp}/{email}";
     public static final String CHANGEPASSWORD = "/changePassword/{email}";
 
     // Email Routes
-
     public static final String EMAIL = VERSION + "/email";
     public static final String SENDOTP = "/verifyEmail/{email}";
+
+    // Branch Routes
+    public static final String BRANCHS = VERSION + "/branch";
+    public static final String BRANCH_ID = "/{branchId}";
+
+    // Product Gender Routes
+    public static final String PRODUCTGENDERS = VERSION + "/productGender";
+    public static final String PRODUCTGENDER_ID = "/{productGenderId}";
+
+    // Category Routes
+    public static final String CATEGORIES = VERSION + "/category";
+    public static final String CATEGORY_ID = "/{categoryId}";
+
+    // Image Routes
+    public static final String IMAGES = VERSION + "/image";
+    public static final String IMAGE_ID = "/{imageId}";
+
+    // Color Routes
+    public static final String COLORS = VERSION + "/color";
+    public static final String COLOR_ID = "/{colorId}";
+
+    // Size Routes
+    public static final String SIZES = VERSION + "/size";
+    public static final String SIZE_ID = "/{sizeId}";
 
 }
