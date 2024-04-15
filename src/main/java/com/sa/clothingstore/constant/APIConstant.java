@@ -49,6 +49,6 @@ public class APIConstant {
 
     // Size Routes
     public static final String SIZES = VERSION + "/size";
-    public static final String SIZE_ID = "/{sizeId}";
+    public static final String SIZE_ID = "/{}";
 
 }
