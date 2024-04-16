@@ -12,6 +12,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductGenderResponse {
-    private Integer id;
+    private UUID id;
     private String name;
 }

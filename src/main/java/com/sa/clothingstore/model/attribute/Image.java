@@ -24,11 +24,7 @@ public class Image {
     private UUID id;
     @Column(name = "url")
     private String url;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "product_image",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "image_id")
-    )
-    private List<Product> products;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 }

@@ -1,6 +1,7 @@
 package com.sa.clothingstore.dto.request.category;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,6 @@ import java.util.UUID;
 public class CategoryRequest {
     @NotEmpty(message = "Missing category name")
     private String name;
-    @NotEmpty(message = "Missing product gender")
+    @NotNull(message = "Missing product gender")
     private UUID productGender;
 }
