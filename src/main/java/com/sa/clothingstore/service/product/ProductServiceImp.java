@@ -48,7 +48,10 @@ public class ProductServiceImp implements ProductService{
     public List<Product> getAllProduct() {
         return productRepository.findAll();
     }
-
+    @Override
+    public List<ProductItem> getDetailProduct(UUID productId) {
+        return productItemRepository.getProductItemByProduct(productId);
+    }
     @Override
     @Transactional
     public void createProduct(ProductRequest productRequest) {

@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.math.BigDecimal;
 @Getter
 @Setter
 @AllArgsConstructor
@@ -28,4 +29,9 @@ public class ImportItem {
     private ProductItem productItem;
     @Column(name = "quantity")
     private Integer quantity;
+    @Column(name = "price")
+    private BigDecimal price;
+    @Column(name = "total")
+    private BigDecimal total;
+
 }

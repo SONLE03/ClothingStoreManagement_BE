@@ -3,6 +3,7 @@ package com.sa.clothingstore.controller.product;
 import com.sa.clothingstore.constant.APIConstant;
 import com.sa.clothingstore.dto.request.product.ProductRequest;
 import com.sa.clothingstore.model.product.Product;
+import com.sa.clothingstore.model.product.ProductItem;
 import com.sa.clothingstore.service.product.ProductService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,10 @@ public class ProductController {
     @GetMapping
     public List<Product> getAllProduct(){
         return productService.getAllProduct();
+    }
+    @GetMapping(APIConstant.PRODUCT_ID)
+    public List<ProductItem> getDetailProduct(@PathVariable UUID productId){
+        return productService.getDetailProduct(productId);
     }
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)

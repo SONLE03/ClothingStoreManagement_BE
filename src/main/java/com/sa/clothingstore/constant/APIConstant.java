@@ -55,5 +55,7 @@ public class APIConstant {
     public static final String PRODUCTS = VERSION + "/products";
     public static final String PRODUCT_ID = "/{productId}";
 
-
+    // Import routes
+    public static final String IMPORTS = VERSION + "/imports";
+    public static final String IMPORT_ID = "/{import}";
 }
