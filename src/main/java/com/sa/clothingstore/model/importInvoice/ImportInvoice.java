@@ -7,6 +7,8 @@ import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -27,5 +29,5 @@ public class ImportInvoice extends CommonModel {
     private BigDecimal total;
 
     @OneToMany(mappedBy = "importInvoice")
-    Set<ImportItem> importItems;
+    List<ImportItem> importItems = new ArrayList<>();;
 }

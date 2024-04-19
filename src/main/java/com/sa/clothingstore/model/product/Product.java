@@ -5,6 +5,7 @@ import com.sa.clothingstore.model.category.Branch;
 import com.sa.clothingstore.model.category.Category;
 import com.sa.clothingstore.model.event.Promotion;
 import com.sa.clothingstore.model.attribute.Image;
+import com.sa.clothingstore.model.order.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -38,9 +39,10 @@ public class Product extends CommonModel {
     @ManyToOne
     @JoinColumn(name = "branch_id")
     private Branch branch;
-    @ManyToMany(mappedBy = "products")
-    private List<Image> imageList;
 
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private ProductStatus productStatus;
     @ManyToMany(mappedBy = "products")
     private List<Promotion> promotions;
 }

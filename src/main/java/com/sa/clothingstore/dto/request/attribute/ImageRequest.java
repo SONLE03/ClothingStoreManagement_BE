@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
