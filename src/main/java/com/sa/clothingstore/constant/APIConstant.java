@@ -57,10 +57,15 @@ public class APIConstant {
 
     // Import routes
     public static final String IMPORTS = VERSION + "/imports";
-    public static final String IMPORT_ID = "/{import}";
+    public static final String IMPORT_ID = "/{importId}";
 
     // Coupon
     public static final String COUPONS = VERSION + "/coupons";
     public static final String COUPON_ID = "couponId/{couponId}";
     public static final String COUPON_STATUS = "status/{status}";
+
+    //Cart
+    public static final String CARTS = VERSION + "/carts";
+    public static final String CART_ID = "/{customerId}";
+
 }

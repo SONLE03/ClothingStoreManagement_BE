@@ -2,6 +2,7 @@ package com.sa.clothingstore.service.user.impl;
 
 import com.sa.clothingstore.dto.request.user.ChangePasswordRequest;
 import com.sa.clothingstore.dto.response.user.UserResponse;
+import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.exception.OtpException;
 import com.sa.clothingstore.exception.PasswordException;
 import com.sa.clothingstore.model.user.ForgotPassword;
@@ -73,7 +74,10 @@ public class UserDetailServiceImp implements UserDetailService {
 
     @Override
     public User getProfile(UUID userId) {
-        return userRepository.getById(userId);
+        if(!userRepository.existsById(userId)){
+            new ObjectNotFoundException("User not found");
+        }
+        return userRepository.getUserDetail(userId);
     }
 
     @Override

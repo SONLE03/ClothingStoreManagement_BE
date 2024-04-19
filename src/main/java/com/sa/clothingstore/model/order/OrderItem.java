@@ -1,7 +1,5 @@
 package com.sa.clothingstore.model.order;
 
-import com.sa.clothingstore.model.cart.Cart;
-import com.sa.clothingstore.model.cart.CartItemKey;
 import com.sa.clothingstore.model.product.ProductItem;
 import jakarta.persistence.*;
 import lombok.*;

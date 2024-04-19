@@ -41,7 +41,7 @@ public class CouponServiceImp implements CouponService{
     @Override
     public CouponResponse getCouponById(UUID couponId) {
         if(!couponRepository.existsById(couponId)){
-            new ObjectNotFoundException("Coupon not found");
+            throw new ObjectNotFoundException("Coupon not found");
         }
         return modelMapper.map(couponRepository.getById(couponId), CouponResponse.class);
     }

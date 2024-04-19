@@ -1,4 +1,26 @@
 package com.sa.clothingstore.dto.response.product;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sa.clothingstore.model.category.Branch;
+import com.sa.clothingstore.model.category.Category;
+import com.sa.clothingstore.model.product.ProductStatus;
+
+import java.math.BigDecimal;
+import java.util.UUID;
+
 public class ProductResponse {
+    @JsonProperty
+    private UUID id;
+    @JsonProperty
+    private String product_Name;
+    @JsonProperty
+    private String description;
+    @JsonProperty
+    private BigDecimal price;
+    @JsonProperty
+    private Category category;
+    @JsonProperty
+    private Branch branch;
+    @JsonProperty
+    private ProductStatus productStatus;
 }
