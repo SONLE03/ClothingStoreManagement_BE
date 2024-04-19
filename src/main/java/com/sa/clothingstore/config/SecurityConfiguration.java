@@ -44,6 +44,7 @@ public class SecurityConfiguration {
                             .requestMatchers(APIConstant.AUTH + "/**").permitAll()
                             .requestMatchers(APIConstant.EMAIL + "/**").permitAll()
                             .requestMatchers(APIConstant.PRODUCTS + "/**").permitAll()
+                            .requestMatchers(APIConstant.COUPONS + "/**").permitAll()
                             .anyRequest()
                             .authenticated()
                     )

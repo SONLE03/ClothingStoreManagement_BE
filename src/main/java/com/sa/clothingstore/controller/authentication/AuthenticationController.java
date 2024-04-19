@@ -56,12 +56,11 @@ public class AuthenticationController {
             .header(HttpHeaders.SET_COOKIE, cookieResponse.getAccessCookie().toString())
             .header(HttpHeaders.SET_COOKIE, cookieResponse.getRefreshCookie().toString())
             .body("You've been signed out!");
-
     }
     @PostMapping(APIConstant.REFRESH_TOKEN)
     public ResponseEntity<?> refreshToken(HttpServletRequest httpServletRequest){
         String refreshToken = jwtService.getJwtRefreshFromCookies(httpServletRequest);
-
+        System.out.println(refreshToken);
         if ((refreshToken != null) && (refreshToken.length() > 0)) {
             return refreshTokenService.findByToken(refreshToken)
                     .map(refreshTokenService::verifyExpiration)
