@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.autoconfigure.data.RepositoryType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -55,6 +56,8 @@ public class ProductServiceImp implements ProductService{
     @Override
     @Transactional
     public void createProduct(ProductRequest productRequest) {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         if(!categoryRepository.existsById(productRequest.getCategory()))
             new ObjectNotFoundException("Category not found");
         if(!branchRepository.existsById(productRequest.getBranch()))
@@ -95,6 +98,8 @@ public class ProductServiceImp implements ProductService{
             );
         });
         product.setCommonCreate(userDetailService.getIdLogin());
+        stopWatch.stop();
+        System.out.println(stopWatch.getTotalTimeMillis() + "ms");
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.sa.clothingstore.model.user.User;
 import com.sa.clothingstore.service.token.JwtService;
 import com.sa.clothingstore.service.authentication.AuthenticationService;
 import com.sa.clothingstore.service.token.RefreshTokenService;
+import com.sa.clothingstore.service.user.service.UserDetailService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
+    private final UserDetailService userDetailService;
     @GetMapping(APIConstant.AUTH_ME)
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)

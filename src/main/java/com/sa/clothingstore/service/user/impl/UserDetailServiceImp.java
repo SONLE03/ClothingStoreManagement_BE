@@ -10,8 +10,10 @@ import com.sa.clothingstore.model.user.User;
 import com.sa.clothingstore.repository.user.ForgotPasswordRepository;
 import com.sa.clothingstore.repository.user.UserRepository;
 import com.sa.clothingstore.service.user.service.UserDetailService;
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,6 +31,22 @@ public class UserDetailServiceImp implements UserDetailService {
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
     private final ForgotPasswordRepository forgotPasswordRepository;
+    @PostConstruct
+    private User getUserLogin(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof User) {
+            User currentUser = (User) principal;
+            return currentUser;
+        } else {
+            // Handle the case where the principal is not a User object (e.g., String, UserDetails, etc.)
+            return null; // or throw an exception, depending on your requirements
+        }
+    }
     @Override
     public UserDetails userDetails() {
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -44,20 +62,34 @@ public class UserDetailServiceImp implements UserDetailService {
 
     @Override
     public UUID getIdLogin() {
-        UserDetails userDetails = userDetails();
-        if (userDetails == null) {
-            return null;
-        }
-        return ((User) userDetails).getId();
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication == null || !authentication.isAuthenticated()) {
+//            return null;
+//        }
+//
+//        Object principal = authentication.getPrincipal();
+//        if (principal instanceof User) {
+//            User currentUser = (User) principal;
+//            return currentUser.getId();
+//        } else {
+//            // Handle the case where the principal is not a User object (e.g., String, UserDetails, etc.)
+//            return null; // or throw an exception, depending on your requirements
+//        }
+        var userLogin = getUserLogin();
+        if(userLogin == null) return null;
+        return userLogin.getId();
     }
 
     @Override
     public String getUsernameLogin() {
-        User userDetails = (User) userDetails();
-        if (userDetails == null) {
-            return null;
-        }
-        return userDetails.getUsername();
+//        User userDetails = (User) userDetails();
+//        if (userDetails == null) {
+//            return null;
+//        }
+//        return userDetails.getUsername();
+        var userLogin = getUserLogin();
+        if(userLogin == null) return null;
+        return userLogin.getEmail();
     }
     @Override
     public Integer getRoleById(UUID userId){
@@ -65,11 +97,14 @@ public class UserDetailServiceImp implements UserDetailService {
     }
     @Override
     public Integer getRoleLogin() {
-        User userDetails = (User) userDetails();
-        if (userDetails == null) {
-            return null;
-        }
-        return userDetails.getRole().ordinal();
+//        User userDetails = (User) userDetails();
+//        if (userDetails == null) {
+//            return null;
+//        }
+//        return userDetails.getRole().ordinal();
+        var userLogin = getUserLogin();
+        if(userLogin == null) return null;
+        return userLogin.getRole().ordinal();
     }
 
     @Override

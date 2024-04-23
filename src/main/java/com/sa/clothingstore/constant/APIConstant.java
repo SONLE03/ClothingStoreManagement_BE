@@ -68,4 +68,7 @@ public class APIConstant {
     public static final String CARTS = VERSION + "/carts";
     public static final String CART_ID = "/{customerId}";
 
+    //Order
+    public static final String ORDERS = VERSION + "/orders";
+    public static final String ORDER_ID = "/{orderId}";
 }
