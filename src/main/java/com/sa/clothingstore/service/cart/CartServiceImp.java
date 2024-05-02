@@ -1,6 +1,8 @@
 package com.sa.clothingstore.service.cart;
 
 import com.sa.clothingstore.dto.request.cart.CartRequest;
+import com.sa.clothingstore.dto.response.cart.CartResponse;
+import com.sa.clothingstore.dto.response.product.ProductItemResponse;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.cart.CartItem;
 import com.sa.clothingstore.model.cart.CartItemKey;
@@ -12,6 +14,7 @@ import com.sa.clothingstore.repository.user.customer.CustomerRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +28,15 @@ public class CartServiceImp implements CartService{
 
     @Override
     @Transactional
-    public List<CartItem> getProductInCart(UUID customerId) {
+    public List<CartResponse> getProductInCart(UUID customerId) {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new ObjectNotFoundException("Customer not found with ID: " + customerId));
-        return cartItemRepository.findByCustomer(customer);
+        List<CartResponse> list = cartItemRepository.findCartResponsesByCustomer(customer);
+        stopWatch.stop();
+        System.out.println(stopWatch.getTotalTimeMillis() + "ms");
+        return list;
     }
 
     @Override

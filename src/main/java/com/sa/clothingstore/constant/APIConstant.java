@@ -71,4 +71,8 @@ public class APIConstant {
     //Order
     public static final String ORDERS = VERSION + "/orders";
     public static final String ORDER_ID = "/{orderId}";
+
+    //Payment method
+    public static final String PAYMENTS = VERSION + "/payments";
+    public static final String PAYMENT_ID = "/{paymentId}";
 }

@@ -2,6 +2,7 @@ package com.sa.clothingstore.controller.cart;
 
 import com.sa.clothingstore.constant.APIConstant;
 import com.sa.clothingstore.dto.request.cart.CartRequest;
+import com.sa.clothingstore.dto.response.cart.CartResponse;
 import com.sa.clothingstore.model.cart.CartItem;
 import com.sa.clothingstore.service.cart.CartService;
 import jakarta.validation.Valid;
@@ -20,7 +21,7 @@ public class CartController {
 
     @GetMapping(APIConstant.CART_ID)
     @ResponseStatus(HttpStatus.OK)
-    public List<CartItem> getProductInCart(@PathVariable UUID customerId){
+    public List<CartResponse> getProductInCart(@PathVariable UUID customerId){
         return cartService.getProductInCart(customerId);
     }
     @PostMapping(APIConstant.CART_ID)

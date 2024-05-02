@@ -1,5 +1,6 @@
 package com.sa.clothingstore.dto.request.order;
 
+import com.sa.clothingstore.dto.request.cart.CartRequest;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -25,5 +26,7 @@ public class OrderRequest {
 //    @NotNull(message = "Missing payment method")
     private Integer paymentMethod;
     private String note;
-        private List<OrderItemRequest> items;
+    private List<CartRequest> items;
+
+    private Integer status;
 }

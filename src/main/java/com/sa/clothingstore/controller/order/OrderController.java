@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RequestMapping(APIConstant.ORDERS)
 @RestController
 @AllArgsConstructor
@@ -20,4 +22,22 @@ public class OrderController {
         orderService.createOrder(orderRequest);
         return "Order was created successfully";
     }
+    @PutMapping(APIConstant.ORDER_ID)
+    @ResponseStatus(HttpStatus.OK)
+    public String updateOrderStatus(@PathVariable UUID orderId, @RequestBody OrderRequest orderRequest){
+        return orderService.updateOrderStatus(orderId, orderRequest);
+    }
+//    @PutMapping(APIConstant.ORDER_ID)
+//    @ResponseStatus(HttpStatus.OK)
+//    public String updateOrderStatusToDelivered(@PathVariable UUID orderId){
+//        orderService.updateOrderStatusToDelivered(orderId);
+//        return "Order was delivered successfully";
+//    }
+//    @PutMapping(APIConstant.ORDER_ID)
+//    @ResponseStatus(HttpStatus.OK)
+//    public String updateOrderStatusToCompleted(@PathVariable UUID orderId){
+//        orderService.updateOrderStatusToCompleted(orderId);
+//        return "Order was completed successfully";
+//    }
+
 }

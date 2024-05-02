@@ -10,5 +10,6 @@ public interface OrderService {
     List<Order> getAllOrder();
     List<Order> getAllOrderByCustomer(UUID customerId);
     void createOrder(OrderRequest orderRequest);
-    void updateOrder(UUID orderId, OrderRequest orderRequest);
+    String updateOrderStatus(UUID orderId, OrderRequest orderRequest);
 }
+
