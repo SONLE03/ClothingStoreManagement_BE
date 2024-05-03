@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.*;
 
 @RequestMapping(APIConstant.USERS)
@@ -59,14 +60,14 @@ public class UserController {
     }
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public String createUser(@RequestBody @Valid UserRequest userRequest){
+    public String createUser(@RequestBody @Valid UserRequest userRequest) throws IOException {
         int userRole = userRequest.getRole();
         roleToServiceMap.get(userRole).createUser(userRequest, Role.convertIntegerToRole(userRole));
         return "User created successfully";
     }
     @PutMapping(APIConstant.USER_ID)
     @ResponseStatus(HttpStatus.OK)
-    public String updateUser(@PathVariable UUID userId, @RequestBody @Valid UserRequest userRequest){
+    public String updateUser(@PathVariable UUID userId, @RequestBody @Valid UserRequest userRequest) throws IOException {
         roleToServiceMap.get(userDetailService.getRoleById(userId)).updateUser(userId, userRequest);
         return "User modified successfully";
     }

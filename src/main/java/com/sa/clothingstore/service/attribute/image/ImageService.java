@@ -16,4 +16,6 @@ public interface ImageService {
     void deleteImage(UUID id);
     Image getById(UUID id);
     List<Image> getAllImage();
+
+    void addImage(Image image);
 }

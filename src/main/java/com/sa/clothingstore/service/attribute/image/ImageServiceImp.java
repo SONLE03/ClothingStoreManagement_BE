@@ -52,4 +52,9 @@ public class ImageServiceImp implements ImageService {
     public List<Image> getAllImage() {
         return imageRepository.findAll();
     }
+
+    @Override
+    public void addImage(Image image) {
+        imageRepository.save(image);
+    }
 }

@@ -1,5 +1,6 @@
 package com.sa.clothingstore.model.importInvoice;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sa.clothingstore.model.CommonModel;
 import com.sa.clothingstore.model.cart.CartItem;
 import jakarta.persistence.*;
@@ -28,6 +29,7 @@ public class ImportInvoice extends CommonModel {
     @Column(name = "total")
     private BigDecimal total;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "importInvoice")
     List<ImportItem> importItems = new ArrayList<>();;
 }

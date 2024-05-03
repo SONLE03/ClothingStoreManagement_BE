@@ -2,9 +2,12 @@ package com.sa.clothingstore.service.product;
 
 import com.sa.clothingstore.dto.request.product.ProductItemRequest;
 import com.sa.clothingstore.dto.request.product.ProductRequest;
+import com.sa.clothingstore.dto.response.product.ProductItemResponse;
 import com.sa.clothingstore.dto.response.product.ProductResponse;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.attribute.Image;
+import com.sa.clothingstore.model.category.Branch;
+import com.sa.clothingstore.model.category.Category;
 import com.sa.clothingstore.model.product.Product;
 import com.sa.clothingstore.model.product.ProductItem;
 import com.sa.clothingstore.model.product.ProductStatus;
@@ -18,16 +21,27 @@ import com.sa.clothingstore.repository.product.ProductRepository;
 import com.sa.clothingstore.service.user.impl.UserDetailServiceImp;
 import com.sa.clothingstore.service.user.service.UserDetailService;
 import com.sa.clothingstore.util.FileUpload;
+import com.sa.clothingstore.util.FileUploadImp;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.autoconfigure.data.RepositoryType;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
+import org.springframework.web.multipart.MultipartFile;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,50 +54,98 @@ public class ProductServiceImp implements ProductService{
     private final ColorRepository colorRepository;
     private final SizeRepository sizeRepository;
     private final UserDetailService userDetailService;
-
-    private final ModelMapper modelMapper;
-    private final FileUpload fileUpload;
+    private final FileUploadImp fileUploadImp;
 
     @Override
-    public List<Product> getAllProduct() {
-        return productRepository.findAll();
+    public List<ProductResponse> getAllProduct() {
+        List<Object[]> objects = productRepository.getAllProduct();
+
+        List<ProductResponse> productResponseList = new ArrayList<>();
+
+        for (Object[] objArray : objects) {
+            UUID id = (UUID) objArray[0];
+            String productName = (String) objArray[1];
+            BigDecimal   price = (BigDecimal) objArray[2];
+
+            ProductResponse productResponse = new ProductResponse();
+            productResponse.setId(id);
+            productResponse.setProduct_Name(productName);
+            productResponse.setPrice(price);
+
+            productResponseList.add(productResponse);
+        }
+        return productResponseList;
     }
     @Override
-    public List<ProductItem> getDetailProduct(UUID productId) {
-        return productItemRepository.getProductItemByProduct(productId);
+    public List<ProductItemResponse> getDetailProduct(UUID productId) {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        List<ProductItemResponse> list = productItemRepository.getDetailProduct(productId);
+        stopWatch.stop();
+        System.out.println(stopWatch.getTotalTimeMillis() + "ms");
+        return list;
     }
     @Override
     @Transactional
-    public void createProduct(ProductRequest productRequest) {
-        if(!categoryRepository.existsById(productRequest.getCategory()))
-            new ObjectNotFoundException("Category not found");
-        if(!branchRepository.existsById(productRequest.getBranch()))
-            new ObjectNotFoundException("Branch not found");
+    public void createProduct(List<MultipartFile> multipartFiles, ProductRequest productRequest) throws IOException {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        Category category = categoryRepository.getCategoryById(productRequest.getCategory());
 
+        if(category == null){ throw new ObjectNotFoundException("Category not found");}
+
+        Branch branch = branchRepository.getBranchById(productRequest.getBranch());
+        if(branch == null){
+            throw  new ObjectNotFoundException("Branch not found");
+        }
         // Flow: Product -> Product_Image -> Product_Item
         Product product = Product.builder()
                 .product_Name(productRequest.getProduct_Name())
                 .description(productRequest.getDescription())
                 .price(productRequest.getPrice())
-                .category(categoryRepository.getById(productRequest.getCategory()))
-                .branch(branchRepository.getById(productRequest.getBranch()))
-        // Change product status
+                .category(category)
+                .branch(branch)
+                // Change product status
                 .productStatus(ProductStatus.ACTIVE)
                 .build();
         productRepository.save(product);
-        productRequest.getImageRequests().forEach(image -> {
-            if(!image.getUrl().isEmpty()) {
+
+        ExecutorService executorService = Executors.newFixedThreadPool(multipartFiles.size());
+        List<Future<Map>> futures = new ArrayList<>();
+
+        for (MultipartFile multipartFile : multipartFiles) {
+            Future<Map> future = executorService.submit(() -> {
+                BufferedImage bi = ImageIO.read(multipartFile.getInputStream());
+                if (bi == null) {
+                    throw new ObjectNotFoundException("Image path not found");
+                }
+                return fileUploadImp.upload(multipartFile, "products");
+            });
+            futures.add(future);
+        }
+
+        for (int i = 0; i < multipartFiles.size(); i++) {
+            Future<Map> future = futures.get(i);
+            try {
+                Map result = future.get();
                 imageRepository.save(
                         Image.builder()
-                                .url(image.getUrl())
+                                .name((String) result.get("original_filename"))
+                                .url((String) result.get("url"))
                                 .product(product)
+                                .cloudinaryId((String) result.get("public_id"))
                                 .build()
                 );
+            } catch (Exception e) {
+                // Xử lý ngoại lệ khi có lỗi xảy ra trong tiến trình tải lên ảnh
             }
-        });
+        }
+
+        executorService.shutdown();
+
         productRequest.getProductItemRequests().forEach(item -> {
-            if(!sizeRepository.existsById(item.getSize()) || !colorRepository.existsById(item.getColor())){
-                new ObjectNotFoundException("Color or Size not found");
+            if (!sizeRepository.existsById(item.getSize()) || !colorRepository.existsById(item.getColor())){
+                throw new ObjectNotFoundException("Color or Size not found");
             }
             productItemRepository.save(
                     ProductItem.builder()
@@ -94,37 +156,76 @@ public class ProductServiceImp implements ProductService{
                             .build()
             );
         });
+
         product.setCommonCreate(userDetailService.getIdLogin());
+        stopWatch.stop();
+        System.out.println(stopWatch.getTotalTimeMillis() + "ms");
     }
 
     @Override
     @Transactional
-    public void updateProduct(UUID productId, ProductRequest productRequest) {
-        if(!productRepository.existsById(productId))
-            new ObjectNotFoundException("Product not found");
-        if(!categoryRepository.existsById(productRequest.getCategory()))
-            new ObjectNotFoundException("Category not found");
-        if(!branchRepository.existsById(productRequest.getBranch()))
-            new ObjectNotFoundException("Branch not found");
-        Product product = productRepository.getById(productId);
+    public void updateProduct(UUID productId, List<MultipartFile> multipartFiles, ProductRequest productRequest) throws IOException {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        Product product = productRepository.getProductById(productId);
+        if(product == null){
+            throw new ObjectNotFoundException("Product not found");
+        }
+        Category category = categoryRepository.getCategoryById(productRequest.getCategory());
+
+        if(category == null){ throw new ObjectNotFoundException("Category not found");}
+
+        Branch branch = branchRepository.getBranchById(productRequest.getBranch());
+        if(branch == null){
+            throw  new ObjectNotFoundException("Branch not found");
+        }
+
         product.setProduct_Name(productRequest.getProduct_Name());
         product.setPrice(productRequest.getPrice());
         product.setDescription(productRequest.getDescription());
-        product.setCategory(categoryRepository.getById(productRequest.getCategory()));
-        product.setBranch(branchRepository.getById(productRequest.getBranch()));
+        product.setCategory(category);
+        product.setBranch(branch);
         productRepository.save(product);
 
+        List<Image> imageList = imageRepository.getImageByProduct(product);
+        for(Image image : imageList){
+            fileUploadImp.delete(image.getCloudinaryId());
+        }
         imageRepository.deleteByProduct(product);
-        productRequest.getImageRequests().forEach(image -> {
-            if(!image.getUrl().isEmpty()) {
+
+        ExecutorService executorService = Executors.newFixedThreadPool(multipartFiles.size());
+        List<Future<Map>> futures = new ArrayList<>();
+
+        for (MultipartFile multipartFile : multipartFiles) {
+            Future<Map> future = executorService.submit(() -> {
+                BufferedImage bi = ImageIO.read(multipartFile.getInputStream());
+                if (bi == null) {
+                    throw new ObjectNotFoundException("Image path not found");
+                }
+                return fileUploadImp.upload(multipartFile, "products");
+            });
+            futures.add(future);
+        }
+
+        for (int i = 0; i < multipartFiles.size(); i++) {
+            Future<Map> future = futures.get(i);
+            try {
+                Map result = future.get();
                 imageRepository.save(
                         Image.builder()
-                                .url(image.getUrl())
+                                .name((String) result.get("original_filename"))
+                                .url((String) result.get("url"))
                                 .product(product)
+                                .cloudinaryId((String) result.get("public_id"))
                                 .build()
                 );
+            } catch (Exception e) {
+                // Xử lý ngoại lệ khi có lỗi xảy ra trong tiến trình tải lên ảnh
             }
-        });
+        }
+
+        executorService.shutdown();
+
         productRequest.getProductItemRequests().forEach(item -> {
             if(productItemRepository.getProductItemByProductAndAttribute(product, item.getSize(), item.getColor()) == null){
                 productItemRepository.save(
@@ -137,13 +238,19 @@ public class ProductServiceImp implements ProductService{
             }
         });
         product.setCommonUpdate(userDetailService.getIdLogin());
+        stopWatch.stop();
+        System.out.println(stopWatch.getTotalTimeMillis() + "ms");
     }
 
     @Override
     public void deleteProduct(UUID productId) {
-        if(!productRepository.existsById(productId)){
-            new ObjectNotFoundException("Product not found");
+        Product product = productRepository.getProductById(productId);
+        if(product == null){
+            throw new ObjectNotFoundException("Product not found");
         }
+        product.setProductStatus(ProductStatus.DELETED);
+        product.setCommonUpdate(userDetailService.getIdLogin());
+        productRepository.save(product);
 
     }
 }

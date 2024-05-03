@@ -8,6 +8,7 @@ import com.sa.clothingstore.model.user.staff.Staff;
 import com.sa.clothingstore.repository.attribute.ImageRepository;
 import com.sa.clothingstore.repository.user.UserRepository;
 import com.sa.clothingstore.service.user.service.UserDetailService;
+import com.sa.clothingstore.util.FileUploadImp;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -16,8 +17,8 @@ import java.util.List;
 
 @Component
 public class StaffServiceFactory extends UserServiceFactory{
-    public StaffServiceFactory(PasswordEncoder passwordEncoder, ImageRepository imageRepository, UserDetailService userDetailService, UserRepository userRepository) {
-        super(passwordEncoder, imageRepository, userDetailService, userRepository);
+    public StaffServiceFactory(PasswordEncoder passwordEncoder, ImageRepository imageRepository, UserDetailService userDetailService, UserRepository userRepository, FileUploadImp fileUploadImp) {
+        super(passwordEncoder, imageRepository, userDetailService, userRepository, fileUploadImp);
     }
     @Override
     @Transactional

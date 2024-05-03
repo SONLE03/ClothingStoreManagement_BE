@@ -7,6 +7,8 @@ import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.UUID;
 
 
 @Entity
@@ -19,12 +21,15 @@ import java.math.BigDecimal;
 @Table(name = "coupon")
 public class Coupon extends CommonModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
-    private Integer id;
-
+    private UUID id;
     @Column(name = "coupon_name")
     private String name;
+    @Column(name = "start_date")
+    private Date startDate;
+    @Column(name = "end_date")
+    private Date endDate;
     @Column(name = "discount_value")
     private BigDecimal discountValue;
     @Column(name = "minimum_bill")

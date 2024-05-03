@@ -1,5 +1,6 @@
 package com.sa.clothingstore.model.order;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sa.clothingstore.model.CommonModel;
 import com.sa.clothingstore.model.user.customer.Address;
 import com.sa.clothingstore.model.event.Coupon;
@@ -58,6 +59,7 @@ public class Order extends CommonModel {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "order")
     Set<OrderItem> orderItems;
 }

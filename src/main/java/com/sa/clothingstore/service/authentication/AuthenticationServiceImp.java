@@ -10,10 +10,14 @@ import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.user.RefreshToken;
 import com.sa.clothingstore.model.user.Role;
 import com.sa.clothingstore.model.user.User;
+import com.sa.clothingstore.model.user.customer.Customer;
 import com.sa.clothingstore.repository.user.UserRepository;
+import com.sa.clothingstore.repository.user.customer.CustomerRepository;
 import com.sa.clothingstore.service.token.JwtService;
 import com.sa.clothingstore.service.token.RefreshTokenService;
+import com.sa.clothingstore.service.user.service.UserDetailService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseCookie;
@@ -39,9 +43,11 @@ public class AuthenticationServiceImp implements AuthenticationService{
     private final RefreshTokenService refreshTokenService;
     private final ModelMapper modelMapper;
     private final AuthenticationManager authenticationManager;
-
+    private final UserDetailService userDetailService;
+    private final CustomerRepository customerRepository;
 
     @Override
+    @Transactional
     public User signup(RegisterRequest registerRequest) {
         userRepository.findByEmail(registerRequest.getEmail()).ifPresent(user -> {
             throw new ObjectAlreadyExistsException("Email already existed");
@@ -56,7 +62,10 @@ public class AuthenticationServiceImp implements AuthenticationService{
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setEnabled(true);
         user.setRole(Role.CUSTOMER);
-        return userRepository.save(user);
+        Customer customer = new Customer(user);
+        customer.setCommonCreate(userDetailService.getIdLogin());
+        customerRepository.save(customer);
+        return user;
     }
 
     @Override

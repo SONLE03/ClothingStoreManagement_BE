@@ -40,10 +40,13 @@ public class SecurityConfiguration {
             http.cors(withDefaults())
                     .csrf(cors -> cors.disable())
                     .authorizeHttpRequests(authorize -> authorize
+                            .requestMatchers("/**").permitAll()
                             .requestMatchers(APIConstant.VERSION + "/**").permitAll()
+                            .requestMatchers(APIConstant.USERS + "/**").permitAll()
                             .requestMatchers(APIConstant.AUTH + "/**").permitAll()
                             .requestMatchers(APIConstant.EMAIL + "/**").permitAll()
                             .requestMatchers(APIConstant.PRODUCTS + "/**").permitAll()
+                            .requestMatchers(APIConstant.COUPONS + "/**").permitAll()
                             .anyRequest()
                             .authenticated()
                     )
@@ -62,7 +65,7 @@ public class SecurityConfiguration {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOriginPatterns(List.of("*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "OPTIONS", "DELETE", "PUT"));
         configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type", "Accept"));
         configuration.setExposedHeaders(List.of("Authorization", "Content-Type"));

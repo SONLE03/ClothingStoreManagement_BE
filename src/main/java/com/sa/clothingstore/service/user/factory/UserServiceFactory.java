@@ -12,11 +12,16 @@ import com.sa.clothingstore.repository.user.UserRepository;
 import com.sa.clothingstore.repository.user.customer.AddressRepository;
 import com.sa.clothingstore.service.user.service.UserDetailService;
 import com.sa.clothingstore.service.user.service.UserService;
+import com.sa.clothingstore.util.FileUploadImp;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,13 +31,14 @@ public abstract class UserServiceFactory  {
     private final ImageRepository imageRepository;
     private final UserDetailService userDetailService;
     private final UserRepository userRepository;
+    private final FileUploadImp fileUploadImp;
     protected abstract User createUser(User user, UserRequest userRequest);
 
     protected abstract User updateUser(User user, UserRequest userRequest);
     protected abstract List<User> getAllUsersByRole(Integer role);
 
     @Transactional
-    public User create(UserRequest userRequest, Role role){
+    public User create(UserRequest userRequest, Role role) throws IOException {
         userRepository.findByEmail(userRequest.getEmail()).ifPresent(user -> {
             throw new ObjectAlreadyExistsException("Email already existed");
         });
@@ -49,16 +55,26 @@ public abstract class UserServiceFactory  {
                 .role(role)
                 .build();
         user.setCommonCreate(userDetailService.getIdLogin());
-        String imagePath = userRequest.getImage();
-        if(imagePath != null){
-            Image image = Image.builder().url(userRequest.getImage()).build();
+
+        var userImage = userRequest.getImage();
+        if(userImage != null){
+            BufferedImage bi = ImageIO.read(userImage.getInputStream());
+            if (bi == null) {
+                throw new ObjectNotFoundException("Image not found");
+            }
+            Map result = fileUploadImp.upload(userImage, "avatars");
+            Image image =  Image.builder()
+                    .name((String) result.get("original_filename"))
+                    .url((String) result.get("url"))
+                    .cloudinaryId((String) result.get("public_id"))
+                    .build();
             imageRepository.save(image);
             user.setImage(image);
         }
         return createUser(user, userRequest);
     }
 
-    public User update(UUID userId, UserRequest userRequest){
+    public User update(UUID userId, UserRequest userRequest) throws IOException {
         User user = userRepository.findById(userId).orElseThrow(() ->{
                 throw new ObjectNotFoundException("User not found");
             }
@@ -82,7 +98,23 @@ public abstract class UserServiceFactory  {
         user.setPhone(userRequest.getPhone());
         user.setDateOfBirth(userRequest.getDateOfBirth());
         user.setEnabled(userRequest.getEnable() == Status.ACTIVE.ordinal());
-        user.getImage().setUrl(userRequest.getImage());
+
+        var userImage = userRequest.getImage();
+        if(userImage != null){
+            fileUploadImp.delete(user.getImage().getCloudinaryId());
+            BufferedImage bi = ImageIO.read(userImage.getInputStream());
+            if (bi == null) {
+                throw new ObjectNotFoundException("Image not found");
+            }
+            Map result = fileUploadImp.upload(userImage, "avatars");
+            Image image =  Image.builder()
+                    .name((String) result.get("original_filename"))
+                    .url((String) result.get("url"))
+                    .cloudinaryId((String) result.get("public_id"))
+                    .build();
+            imageRepository.save(image);
+            user.setImage(image);
+        }
         user.setCommonUpdate(userDetailService.getIdLogin());
 
         return updateUser(user, userRequest);

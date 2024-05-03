@@ -11,7 +11,7 @@ public class APIConstant {
     public static final String LOGIN = "/login";
     public static final String LOGOUT = "/logout";
     public static final String SIGNUP = "/signup";
-    public static final String REFRESH_TOKEN = "/refresh-token";
+    public static final String REFRESH_TOKEN = "/refreshtoken";
     public static final String AUTH_ME = "/me";
 
     // Users Routes
@@ -57,5 +57,22 @@ public class APIConstant {
 
     // Import routes
     public static final String IMPORTS = VERSION + "/imports";
-    public static final String IMPORT_ID = "/{import}";
+    public static final String IMPORT_ID = "/{importId}";
+
+    // Coupon
+    public static final String COUPONS = VERSION + "/coupons";
+    public static final String COUPON_ID = "couponId/{couponId}";
+    public static final String COUPON_STATUS = "status/{status}";
+
+    //Cart
+    public static final String CARTS = VERSION + "/carts";
+    public static final String CART_ID = "/{customerId}";
+
+    //Order
+    public static final String ORDERS = VERSION + "/orders";
+    public static final String ORDER_ID = "/{orderId}";
+
+    //Payment method
+    public static final String PAYMENTS = VERSION + "/payments";
+    public static final String PAYMENT_ID = "/{paymentId}";
 }

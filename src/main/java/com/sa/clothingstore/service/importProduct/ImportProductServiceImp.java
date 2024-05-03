@@ -6,6 +6,7 @@ import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.importInvoice.ImportInvoice;
 import com.sa.clothingstore.model.importInvoice.ImportItem;
 import com.sa.clothingstore.model.importInvoice.ImportItemKey;
+import com.sa.clothingstore.model.product.ProductItem;
 import com.sa.clothingstore.repository.importInvoice.ImportInvoiceRepository;
 import com.sa.clothingstore.repository.importInvoice.ImportItemRepository;
 import com.sa.clothingstore.repository.product.ProductItemRepository;
@@ -13,6 +14,7 @@ import com.sa.clothingstore.service.user.service.UserDetailService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -27,16 +29,17 @@ public class ImportProductServiceImp implements ImportProductService{
 
     private final ImportInvoiceRepository importInvoiceRepository;
     private final ImportItemRepository importItemRepository;
+    private final ModelMapper modelMapper;
     @Override
     public List<ImportInvoice> getAllImport() {
         return importInvoiceRepository.findAll();
     }
 
     @Override
-    public ImportResponse getImportById(UUID importId) {
-        if(!importInvoiceRepository.existsById(importId))
-            new ObjectNotFoundException("Import not found");
-        return null;
+    public List<ImportItem> getImportById(UUID importId) {
+       ImportInvoice importInvoice = importInvoiceRepository.findById(importId)
+               .orElseThrow(() -> new ObjectNotFoundException("Import not found"));
+       return importItemRepository.findByImportInvoice(importInvoice);
     }
 
     @Override
@@ -56,13 +59,12 @@ public class ImportProductServiceImp implements ImportProductService{
             UUID productItemId = request.getProductItemId();
 
             // Check if the product exists
-            if (!productItemRepository.existsById(productItemId)) {
-                throw new ObjectNotFoundException("Product not found");
-            }
+            ProductItem productItem = productItemRepository.findById(productItemId)
+                    .orElseThrow(() -> new ObjectNotFoundException("ProductItem not found with ID: " + productItemId));
             // Trigger giá nhập < giá bán
             // Calculate total for each import request
             total = total.add(request.getTotal());
-
+            Integer quantity = request.getQuantity();
             // Create ImportItemKey
             ImportItemKey importItemKey = new ImportItemKey();
             importItemKey.setImportId(importInvoice.getId()); // Set importId from the saved ImportInvoice
@@ -72,12 +74,15 @@ public class ImportProductServiceImp implements ImportProductService{
             ImportItem importItem = new ImportItem();
             importItem.setId(importItemKey);
             importItem.setImportInvoice(importInvoice);
-            importItem.setProductItem(productItemRepository.getById(productItemId));
-            importItem.setQuantity(request.getQuantity());
+            importItem.setProductItem(productItem);
+            importItem.setQuantity(quantity);
             importItem.setPrice(request.getPrice());
             importItem.setTotal(request.getTotal());
 
             importItems.add(importItem);
+
+            productItem.setQuantity(quantity + productItem.getQuantity());
+            productItemRepository.save(productItem);
         }
 
         // Set total for ImportInvoice

@@ -1,5 +1,6 @@
 package com.sa.clothingstore.dto.response.attribute;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,8 @@ import java.util.UUID;
 @Getter
 @Setter
 public class ImageResponse {
+    @JsonProperty("id")
     private UUID id;
+    @JsonProperty("url")
     private String url;
 }

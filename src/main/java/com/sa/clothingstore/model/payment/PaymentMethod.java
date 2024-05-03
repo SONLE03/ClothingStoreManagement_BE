@@ -22,7 +22,7 @@ public class PaymentMethod extends CommonModel {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "image")
     private Image image;
     @Column(name = "name")

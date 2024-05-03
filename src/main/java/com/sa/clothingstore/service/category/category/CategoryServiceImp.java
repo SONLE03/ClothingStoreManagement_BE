@@ -7,6 +7,7 @@ import com.sa.clothingstore.model.category.Category;
 import com.sa.clothingstore.model.category.ProductGender;
 import com.sa.clothingstore.repository.category.CategoryRepository;
 import com.sa.clothingstore.repository.category.ProductGenderRepository;
+import com.sa.clothingstore.service.user.service.UserDetailService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class CategoryServiceImp implements CategoryService{
     private final CategoryRepository categoryRepository;
     private final ProductGenderRepository productGenderRepository;
     private final ModelMapper modelMapper;
+    private final UserDetailService userDetailService;
 
     @Override
     public List<Category> getAllCategory() {
@@ -38,6 +40,7 @@ public class CategoryServiceImp implements CategoryService{
                 .name(categoryRequest.getName())
                 .productGender(productGender)
                 .build();
+        category.setCommonCreate(userDetailService.getIdLogin());
         categoryRepository.save(category);
         return modelMapper.map(category, CategoryResponse.class);
     }
@@ -54,6 +57,7 @@ public class CategoryServiceImp implements CategoryService{
         Category category = categoryRepository.getById(categoryId);
         category.setName(categoryRequest.getName());
         category.setProductGender(productGender);
+        category.setCommonUpdate(userDetailService.getIdLogin());
         categoryRepository.save(category);
         return category;
     }

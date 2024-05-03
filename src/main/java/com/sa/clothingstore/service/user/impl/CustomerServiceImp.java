@@ -7,6 +7,7 @@ import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.user.Role;
 import com.sa.clothingstore.model.user.User;
 import com.sa.clothingstore.model.user.customer.Address;
+import com.sa.clothingstore.model.user.customer.Customer;
 import com.sa.clothingstore.repository.user.UserRepository;
 import com.sa.clothingstore.repository.user.customer.AddressRepository;
 import com.sa.clothingstore.repository.user.customer.CustomerRepository;
@@ -17,6 +18,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,22 +35,28 @@ public class CustomerServiceImp implements CustomerService {
         return customerServiceFactory.getAllUsers(role);
     }
     @Override
-    public void createUser(UserRequest userRequest, Role role) {
+    public void createUser(UserRequest userRequest, Role role) throws IOException {
         userRepository.save(customerServiceFactory.create(userRequest, role));
     }
 
     @Override
-    public void updateUser(UUID userId, UserRequest userRequest) {
+    public void updateUser(UUID userId, UserRequest userRequest) throws IOException {
         userRepository.save(customerServiceFactory.update(userId, userRequest));
     }
-
+    @Override
+    @Transactional
+    public List<Address> getAddressByCustomer(UUID customerId){
+        return null;
+    }
 
     @Override
     @Transactional
     public void createAddress(UUID userId, AddressRequest addressRequest) {
-        if(!customerRepository.existsById(userId)){
-            throw new ObjectNotFoundException("Customer not found");
-        }
+//        if(!customerRepository.existsById(userId)){
+//            throw new ObjectNotFoundException("Customer not found");
+//        }
+        Customer customer = customerRepository.findById(userId).orElseThrow(
+                () -> new ObjectNotFoundException("Customer not found"));
         Address address = Address.builder()
                 .postalCode(addressRequest.getPostalCode())
                 .ward(addressRequest.getWard())
@@ -57,9 +65,10 @@ public class CustomerServiceImp implements CustomerService {
                 .province(addressRequest.getProvince())
                 .phone(addressRequest.getPhone())
                 .isDefault(addressRequest.isDefault())
-                .id(userId)
+                .customer(customer)
                 .build();
         addressRepository.save(address);
+        System.out.println(address.getId());
     }
     @Override
     @Transactional

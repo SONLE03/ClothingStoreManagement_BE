@@ -4,6 +4,7 @@ import com.sa.clothingstore.constant.APIConstant;
 import com.sa.clothingstore.dto.request.importProduct.ImportRequest;
 import com.sa.clothingstore.dto.response.importProduct.ImportResponse;
 import com.sa.clothingstore.model.importInvoice.ImportInvoice;
+import com.sa.clothingstore.model.importInvoice.ImportItem;
 import com.sa.clothingstore.service.importProduct.ImportProductService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -25,7 +26,7 @@ public class ImportProductController {
     }
 
     @GetMapping(APIConstant.IMPORT_ID)
-    public ImportResponse getImportById(@PathVariable UUID importId){
+    public List<ImportItem> getImportById(@PathVariable UUID importId){
         return importService.getImportById(importId);
     }
     @PostMapping()

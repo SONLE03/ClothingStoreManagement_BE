@@ -1,10 +1,21 @@
 package com.sa.clothingstore.dto.response.importProduct;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
-
+@Getter
+@Setter
 public class ImportResponse {
-    @JsonProperty("importId")
-    private UUID importId;
+    @JsonProperty("id")
+    private UUID id;
+    @JsonProperty("total")
+    private BigDecimal total;
+
+    @JsonProperty("Product list")
+    List<ImportItemResponse> importItemResponseList;
 }
