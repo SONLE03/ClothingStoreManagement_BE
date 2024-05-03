@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -33,5 +34,5 @@ public class UserRequest{
     @Max(value = 2, message = "Role must be at most 2")
     private int role;
     private Date dateOfBirth;
-    private String image;
+    private MultipartFile image;
 }

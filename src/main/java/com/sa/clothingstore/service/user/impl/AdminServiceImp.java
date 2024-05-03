@@ -10,6 +10,7 @@ import com.sa.clothingstore.service.user.service.AdminService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,12 +26,12 @@ public class AdminServiceImp implements AdminService {
         return adminServiceFatory.getAllUsers(role);
     }
     @Override
-    public void createUser(UserRequest userRequest, Role role) {
+    public void createUser(UserRequest userRequest, Role role) throws IOException {
         userRepository.save(adminServiceFatory.create(userRequest, role));
     }
 
     @Override
-    public void updateUser(UUID userId, UserRequest userRequest) {
+    public void updateUser(UUID userId, UserRequest userRequest) throws IOException {
         userRepository.save(adminServiceFatory.update(userId, userRequest));
     }
 

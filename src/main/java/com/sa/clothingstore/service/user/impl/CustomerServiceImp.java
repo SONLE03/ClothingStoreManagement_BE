@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,12 +35,12 @@ public class CustomerServiceImp implements CustomerService {
         return customerServiceFactory.getAllUsers(role);
     }
     @Override
-    public void createUser(UserRequest userRequest, Role role) {
+    public void createUser(UserRequest userRequest, Role role) throws IOException {
         userRepository.save(customerServiceFactory.create(userRequest, role));
     }
 
     @Override
-    public void updateUser(UUID userId, UserRequest userRequest) {
+    public void updateUser(UUID userId, UserRequest userRequest) throws IOException {
         userRepository.save(customerServiceFactory.update(userId, userRequest));
     }
     @Override

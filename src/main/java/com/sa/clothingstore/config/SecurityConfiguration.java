@@ -40,6 +40,7 @@ public class SecurityConfiguration {
             http.cors(withDefaults())
                     .csrf(cors -> cors.disable())
                     .authorizeHttpRequests(authorize -> authorize
+                            .requestMatchers("/**").permitAll()
                             .requestMatchers(APIConstant.VERSION + "/**").permitAll()
                             .requestMatchers(APIConstant.USERS + "/**").permitAll()
                             .requestMatchers(APIConstant.AUTH + "/**").permitAll()

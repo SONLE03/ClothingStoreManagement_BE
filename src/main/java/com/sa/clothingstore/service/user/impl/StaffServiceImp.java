@@ -10,6 +10,7 @@ import com.sa.clothingstore.service.user.service.StaffService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,12 +26,12 @@ public class StaffServiceImp implements StaffService {
         return staffServiceFactory.getAllUsers(role);
     }
     @Override
-    public void createUser(UserRequest userRequest, Role role) {
+    public void createUser(UserRequest userRequest, Role role) throws IOException {
         userRepository.save(staffServiceFactory.create(userRequest, role));
     }
 
     @Override
-    public void updateUser(UUID userId, UserRequest userRequest) {
+    public void updateUser(UUID userId, UserRequest userRequest) throws IOException {
         userRepository.save(staffServiceFactory.update(userId, userRequest));
     }
 

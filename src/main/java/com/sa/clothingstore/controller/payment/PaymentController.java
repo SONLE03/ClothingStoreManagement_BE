@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RequestMapping(APIConstant.PAYMENTS)
 @RestController
 @AllArgsConstructor
@@ -16,13 +18,13 @@ public class PaymentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public String createPaymentMethod(@RequestBody @Valid PaymentRequest paymentRequest){
+    public String createPaymentMethod(@RequestBody @Valid PaymentRequest paymentRequest) throws IOException {
         paymentService.createPaymentMethod(paymentRequest);
         return "Payment method was created successfully";
     }
     @PutMapping(APIConstant.PAYMENT_ID)
     @ResponseStatus(HttpStatus.OK)
-    public String updatePaymentMethod(@PathVariable Integer paymentId, @RequestBody @Valid PaymentRequest paymentRequest){
+    public String updatePaymentMethod(@PathVariable Integer paymentId, @RequestBody @Valid PaymentRequest paymentRequest) throws IOException {
         paymentService.updatePaymentMethod(paymentId, paymentRequest);
         return "Payment method was modified successfully";
     }
