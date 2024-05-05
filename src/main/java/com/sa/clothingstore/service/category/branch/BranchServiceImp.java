@@ -1,7 +1,9 @@
 package com.sa.clothingstore.service.category.branch;
 
+import com.sa.clothingstore.constant.APIStatus;
 import com.sa.clothingstore.dto.request.category.BranchRequest;
 import com.sa.clothingstore.dto.response.category.BranchResponse;
+import com.sa.clothingstore.exception.BusinessException;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.category.Branch;
 import com.sa.clothingstore.repository.category.BranchRepository;
@@ -36,7 +38,7 @@ public class BranchServiceImp implements BranchService{
     @Override
     public Branch modifyBranch(UUID id, BranchRequest branchRequest) {
         Branch branch = branchRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("Branch not found")
+                .orElseThrow(() -> new BusinessException(APIStatus.BRANCH_NOT_FOUND)
         );
         branch.setName(branchRequest.getName());
         return branchRepository.save(branch);
@@ -45,7 +47,7 @@ public class BranchServiceImp implements BranchService{
     @Override
     public void deleteBranch(UUID id) {
         Branch branch = branchRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("Branch not found")
+                .orElseThrow(() -> new BusinessException(APIStatus.BRANCH_NOT_FOUND)
                 );
         branchRepository.delete(branch);
     }

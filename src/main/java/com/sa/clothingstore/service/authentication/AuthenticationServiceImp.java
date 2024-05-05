@@ -1,10 +1,12 @@
 package com.sa.clothingstore.service.authentication;
 
+import com.sa.clothingstore.constant.APIStatus;
 import com.sa.clothingstore.dto.request.authentication.AuthenticationRequest;
 import com.sa.clothingstore.dto.request.authentication.RegisterRequest;
 import com.sa.clothingstore.dto.response.authentication.AuthenticationResponse;
 import com.sa.clothingstore.dto.response.authentication.CookieResponse;
 import com.sa.clothingstore.dto.response.user.UserResponse;
+import com.sa.clothingstore.exception.BusinessException;
 import com.sa.clothingstore.exception.ObjectAlreadyExistsException;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.user.RefreshToken;
@@ -50,10 +52,10 @@ public class AuthenticationServiceImp implements AuthenticationService{
     @Transactional
     public User signup(RegisterRequest registerRequest) {
         userRepository.findByEmail(registerRequest.getEmail()).ifPresent(user -> {
-            throw new ObjectAlreadyExistsException("Email already existed");
+            throw new BusinessException(APIStatus.EMAIL_ALREADY_EXISTED);
         });
         userRepository.findByPhone(registerRequest.getPhone()).ifPresent(user -> {
-            throw new ObjectAlreadyExistsException("Phone already existed");
+            throw new BusinessException(APIStatus.PHONE_ALREADY_EXISTED);
         });
         User user = new User();
         user.setEmail(registerRequest.getEmail());
@@ -77,7 +79,7 @@ public class AuthenticationServiceImp implements AuthenticationService{
                 )
         );
        var user = userRepository.findByEmail(authenticationRequest.getUsername())
-               .orElseThrow(() -> new ObjectNotFoundException("User not found")
+               .orElseThrow(() -> new BusinessException(APIStatus.USER_NOT_FOUND)
                );
        return this.generateToken(user);
     }

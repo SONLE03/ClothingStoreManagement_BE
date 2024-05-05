@@ -1,7 +1,9 @@
 package com.sa.clothingstore.service.category.category;
 
+import com.sa.clothingstore.constant.APIStatus;
 import com.sa.clothingstore.dto.request.category.CategoryRequest;
 import com.sa.clothingstore.dto.response.category.CategoryResponse;
+import com.sa.clothingstore.exception.BusinessException;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.category.Category;
 import com.sa.clothingstore.model.category.ProductGender;
@@ -33,7 +35,7 @@ public class CategoryServiceImp implements CategoryService{
     @Override
     public CategoryResponse createCategory(CategoryRequest categoryRequest) {
         if(!productGenderRepository.existsById(categoryRequest.getProductGender())){
-            new ObjectNotFoundException("Product gender not found");
+            new BusinessException(APIStatus.PRODUCT_GENDER_NOT_FOUND);
         }
         var productGender = productGenderRepository.getById(categoryRequest.getProductGender());
         Category category = Category.builder()
@@ -48,10 +50,10 @@ public class CategoryServiceImp implements CategoryService{
     @Override
     public Category modifyCategory(UUID categoryId, CategoryRequest categoryRequest) {
         if(!categoryRepository.existsById(categoryId)){
-            new ObjectNotFoundException("Category not found");
+            new BusinessException(APIStatus.CATEGORY_NOT_FOUND);
         }
         if(!productGenderRepository.existsById(categoryRequest.getProductGender())){
-            new ObjectNotFoundException("Product gender not found");
+            new BusinessException(APIStatus.PRODUCT_GENDER_NOT_FOUND);
         }
         var productGender = productGenderRepository.getById(categoryRequest.getProductGender());
         Category category = categoryRepository.getById(categoryId);
@@ -65,7 +67,7 @@ public class CategoryServiceImp implements CategoryService{
     @Override
     public void deleteCategory(UUID categoryId) {
         if(!categoryRepository.existsById(categoryId)){
-            new ObjectNotFoundException("Category not found");
+            new BusinessException(APIStatus.CATEGORY_NOT_FOUND);
         }
         categoryRepository.deleteById(categoryId);
     }

@@ -1,5 +1,6 @@
 package com.sa.clothingstore.exception;
 
+import com.sa.clothingstore.dto.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 import java.io.IOException;
 import org.springframework.validation.FieldError;
@@ -78,5 +81,14 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleOtpException(OtpException otpException){
         return otpException.getMessage();
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException businessException){
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setErrorCode(businessException.getApiStatus().name());
+        errorResponse.setMessage(businessException.getApiStatus().getMessage());
+        errorResponse.setTimestamp(LocalDateTime.now().toString());
+        return ResponseEntity.status(businessException.getApiStatus().getStatus()).body(errorResponse);
     }
 }

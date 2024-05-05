@@ -1,5 +1,7 @@
 package com.sa.clothingstore.service.attribute.size;
 
+import com.sa.clothingstore.constant.APIStatus;
+import com.sa.clothingstore.exception.BusinessException;
 import com.sa.clothingstore.exception.ObjectAlreadyExistsException;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.dto.request.attribute.SizeRequest;
@@ -26,7 +28,7 @@ public class SizeServiceImp implements SizeService{
     public SizeResponse createSize(SizeRequest sizeRequest) {
         Optional<Size> existingSize = sizeRepository.findByName(sizeRequest.getName());
         if (existingSize.isPresent()) {
-            throw new ObjectAlreadyExistsException("Size already exists");
+            throw new BusinessException(APIStatus.SIZE_ALREADY_EXISTED);
         }
         return modelMapper
                 .map(sizeRepository
@@ -38,11 +40,11 @@ public class SizeServiceImp implements SizeService{
     @Override
     public Size modifySize(Integer id, SizeRequest sizeRequest) {
         Size size = sizeRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("Size not found")
+                .orElseThrow(() -> new BusinessException(APIStatus.SIZE_NOT_FOUND)
                 );
         String newName = sizeRequest.getName();
         if(sizeRequest.getName().equals(newName)){
-            throw new ObjectAlreadyExistsException("Size already existed");
+            throw new BusinessException(APIStatus.SIZE_ALREADY_EXISTED);
         }
         size.setName(sizeRequest.getName());
         return sizeRepository.save(size);
@@ -51,7 +53,7 @@ public class SizeServiceImp implements SizeService{
     @Override
     public void deleteSize(Integer id) {
         Size size = sizeRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("Size not found")
+                .orElseThrow(() -> new BusinessException(APIStatus.SIZE_NOT_FOUND)
                 );
         sizeRepository.delete(size);
     }

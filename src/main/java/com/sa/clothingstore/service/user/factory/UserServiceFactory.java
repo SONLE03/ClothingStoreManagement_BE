@@ -1,6 +1,8 @@
 package com.sa.clothingstore.service.user.factory;
 
+import com.sa.clothingstore.constant.APIStatus;
 import com.sa.clothingstore.dto.request.user.UserRequest;
+import com.sa.clothingstore.exception.BusinessException;
 import com.sa.clothingstore.exception.ObjectAlreadyExistsException;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.attribute.Image;
@@ -40,10 +42,10 @@ public abstract class UserServiceFactory  {
     @Transactional
     public User create(UserRequest userRequest, Role role) throws IOException {
         userRepository.findByEmail(userRequest.getEmail()).ifPresent(user -> {
-            throw new ObjectAlreadyExistsException("Email already existed");
+            throw new BusinessException(APIStatus.EMAIL_ALREADY_EXISTED);
         });
         userRepository.findByPhone(userRequest.getPhone()).ifPresent(user -> {
-            throw new ObjectAlreadyExistsException("Phone already existed");
+            throw new BusinessException(APIStatus.PHONE_ALREADY_EXISTED);
         });
         User user = User.builder()
                 .fullName(userRequest.getFullname())
@@ -60,7 +62,7 @@ public abstract class UserServiceFactory  {
         if(userImage != null){
             BufferedImage bi = ImageIO.read(userImage.getInputStream());
             if (bi == null) {
-                throw new ObjectNotFoundException("Image not found");
+                throw new BusinessException(APIStatus.IMAGE_NOT_FOUND);
             }
             Map result = fileUploadImp.upload(userImage, "avatars");
             Image image =  Image.builder()
@@ -76,7 +78,7 @@ public abstract class UserServiceFactory  {
 
     public User update(UUID userId, UserRequest userRequest) throws IOException {
         User user = userRepository.findById(userId).orElseThrow(() ->{
-                throw new ObjectNotFoundException("User not found");
+                throw new BusinessException(APIStatus.USER_NOT_FOUND);
             }
         );
         String oldEmail = user.getEmail();
@@ -85,12 +87,12 @@ public abstract class UserServiceFactory  {
         String newPhone = userRequest.getPhone();
         userRepository.findByEmail(newEmail).ifPresent(u -> {
             if(!oldEmail.equals(newEmail)) {
-                throw new ObjectAlreadyExistsException("Email already existed");
+                throw new BusinessException(APIStatus.EMAIL_ALREADY_EXISTED);
             }
         });
         userRepository.findByPhone(newPhone).ifPresent(u -> {
             if(!oldPhone.equals(newPhone)) {
-                throw new ObjectAlreadyExistsException("Phone already existed");
+                throw new BusinessException(APIStatus.PHONE_ALREADY_EXISTED);
             }
         });
         user.setEmail(userRequest.getEmail());
@@ -104,7 +106,7 @@ public abstract class UserServiceFactory  {
             fileUploadImp.delete(user.getImage().getCloudinaryId());
             BufferedImage bi = ImageIO.read(userImage.getInputStream());
             if (bi == null) {
-                throw new ObjectNotFoundException("Image not found");
+                throw new BusinessException(APIStatus.IMAGE_NOT_FOUND);
             }
             Map result = fileUploadImp.upload(userImage, "avatars");
             Image image =  Image.builder()
@@ -122,6 +124,6 @@ public abstract class UserServiceFactory  {
 
     public List<User> getAllUsers(Integer role){
         return userRepository.findByRole(Role.convertIntegerToRole(role))
-                .orElseThrow(() -> new ObjectNotFoundException("No users were found with this role"));
+                .orElse(null);
     }
 }

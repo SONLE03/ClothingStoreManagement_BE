@@ -1,8 +1,10 @@
 package com.sa.clothingstore.service.order;
 
+import com.sa.clothingstore.constant.APIStatus;
 import com.sa.clothingstore.dto.request.cart.CartRequest;
 import com.sa.clothingstore.dto.request.order.OrderItemRequest;
 import com.sa.clothingstore.dto.request.order.OrderRequest;
+import com.sa.clothingstore.exception.BusinessException;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.CommonModel;
 import com.sa.clothingstore.model.event.Coupon;
@@ -61,7 +63,7 @@ public class OrderServiceImp implements OrderService{
         var customer = orderRequest.getCustomerId();
         var address = orderRequest.getAddressId();
         if(!addressRepository.existsAddressForCustomer(customer, address)){
-            throw new ObjectNotFoundException("Customer and address not found");
+            throw new BusinessException(APIStatus.CUSTOMER_ADDRESS_NOT_FOUND);
         }
         Coupon coupon;
         var couponId = orderRequest.getCoupon();
@@ -78,11 +80,11 @@ public class OrderServiceImp implements OrderService{
                 .note(orderRequest.getNote())
                 .orderStatus(OrderStatus.PENDING)
                 .address(addressRepository.findById(address).orElseThrow(
-                        () -> new ObjectNotFoundException("Address not found")))
+                        () -> new BusinessException(APIStatus.ADDRESS_NOT_FOUND)))
                 .customer(customerRepository.findById(customer).orElseThrow(
-                        () -> new ObjectNotFoundException("Customer not found")))
+                        () -> new BusinessException(APIStatus.CUSTOMER_NOT_FOUND)))
                 .paymentMethod(paymentRepository.findById(orderRequest.getPaymentMethod()).orElseThrow(
-                        () -> new ObjectNotFoundException("Payment method not found")))
+                        () -> new BusinessException(APIStatus.PAYMENT_NOT_FOUND)))
                 .shippingFee(new BigDecimal(35000))
                 .coupon(coupon)
                 .orderStatus(OrderStatus.PENDING)
@@ -92,7 +94,7 @@ public class OrderServiceImp implements OrderService{
         List<OrderItem> orderItems = new ArrayList<>();
         for(CartRequest item : cartList){
             ProductItem productItem = productItemRepository.findById(item.getProductItemId()).orElseThrow(
-                    () -> new ObjectNotFoundException("Product item not found"));
+                    () -> new BusinessException(APIStatus.PRODUCT_ITEM_NOT_FOUND));
 
             Integer quantity = item.getQuantity();
             BigDecimal price = productItem.getProduct().getPrice();
@@ -143,13 +145,13 @@ public class OrderServiceImp implements OrderService{
 
     private void updateOrderStatusToCanceled(UUID orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(
-                () -> new ObjectNotFoundException("Order not found"));
+                () -> new BusinessException(APIStatus.ORDER_NOT_FOUND));
         if(order.getOrderStatus() != OrderStatus.PENDING) {
-            throw new ObjectNotFoundException("Order cannot be canceled");
+            throw new BusinessException(APIStatus.ORDER_NOT_CANCEL);
         }
         for(OrderItem items : order.getOrderItems()){
             ProductItem productItem = productItemRepository.findById(items.getProductItem().getId()).orElseThrow(
-                    () -> new ObjectNotFoundException("Product item not found"));
+                    () -> new BusinessException(APIStatus.PRODUCT_ITEM_NOT_FOUND));
             productItem.setQuantity(productItem.getQuantity() + items.getQuantity());
             productItemRepository.save(productItem);
         }
@@ -163,10 +165,10 @@ public class OrderServiceImp implements OrderService{
 
     private void updateOrderStatusToDelivered(UUID orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(
-                () -> new ObjectNotFoundException("Order not found"));
+                () -> new BusinessException(APIStatus.ORDER_NOT_FOUND));
         OrderStatus orderStatus = order.getOrderStatus();
         if(orderStatus == OrderStatus.CANCELED || orderStatus == OrderStatus.COMPLETED){
-            throw new ObjectNotFoundException("Order cannot be delivered");
+            throw new BusinessException(APIStatus.ORDER_NOT_SHIPPING);
         }
         order.setOrderStatus(OrderStatus.DELIVERED);
         order.setShippingAt(CommonModel.resultTimestamp());
@@ -178,10 +180,10 @@ public class OrderServiceImp implements OrderService{
 
     private void updateOrderStatusToCompleted(UUID orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(
-                () -> new ObjectNotFoundException("Order not found"));
+                () -> new BusinessException(APIStatus.ORDER_NOT_FOUND));
         OrderStatus orderStatus = order.getOrderStatus();
         if(orderStatus == OrderStatus.CANCELED || orderStatus == OrderStatus.PENDING){
-            throw new ObjectNotFoundException("Order cannot be completed");
+            throw new BusinessException(APIStatus.ORDER_NOT_COMPLETE);
         }
         order.setOrderStatus(OrderStatus.COMPLETED);
         order.setCompletedAt(CommonModel.resultTimestamp());

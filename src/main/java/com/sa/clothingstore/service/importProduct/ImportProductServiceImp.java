@@ -1,7 +1,9 @@
 package com.sa.clothingstore.service.importProduct;
 
+import com.sa.clothingstore.constant.APIStatus;
 import com.sa.clothingstore.dto.request.importProduct.ImportRequest;
 import com.sa.clothingstore.dto.response.importProduct.ImportResponse;
+import com.sa.clothingstore.exception.BusinessException;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.importInvoice.ImportInvoice;
 import com.sa.clothingstore.model.importInvoice.ImportItem;
@@ -38,7 +40,7 @@ public class ImportProductServiceImp implements ImportProductService{
     @Override
     public List<ImportItem> getImportById(UUID importId) {
        ImportInvoice importInvoice = importInvoiceRepository.findById(importId)
-               .orElseThrow(() -> new ObjectNotFoundException("Import not found"));
+               .orElseThrow(() -> new BusinessException(APIStatus.IMPORT_NOT_FOUND));
        return importItemRepository.findByImportInvoice(importInvoice);
     }
 
@@ -60,7 +62,7 @@ public class ImportProductServiceImp implements ImportProductService{
 
             // Check if the product exists
             ProductItem productItem = productItemRepository.findById(productItemId)
-                    .orElseThrow(() -> new ObjectNotFoundException("ProductItem not found with ID: " + productItemId));
+                    .orElseThrow(() -> new BusinessException(APIStatus.PRODUCT_ITEM_NOT_FOUND));
             // Trigger giá nhập < giá bán
             // Calculate total for each import request
             total = total.add(request.getTotal());

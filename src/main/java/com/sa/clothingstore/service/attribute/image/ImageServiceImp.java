@@ -1,5 +1,7 @@
 package com.sa.clothingstore.service.attribute.image;
 
+import com.sa.clothingstore.constant.APIStatus;
+import com.sa.clothingstore.exception.BusinessException;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.dto.request.attribute.ImageRequest;
 import com.sa.clothingstore.dto.response.attribute.ImageResponse;
@@ -29,7 +31,7 @@ public class ImageServiceImp implements ImageService {
     @Override
     public Image modifyImage(UUID id, ImageRequest imageRequest) {
         Image image = imageRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("Image not found")
+                .orElseThrow(() -> new BusinessException(APIStatus.IMAGE_NOT_FOUND)
                 );
         image.setUrl(imageRequest.getUrl());
         return imageRepository.save(image);
@@ -38,7 +40,7 @@ public class ImageServiceImp implements ImageService {
     @Override
     public void deleteImage(UUID id) {
         Image image = imageRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("Image not found")
+                .orElseThrow(() -> new BusinessException(APIStatus.IMAGE_NOT_FOUND)
                 );
         imageRepository.delete(image);
     }

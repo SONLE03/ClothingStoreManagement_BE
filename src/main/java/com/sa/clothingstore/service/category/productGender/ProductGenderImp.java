@@ -1,5 +1,7 @@
 package com.sa.clothingstore.service.category.productGender;
 
+import com.sa.clothingstore.constant.APIStatus;
+import com.sa.clothingstore.exception.BusinessException;
 import com.sa.clothingstore.exception.ObjectAlreadyExistsException;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.dto.request.category.ProductGenderRequest;
@@ -31,7 +33,7 @@ public class ProductGenderImp implements ProductGenderService {
     public ProductGenderResponse createProductGender(ProductGenderRequest productGenderRequest) {
         Optional<ProductGender> productGender = productGenderRepository.findByName(productGenderRequest.getName());
         if(productGender.isPresent()){
-            throw new ObjectAlreadyExistsException("Product Gender already exists");
+            throw new BusinessException(APIStatus.PRODUCT_GENDER_ALREADY_EXISTED);
         }
         return modelMapper
                 .map(productGenderRepository
@@ -43,11 +45,11 @@ public class ProductGenderImp implements ProductGenderService {
     @Override
     public ProductGender modifyProductGender(UUID id, ProductGenderRequest productGenderRequest) {
         ProductGender productGender = productGenderRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("Product Gender not found")
+                .orElseThrow(() -> new BusinessException(APIStatus.PRODUCT_GENDER_NOT_FOUND)
                 );
         String newName = productGender.getName();
         if (productGender.getName().equals(newName)) {
-            throw new ObjectAlreadyExistsException("Product Gender already existed");
+            throw new BusinessException(APIStatus.PRODUCT_GENDER_ALREADY_EXISTED);
         }
         productGender.setName(newName);
         return productGenderRepository.save(productGender);
@@ -56,7 +58,7 @@ public class ProductGenderImp implements ProductGenderService {
     @Override
     public void deleteProductGender(UUID id) {
         ProductGender productGender = productGenderRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("Product Gender not found")
+                .orElseThrow(() -> new BusinessException(APIStatus.PRODUCT_GENDER_NOT_FOUND)
                 );
         productGenderRepository.delete(productGender);
     }

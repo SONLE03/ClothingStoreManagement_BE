@@ -1,8 +1,10 @@
 package com.sa.clothingstore.service.cart;
 
+import com.sa.clothingstore.constant.APIStatus;
 import com.sa.clothingstore.dto.request.cart.CartRequest;
 import com.sa.clothingstore.dto.response.cart.CartResponse;
 import com.sa.clothingstore.dto.response.product.ProductItemResponse;
+import com.sa.clothingstore.exception.BusinessException;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.cart.CartItem;
 import com.sa.clothingstore.model.cart.CartItemKey;
@@ -32,7 +34,7 @@ public class CartServiceImp implements CartService{
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new ObjectNotFoundException("Customer not found with ID: " + customerId));
+                .orElseThrow(() -> new BusinessException(APIStatus.CUSTOMER_NOT_FOUND));
         List<CartResponse> list = cartItemRepository.findCartResponsesByCustomer(customer);
         stopWatch.stop();
         System.out.println(stopWatch.getTotalTimeMillis() + "ms");
@@ -49,23 +51,23 @@ public class CartServiceImp implements CartService{
         //                                -> check total quantity (true)
         //                                -> save
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new ObjectNotFoundException("Customer not found with ID: " + customerId));
+                .orElseThrow(() -> new BusinessException(APIStatus.CUSTOMER_NOT_FOUND));
 
         UUID productItemId = cartRequest.getProductItemId();
 
         ProductItem productItem = productItemRepository.findById(productItemId)
-                .orElseThrow(() ->  new ObjectNotFoundException("ProductItem not found with ID: " + productItemId));
+                .orElseThrow(() ->  new BusinessException(APIStatus.PRODUCT_ITEM_NOT_FOUND));
 
         Integer quantity = cartRequest.getQuantity();
         if(quantity > productItem.getQuantity()) {
-            throw new ObjectNotFoundException("The quantity of products available must be greater than the quantity you want to buy");
+            throw new BusinessException(APIStatus.INSUFFICIENT_PRODUCT_QUANTITY);
         }
 
         CartItem cartItem = cartItemRepository.findByCustomerAndProductItem(customer, productItem);
         if(cartItem != null){
             quantity += cartItem.getQuantity();
             if(quantity > productItem.getQuantity()) {
-                throw new ObjectNotFoundException("The quantity of products available must be greater than the quantity you want to buy");
+                throw new BusinessException(APIStatus.INSUFFICIENT_PRODUCT_QUANTITY);
             }
             cartItem.setQuantity(quantity);
             cartItemRepository.save(cartItem);
@@ -87,13 +89,13 @@ public class CartServiceImp implements CartService{
     @Transactional
     public void updateProductInCart(UUID customerId, List<CartRequest> cartRequestList) {
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new ObjectNotFoundException("Customer not found with ID: " + customerId));
+                .orElseThrow(() -> new BusinessException(APIStatus.CUSTOMER_NOT_FOUND));
         for(CartRequest request : cartRequestList){
             ProductItem productItem = productItemRepository.findById(request.getProductItemId())
-                    .orElseThrow(() -> new ObjectNotFoundException("ProductItem not found with ID: " ));
+                    .orElseThrow(() -> new BusinessException(APIStatus.PRODUCT_ITEM_NOT_FOUND));
             Integer quantity = request.getQuantity();
             if(quantity > productItem.getQuantity()){
-                throw new ObjectNotFoundException("The quantity of products available must be greater than the quantity you want to buy");
+                throw new BusinessException(APIStatus.INSUFFICIENT_PRODUCT_QUANTITY);
             }
             CartItem cartItem = cartItemRepository.findByCustomerAndProductItem(customer, productItem);
             cartItem.setQuantity(quantity);
@@ -105,10 +107,10 @@ public class CartServiceImp implements CartService{
     @Transactional
     public void deleteProductInCart(UUID customerId, List<CartRequest> cartRequestList) {
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new ObjectNotFoundException("Customer not found with ID: " + customerId));
+                .orElseThrow(() -> new BusinessException(APIStatus.CUSTOMER_NOT_FOUND));
         for(CartRequest request : cartRequestList){
             ProductItem productItem = productItemRepository.findById(request.getProductItemId())
-                    .orElseThrow(() -> new ObjectNotFoundException("ProductItem not found with ID: " ));
+                    .orElseThrow(() -> new BusinessException(APIStatus.PRODUCT_ITEM_NOT_FOUND));
             cartItemRepository.deleteByCustomerAndProductItem(customer, productItem);
         }
     }

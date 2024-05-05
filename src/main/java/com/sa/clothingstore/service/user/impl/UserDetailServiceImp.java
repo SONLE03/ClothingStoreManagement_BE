@@ -1,7 +1,9 @@
 package com.sa.clothingstore.service.user.impl;
 
+import com.sa.clothingstore.constant.APIStatus;
 import com.sa.clothingstore.dto.request.user.ChangePasswordRequest;
 import com.sa.clothingstore.dto.response.user.UserResponse;
+import com.sa.clothingstore.exception.BusinessException;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.exception.OtpException;
 import com.sa.clothingstore.exception.PasswordException;
@@ -110,7 +112,7 @@ public class UserDetailServiceImp implements UserDetailService {
     @Override
     public User getProfile(UUID userId) {
         if(!userRepository.existsById(userId)){
-            new ObjectNotFoundException("User not found");
+            new BusinessException(APIStatus.USER_NOT_FOUND);
         }
         return userRepository.getUserDetail(userId);
     }
@@ -120,10 +122,10 @@ public class UserDetailServiceImp implements UserDetailService {
         User user =  userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Please provide an valid email"));
         ForgotPassword fp = forgotPasswordRepository.findByOtpAndUser(otp, user)
-                .orElseThrow(() -> new OtpException("Invalid OTP for email: " + email));
+                .orElseThrow(() -> new BusinessException(APIStatus.OTP_INVALID));
         if(fp.getExpiryDate().before(Date.from(Instant.now()))){
             forgotPasswordRepository.delete(fp);
-            new OtpException("OTP has expiried!");
+            new BusinessException(APIStatus.OTP_EXPIRY);
         }
         return "OTP verified!";
     }
@@ -131,7 +133,7 @@ public class UserDetailServiceImp implements UserDetailService {
     @Override
     public String changePassword(ChangePasswordRequest changePasswordRequest, String email){
         if(!Objects.equals(changePasswordRequest.password(), changePasswordRequest.repeatPassword())){
-            new PasswordException("Please enter the password again!");
+            new BusinessException(APIStatus.PASSWORD_INCORRECT);
         }
         userRepository.updatePassword(email, passwordEncoder.encode(changePasswordRequest.password()));
         return "Password has been changed!";

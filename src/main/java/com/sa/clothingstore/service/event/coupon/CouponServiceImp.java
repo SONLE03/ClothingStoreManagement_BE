@@ -1,7 +1,9 @@
 package com.sa.clothingstore.service.event.coupon;
 
+import com.sa.clothingstore.constant.APIStatus;
 import com.sa.clothingstore.dto.request.event.CouponRequest;
 import com.sa.clothingstore.dto.response.event.CouponResponse;
+import com.sa.clothingstore.exception.BusinessException;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.event.Coupon;
 import com.sa.clothingstore.model.event.EventStatus;
@@ -41,7 +43,7 @@ public class CouponServiceImp implements CouponService{
     @Override
     public CouponResponse getCouponById(UUID couponId) {
         if(!couponRepository.existsById(couponId)){
-            throw new ObjectNotFoundException("Coupon not found");
+            throw new BusinessException(APIStatus.COUPON_NOT_FOUND);
         }
         return modelMapper.map(couponRepository.getById(couponId), CouponResponse.class);
     }
@@ -66,7 +68,7 @@ public class CouponServiceImp implements CouponService{
     @Transactional
     public void updateCoupon(UUID couponId, CouponRequest couponRequest) {
         if(!couponRepository.existsById(couponId)){
-            new ObjectNotFoundException("Coupon not found");
+            new BusinessException(APIStatus.COUPON_NOT_FOUND);
         }
         Coupon coupon = couponRepository.getById(couponId);
         coupon.setName(couponRequest.getName());
@@ -83,7 +85,7 @@ public class CouponServiceImp implements CouponService{
     @Override
     public void deleteCoupon(UUID couponId) {
         if(!couponRepository.existsById(couponId)){
-            new ObjectNotFoundException("Coupon not found");
+            new BusinessException(APIStatus.COUPON_NOT_FOUND);
         }
         couponRepository.deleteById(couponId);
     }

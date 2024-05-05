@@ -1,9 +1,11 @@
 package com.sa.clothingstore.service.product;
 
+import com.sa.clothingstore.constant.APIStatus;
 import com.sa.clothingstore.dto.request.product.ProductItemRequest;
 import com.sa.clothingstore.dto.request.product.ProductRequest;
 import com.sa.clothingstore.dto.response.product.ProductItemResponse;
 import com.sa.clothingstore.dto.response.product.ProductResponse;
+import com.sa.clothingstore.exception.BusinessException;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.attribute.Image;
 import com.sa.clothingstore.model.category.Branch;
@@ -92,11 +94,11 @@ public class ProductServiceImp implements ProductService{
         stopWatch.start();
         Category category = categoryRepository.getCategoryById(productRequest.getCategory());
 
-        if(category == null){ throw new ObjectNotFoundException("Category not found");}
+        if(category == null){ throw new BusinessException(APIStatus.CATEGORY_NOT_FOUND);}
 
         Branch branch = branchRepository.getBranchById(productRequest.getBranch());
         if(branch == null){
-            throw  new ObjectNotFoundException("Branch not found");
+            throw  new BusinessException(APIStatus.BRANCH_NOT_FOUND);
         }
         // Flow: Product -> Product_Image -> Product_Item
         Product product = Product.builder()
@@ -117,7 +119,7 @@ public class ProductServiceImp implements ProductService{
             Future<Map> future = executorService.submit(() -> {
                 BufferedImage bi = ImageIO.read(multipartFile.getInputStream());
                 if (bi == null) {
-                    throw new ObjectNotFoundException("Image path not found");
+                    throw new BusinessException(APIStatus.IMAGE_NOT_FOUND);
                 }
                 return fileUploadImp.upload(multipartFile, "products");
             });
@@ -145,7 +147,7 @@ public class ProductServiceImp implements ProductService{
 
         productRequest.getProductItemRequests().forEach(item -> {
             if (!sizeRepository.existsById(item.getSize()) || !colorRepository.existsById(item.getColor())){
-                throw new ObjectNotFoundException("Color or Size not found");
+                throw new BusinessException(APIStatus.COLOR_SIZE_NOT_FOUND);
             }
             productItemRepository.save(
                     ProductItem.builder()
@@ -169,15 +171,15 @@ public class ProductServiceImp implements ProductService{
         stopWatch.start();
         Product product = productRepository.getProductById(productId);
         if(product == null){
-            throw new ObjectNotFoundException("Product not found");
+            throw new BusinessException(APIStatus.PRODUCT_NOT_FOUND);
         }
         Category category = categoryRepository.getCategoryById(productRequest.getCategory());
 
-        if(category == null){ throw new ObjectNotFoundException("Category not found");}
+        if(category == null){ throw new BusinessException(APIStatus.CATEGORY_NOT_FOUND);}
 
         Branch branch = branchRepository.getBranchById(productRequest.getBranch());
         if(branch == null){
-            throw  new ObjectNotFoundException("Branch not found");
+            throw  new BusinessException(APIStatus.BRANCH_NOT_FOUND);
         }
 
         product.setProduct_Name(productRequest.getProduct_Name());
@@ -200,7 +202,7 @@ public class ProductServiceImp implements ProductService{
             Future<Map> future = executorService.submit(() -> {
                 BufferedImage bi = ImageIO.read(multipartFile.getInputStream());
                 if (bi == null) {
-                    throw new ObjectNotFoundException("Image path not found");
+                    throw new BusinessException(APIStatus.IMAGE_NOT_FOUND);
                 }
                 return fileUploadImp.upload(multipartFile, "products");
             });
@@ -246,11 +248,10 @@ public class ProductServiceImp implements ProductService{
     public void deleteProduct(UUID productId) {
         Product product = productRepository.getProductById(productId);
         if(product == null){
-            throw new ObjectNotFoundException("Product not found");
+            throw new BusinessException(APIStatus.PRODUCT_NOT_FOUND);
         }
         product.setProductStatus(ProductStatus.DELETED);
         product.setCommonUpdate(userDetailService.getIdLogin());
         productRepository.save(product);
-
     }
 }

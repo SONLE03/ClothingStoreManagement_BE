@@ -1,7 +1,9 @@
 package com.sa.clothingstore.service.payment;
 
+import com.sa.clothingstore.constant.APIStatus;
 import com.sa.clothingstore.dto.request.payment.PaymentRequest;
 import com.sa.clothingstore.dto.response.payment.PaymentResponse;
+import com.sa.clothingstore.exception.BusinessException;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.attribute.Image;
 import com.sa.clothingstore.model.payment.PaymentMethod;
@@ -47,7 +49,7 @@ public class PaymentServiceImp implements PaymentService{
         if(paymentImage != null){
             BufferedImage bi = ImageIO.read(paymentImage.getInputStream());
             if (bi == null) {
-                throw new ObjectNotFoundException("Image path not found");
+                throw new BusinessException(APIStatus.IMAGE_NOT_FOUND);
             }
             Map result = fileUploadImp.upload(paymentImage, "payments");
             Image image =  Image.builder()
@@ -65,14 +67,14 @@ public class PaymentServiceImp implements PaymentService{
     @Override
     public void updatePaymentMethod(Integer paymentId, PaymentRequest paymentRequest) throws IOException {
         PaymentMethod paymentMethod = paymentRepository.findById(paymentId).orElseThrow(
-                () -> new ObjectNotFoundException("Payment method not found"));
+                () -> new BusinessException(APIStatus.PAYMENT_NOT_FOUND));
         paymentMethod.setName(paymentMethod.getName());
         var paymentImage = paymentRequest.getImage();
         if(paymentImage != null){
             fileUploadImp.delete(paymentMethod.getImage().getCloudinaryId());
             BufferedImage bi = ImageIO.read(paymentImage.getInputStream());
             if (bi == null) {
-                throw new ObjectNotFoundException("Image path not found");
+                throw new BusinessException(APIStatus.IMAGE_NOT_FOUND);
             }
             Map result = fileUploadImp.upload(paymentImage, "payments");
             Image image =  Image.builder()
@@ -90,7 +92,7 @@ public class PaymentServiceImp implements PaymentService{
     @Override
     public void deletePaymentMethod(Integer paymentId) {
         if(!paymentRepository.existsById(paymentId)){
-            throw new ObjectNotFoundException("Payment method not found");
+            throw new BusinessException(APIStatus.PAYMENT_NOT_FOUND);
         }
         paymentRepository.deleteById(paymentId);
     }

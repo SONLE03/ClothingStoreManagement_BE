@@ -1,5 +1,7 @@
 package com.sa.clothingstore.service.attribute.color;
 
+import com.sa.clothingstore.constant.APIStatus;
+import com.sa.clothingstore.exception.BusinessException;
 import com.sa.clothingstore.exception.ObjectAlreadyExistsException;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.dto.request.attribute.ColorRequest;
@@ -22,7 +24,7 @@ public class ColorServiceImp implements ColorService{
     public ColorResponse createColor(ColorRequest colorRequest) {
         Optional<Color> existingColor = colorRepository.findByName(colorRequest.getName());
         if (existingColor.isPresent()) {
-            throw new ObjectAlreadyExistsException("Color already exists");
+            throw new BusinessException(APIStatus.COLOR_ALREADY_EXISTED);
         }
         return modelMapper
                 .map(colorRepository
@@ -34,11 +36,11 @@ public class ColorServiceImp implements ColorService{
     @Override
     public Color modifyColor(Integer id, ColorRequest colorRequest) {
         Color color = colorRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("Color not found")
+                .orElseThrow(() -> new BusinessException(APIStatus.COLOR_NOT_FOUND)
                 );
         String newName = colorRequest.getName();
         if(colorRequest.getName().equals(newName)){
-            throw new ObjectAlreadyExistsException("Color already existed");
+            throw new BusinessException(APIStatus.COLOR_ALREADY_EXISTED);
         }
         color.setName(newName);
         return colorRepository.save(color);
@@ -47,7 +49,7 @@ public class ColorServiceImp implements ColorService{
     @Override
     public void deleteColor(Integer id) {
         Color color = colorRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("Color not found")
+                .orElseThrow(() -> new BusinessException(APIStatus.COLOR_NOT_FOUND)
                 );
         colorRepository.delete(color);
     }
