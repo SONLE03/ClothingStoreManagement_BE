@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(APIConstant.BRANCHS)
+@RequestMapping(APIConstant.BRANCHES)
 public class BranchController {
     private final BranchService branchService;
     @GetMapping

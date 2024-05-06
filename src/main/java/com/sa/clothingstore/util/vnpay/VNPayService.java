@@ -1,4 +1,4 @@
-package com.sa.clothingstore.util;
+package com.sa.clothingstore.util.vnpay;
 
 import com.sa.clothingstore.config.VNPayConfig;
 import jakarta.servlet.http.HttpServletRequest;

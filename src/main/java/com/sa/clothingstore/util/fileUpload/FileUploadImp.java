@@ -1,4 +1,4 @@
-package com.sa.clothingstore.util;
+package com.sa.clothingstore.util.fileUpload;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;

@@ -1,6 +1,6 @@
 package com.sa.clothingstore.controller.payment;
 
-import com.sa.clothingstore.util.VNPayService;
+import com.sa.clothingstore.util.vnpay.VNPayService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.ui.Model;

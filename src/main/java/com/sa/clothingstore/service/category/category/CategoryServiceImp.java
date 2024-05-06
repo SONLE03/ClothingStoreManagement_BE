@@ -12,6 +12,7 @@ import com.sa.clothingstore.repository.category.ProductGenderRepository;
 import com.sa.clothingstore.service.user.service.UserDetailService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
@@ -29,7 +30,8 @@ public class CategoryServiceImp implements CategoryService{
 
     @Override
     public List<Category> getAllCategory() {
-        return categoryRepository.findAll();
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        return categoryRepository.findAll(sort);
     }
 
     @Override

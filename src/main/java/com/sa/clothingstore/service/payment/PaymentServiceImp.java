@@ -4,13 +4,12 @@ import com.sa.clothingstore.constant.APIStatus;
 import com.sa.clothingstore.dto.request.payment.PaymentRequest;
 import com.sa.clothingstore.dto.response.payment.PaymentResponse;
 import com.sa.clothingstore.exception.BusinessException;
-import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.attribute.Image;
 import com.sa.clothingstore.model.payment.PaymentMethod;
 import com.sa.clothingstore.repository.attribute.ImageRepository;
 import com.sa.clothingstore.repository.payment.PaymentRepository;
 import com.sa.clothingstore.service.user.service.UserDetailService;
-import com.sa.clothingstore.util.FileUploadImp;
+import com.sa.clothingstore.util.fileUpload.FileUploadImp;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -21,7 +20,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class PaymentServiceImp implements PaymentService{

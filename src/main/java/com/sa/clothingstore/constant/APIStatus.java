@@ -29,6 +29,7 @@ public enum APIStatus {
     ORDER_NOT_CANCEL(400, "Order cannot be canceled"),
     ORDER_NOT_SHIPPING(400, "Order cannot be delivered"),
     ORDER_NOT_COMPLETE(400, "Order cannot be completed"),
+    ORDER_STATUS_NOT_FOUND(404, "Order status not found"),
     // Category
     CATEGORY_NOT_FOUND(404, "Category not found"),
     // Branch

@@ -37,7 +37,7 @@ public class UserController {
         roleToServiceMap.put(1, staffService);
         roleToServiceMap.put(2, customerService);
     }
-    @GetMapping(APIConstant.GETALL)
+    @GetMapping(APIConstant.GET_ALL)
     public List<User> getAllUsersByRole(@PathVariable Integer role){
         return roleToServiceMap.get(role).getAllUsersByRole(role);
     }
@@ -47,13 +47,13 @@ public class UserController {
         return userDetailService.getProfile(userId);
     }
 
-    @PostMapping(APIConstant.CHANGEPASSWORD)
+    @PostMapping(APIConstant.CHANGE_PASSWORD)
     @PreAuthorize("permitAll()")
     @ResponseStatus(HttpStatus.OK)
     public String changePassword(@RequestBody ChangePasswordRequest changePasswordRequest, @PathVariable String email){
        return userDetailService.changePassword(changePasswordRequest, email);
     }
-    @PostMapping(APIConstant.VERIFYOTP)
+    @PostMapping(APIConstant.VERIFY_OTP)
     @ResponseStatus(HttpStatus.OK)
     public String verifyOtp(@PathVariable Integer otp, @PathVariable String email){
         return userDetailService.verifyOtp(otp, email);
@@ -72,17 +72,17 @@ public class UserController {
         return "User modified successfully";
     }
 
-    // Customer service
-    @PostMapping(APIConstant.CREATEADDRESS)
-    @ResponseStatus(HttpStatus.CREATED)
-    public String createCustomerAddress(@PathVariable UUID userId, @RequestBody @Valid AddressRequest addressRequest){
-        customerService.createAddress(userId, addressRequest);
-        return "Customer address created successfully";
-    }
-    @PutMapping(APIConstant.UPDATEADDRESS)
-    @ResponseStatus(HttpStatus.OK)
-    public String updateCustomerAddress(@PathVariable UUID addressId, @RequestBody @Valid AddressRequest addressRequest){
-        customerService.updateAddress(addressId ,addressRequest);
-        return "Customer address modified successfully";
-    }
+//    // Customer service
+//    @PostMapping(APIConstant.CREATEADDRESS)
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public String createCustomerAddress(@PathVariable UUID userId, @RequestBody @Valid AddressRequest addressRequest){
+//        customerService.createAddress(userId, addressRequest);
+//        return "Customer address created successfully";
+//    }
+//    @PutMapping(APIConstant.UPDATEADDRESS)
+//    @ResponseStatus(HttpStatus.OK)
+//    public String updateCustomerAddress(@PathVariable UUID addressId, @RequestBody @Valid AddressRequest addressRequest){
+//        customerService.updateAddress(addressId ,addressRequest);
+//        return "Customer address modified successfully";
+//    }
 }

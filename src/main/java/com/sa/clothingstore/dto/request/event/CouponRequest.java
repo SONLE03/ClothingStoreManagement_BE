@@ -14,7 +14,7 @@ public class CouponRequest {
     private String name;
     @FutureOfDateFormat(message = "Start date must be in the future or today")
     private Date startDate;
-    @FutureOfDateFormat(message = "Start date must be in the future or today")
+    @FutureOfDateFormat(message = "End date must be in the future or today")
     private Date endDate;
     @NotNull(message = "Missing discount value")
     @DecimalMin(value = "0.00", inclusive = false, message = "Discount value must be greater than 0")

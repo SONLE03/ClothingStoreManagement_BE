@@ -17,23 +17,25 @@ public class APIConstant {
     // Users Routes
     public static final String USERS = VERSION + "/users";
     public static final String USER_ID = "/{userId}";
-    public static final String GETALL = "/all/{role}";
-    public static final String CREATEADDRESS = "/{userId}/address";
-    public static final String UPDATEADDRESS = "/{addressId}";
-    public static final String VERIFYOTP = "verifyOtp/{otp}/{email}";
-    public static final String CHANGEPASSWORD = "/changePassword/{email}";
-
+    public static final String GET_ALL = "/all/{role}";
+    public static final String VERIFY_OTP = "verifyOtp/{otp}/{email}";
+    public static final String CHANGE_PASSWORD = "/changePassword/{email}";
+    // Customer
+    public static final String CUSTOMERS = VERSION + "/customers";
+    public static final String CUSTOMER_ID = "/{customerId}";
+    public static final String CREATE_ADDRESS = "/{userId}/address";
+    public static final String UPDATE_ADDRESS = "/{addressId}";
     // Email Routes
     public static final String EMAIL = VERSION + "/email";
-    public static final String SENDOTP = "/verifyEmail/{email}";
+    public static final String SEND_OTP = "/verifyEmail/{email}";
 
     // Branch Routes
-    public static final String BRANCHS = VERSION + "/branch";
+    public static final String BRANCHES = VERSION + "/branch";
     public static final String BRANCH_ID = "/{branchId}";
 
     // Product Gender Routes
-    public static final String PRODUCTGENDERS = VERSION + "/productGender";
-    public static final String PRODUCTGENDER_ID = "/{productGenderId}";
+    public static final String PRODUCT_GENDERS = VERSION + "/productGender";
+    public static final String PRODUCT_GENDER_ID = "/{productGenderId}";
 
     // Category Routes
     public static final String CATEGORIES = VERSION + "/category";
@@ -71,8 +73,18 @@ public class APIConstant {
     //Order
     public static final String ORDERS = VERSION + "/orders";
     public static final String ORDER_ID = "/{orderId}";
+    public static final String ORDER_STATUS = "/order/{orderStatus}";
+    public static final String ORDER_CUSTOMER = "/order/{customerId}";
 
     //Payment method
     public static final String PAYMENTS = VERSION + "/payments";
     public static final String PAYMENT_ID = "/{paymentId}";
+    // Report
+    public static final String REPORTS = VERSION + "/reports";
+    public static final String DAILY_REVENUE = "/daily-revenue";
+    public static final String MONTHLY_REVENUE = "/monthly-report";
+    public static final String YEARLY_REVENUE = "/yearly-revenue";
+    public static final String DAILY_EXPENSE = "/daily-expense";
+    public static final String MONTHLY_EXPENSE = "/monthly-expense";
+    public static final String YEARLY_EXPENSE = "/yearly-expense";
 }

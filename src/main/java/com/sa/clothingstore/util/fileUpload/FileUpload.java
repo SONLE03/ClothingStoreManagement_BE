@@ -1,4 +1,4 @@
-package com.sa.clothingstore.util;
+package com.sa.clothingstore.util.fileUpload;
 
 import org.springframework.web.multipart.MultipartFile;
 

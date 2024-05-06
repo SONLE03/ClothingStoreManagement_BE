@@ -1,12 +1,10 @@
 package com.sa.clothingstore.service.product;
 
 import com.sa.clothingstore.constant.APIStatus;
-import com.sa.clothingstore.dto.request.product.ProductItemRequest;
 import com.sa.clothingstore.dto.request.product.ProductRequest;
 import com.sa.clothingstore.dto.response.product.ProductItemResponse;
 import com.sa.clothingstore.dto.response.product.ProductResponse;
 import com.sa.clothingstore.exception.BusinessException;
-import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.attribute.Image;
 import com.sa.clothingstore.model.category.Branch;
 import com.sa.clothingstore.model.category.Category;
@@ -20,16 +18,10 @@ import com.sa.clothingstore.repository.category.BranchRepository;
 import com.sa.clothingstore.repository.category.CategoryRepository;
 import com.sa.clothingstore.repository.product.ProductItemRepository;
 import com.sa.clothingstore.repository.product.ProductRepository;
-import com.sa.clothingstore.service.user.impl.UserDetailServiceImp;
 import com.sa.clothingstore.service.user.service.UserDetailService;
-import com.sa.clothingstore.util.FileUpload;
-import com.sa.clothingstore.util.FileUploadImp;
+import com.sa.clothingstore.util.fileUpload.FileUploadImp;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.boot.autoconfigure.data.RepositoryType;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,7 +35,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -254,4 +245,5 @@ public class ProductServiceImp implements ProductService{
         product.setCommonUpdate(userDetailService.getIdLogin());
         productRepository.save(product);
     }
+
 }

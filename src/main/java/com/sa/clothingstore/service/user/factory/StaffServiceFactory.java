@@ -3,12 +3,11 @@ package com.sa.clothingstore.service.user.factory;
 
 import com.sa.clothingstore.dto.request.user.UserRequest;
 import com.sa.clothingstore.model.user.User;
-import com.sa.clothingstore.model.user.admin.Admin;
 import com.sa.clothingstore.model.user.staff.Staff;
 import com.sa.clothingstore.repository.attribute.ImageRepository;
 import com.sa.clothingstore.repository.user.UserRepository;
 import com.sa.clothingstore.service.user.service.UserDetailService;
-import com.sa.clothingstore.util.FileUploadImp;
+import com.sa.clothingstore.util.fileUpload.FileUploadImp;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;

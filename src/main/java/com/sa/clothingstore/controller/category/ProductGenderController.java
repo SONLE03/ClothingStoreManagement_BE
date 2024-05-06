@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(APIConstant.PRODUCTGENDERS)
+@RequestMapping(APIConstant.PRODUCT_GENDERS)
 public class ProductGenderController {
     private final ProductGenderService productGenderService;
     @GetMapping
@@ -32,13 +32,13 @@ public class ProductGenderController {
         productGenderService.createProductGender(productGenderRequest);
         return "Product Gender was created successfully";
     }
-    @PutMapping(APIConstant.PRODUCTGENDER_ID)
+    @PutMapping(APIConstant.PRODUCT_GENDER_ID)
     @ResponseStatus(HttpStatus.OK)
     public String modifyProductGender(@PathVariable UUID id, @RequestBody @Valid ProductGenderRequest productGenderRequest){
         productGenderService.modifyProductGender(id, productGenderRequest);
         return "Product Gender was modified successfully";
     }
-    @DeleteMapping(APIConstant.PRODUCTGENDER_ID)
+    @DeleteMapping(APIConstant.PRODUCT_GENDER_ID)
     @ResponseStatus(HttpStatus.OK)
     public String deleteProductGender(@PathVariable UUID id){
         productGenderService.deleteProductGender(id);

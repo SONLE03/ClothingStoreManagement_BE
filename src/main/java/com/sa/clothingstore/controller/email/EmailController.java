@@ -32,7 +32,7 @@ public class EmailController {
     private final ForgotPasswordRepository forgotPasswordRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @PostMapping(APIConstant.SENDOTP)
+    @PostMapping(APIConstant.SEND_OTP)
     @ResponseStatus(HttpStatus.OK)
     public String sendOtp(@PathVariable String email){
         return emailService.verifyEmail(email);

@@ -4,6 +4,9 @@ import com.sa.clothingstore.constant.APIStatus;
 import com.sa.clothingstore.dto.request.cart.CartRequest;
 import com.sa.clothingstore.dto.request.order.OrderItemRequest;
 import com.sa.clothingstore.dto.request.order.OrderRequest;
+import com.sa.clothingstore.dto.response.order.OrderItemResponse;
+import com.sa.clothingstore.dto.response.order.OrderResponse;
+import com.sa.clothingstore.dto.response.report.MonthlyRevenueResponse;
 import com.sa.clothingstore.exception.BusinessException;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.CommonModel;
@@ -13,6 +16,7 @@ import com.sa.clothingstore.model.order.OrderItem;
 import com.sa.clothingstore.model.order.OrderItemKey;
 import com.sa.clothingstore.model.order.OrderStatus;
 import com.sa.clothingstore.model.product.ProductItem;
+import com.sa.clothingstore.model.user.customer.Customer;
 import com.sa.clothingstore.repository.event.CouponRepository;
 import com.sa.clothingstore.repository.order.OrderItemRepository;
 import com.sa.clothingstore.repository.order.OrderRepository;
@@ -49,14 +53,33 @@ public class OrderServiceImp implements OrderService{
     private final CartService cartService;
 
     @Override
-    public List<Order> getAllOrder() {
-        return null;
+    public List<OrderResponse> getAllOrder() {
+        return orderRepository.getAllOrder();
     }
 
     @Override
-    public List<Order> getAllOrderByCustomer(UUID customerId) {
-        return null;
+    public List<OrderResponse> getOrderByStatus(Integer status) {
+        OrderStatus orderStatus = OrderStatus.convertIntegerToOrderStatus(status);
+        if(orderStatus == null){
+            throw new BusinessException(APIStatus.ORDER_STATUS_NOT_FOUND);
+        }
+        return orderRepository.getOrderByStatus(orderStatus);
     }
+
+    @Override
+    public List<OrderResponse> getAllOrderByCustomer(UUID customerId) {
+        Customer customer = customerRepository.findById(customerId).orElseThrow(
+                () -> new BusinessException(APIStatus.CUSTOMER_NOT_FOUND));
+        return orderRepository.getOrderByCustomer(customer);
+    }
+
+    @Override
+    public List<OrderItemResponse> getOrderDetail(UUID orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(
+                () -> new BusinessException(APIStatus.ORDER_NOT_FOUND));
+        return orderItemRepository.getOrderDetail(order);
+    }
+
     @Transactional
     @Override
     public void createOrder(OrderRequest orderRequest) {
@@ -83,8 +106,8 @@ public class OrderServiceImp implements OrderService{
                         () -> new BusinessException(APIStatus.ADDRESS_NOT_FOUND)))
                 .customer(customerRepository.findById(customer).orElseThrow(
                         () -> new BusinessException(APIStatus.CUSTOMER_NOT_FOUND)))
-                .paymentMethod(paymentRepository.findById(orderRequest.getPaymentMethod()).orElseThrow(
-                        () -> new BusinessException(APIStatus.PAYMENT_NOT_FOUND)))
+//                .paymentMethod(paymentRepository.findById(orderRequest.getPaymentMethod()).orElseThrow(
+//                        () -> new BusinessException(APIStatus.PAYMENT_NOT_FOUND)))
                 .shippingFee(new BigDecimal(35000))
                 .coupon(coupon)
                 .orderStatus(OrderStatus.PENDING)
@@ -191,4 +214,9 @@ public class OrderServiceImp implements OrderService{
         orderRepository.save(order);
 //        return "Order completed successfully";
     }
+
+//    @Override
+//    public List<MonthlyRevenueResponse> getMonthlyRevenue(int year){
+//        return orderItemRepository.getMonthlyReport(year);
+//    }
 }

@@ -3,18 +3,14 @@ package com.sa.clothingstore.service.user.factory;
 import com.sa.clothingstore.constant.APIStatus;
 import com.sa.clothingstore.dto.request.user.UserRequest;
 import com.sa.clothingstore.exception.BusinessException;
-import com.sa.clothingstore.exception.ObjectAlreadyExistsException;
-import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.attribute.Image;
 import com.sa.clothingstore.model.user.Role;
 import com.sa.clothingstore.model.user.Status;
 import com.sa.clothingstore.model.user.User;
 import com.sa.clothingstore.repository.attribute.ImageRepository;
 import com.sa.clothingstore.repository.user.UserRepository;
-import com.sa.clothingstore.repository.user.customer.AddressRepository;
 import com.sa.clothingstore.service.user.service.UserDetailService;
-import com.sa.clothingstore.service.user.service.UserService;
-import com.sa.clothingstore.util.FileUploadImp;
+import com.sa.clothingstore.util.fileUpload.FileUploadImp;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,7 +20,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor

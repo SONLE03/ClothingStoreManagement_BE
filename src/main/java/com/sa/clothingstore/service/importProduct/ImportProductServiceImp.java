@@ -17,6 +17,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -34,7 +35,8 @@ public class ImportProductServiceImp implements ImportProductService{
     private final ModelMapper modelMapper;
     @Override
     public List<ImportInvoice> getAllImport() {
-        return importInvoiceRepository.findAll();
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        return importInvoiceRepository.findAll(sort);
     }
 
     @Override
