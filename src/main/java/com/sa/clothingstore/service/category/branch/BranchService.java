@@ -12,4 +12,5 @@ public interface BranchService {
     BranchResponse createBranch(BranchRequest branchRequest);
     Branch modifyBranch(UUID id, BranchRequest branchRequest);
     void deleteBranch(UUID id);
+    List<Branch> searchBranch(String keyword);
 }
