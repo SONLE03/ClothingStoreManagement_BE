@@ -2,6 +2,7 @@ package com.sa.clothingstore.model.attribute;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sa.clothingstore.model.product.Product;
+import com.sa.clothingstore.model.review.Review;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -33,4 +34,9 @@ public class Image {
     @JsonIgnore
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "review_id")
+    private Review review;
 }

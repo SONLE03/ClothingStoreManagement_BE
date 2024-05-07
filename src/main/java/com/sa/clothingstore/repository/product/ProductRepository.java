@@ -17,5 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     @Query("SELECT p FROM Product p where p.id = ?1")
     Product getProductById(UUID productId);
 
+
+
 //    Page<Product> searchProduct(Pageable pageable, String searchText);
 }

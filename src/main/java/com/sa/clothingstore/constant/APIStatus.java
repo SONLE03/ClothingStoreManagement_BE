@@ -30,6 +30,7 @@ public enum APIStatus {
     ORDER_NOT_SHIPPING(400, "Order cannot be delivered"),
     ORDER_NOT_COMPLETE(400, "Order cannot be completed"),
     ORDER_STATUS_NOT_FOUND(404, "Order status not found"),
+    CUSTOMER_NEVER_PURCHASED_PRODUCT(404, "Customer has never purchased the product"),
     // Category
     CATEGORY_NOT_FOUND(404, "Category not found"),
     // Branch
@@ -52,7 +53,10 @@ public enum APIStatus {
     // Import product
     IMPORT_NOT_FOUND(404, "Import not found"),
     // Payment
-    PAYMENT_NOT_FOUND(404, "Payment not found");
+    PAYMENT_NOT_FOUND(404, "Payment not found"),
+    // Review
+    REVIEW_NOT_FOUND(404, "Review not found"),
+    REVIEW_CUSTOMER_ID_MISMATCH(400, "Review customer ID does not match the requested customer ID");
     private final int status;
     private final String message;
 }
