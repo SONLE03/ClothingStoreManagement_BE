@@ -15,7 +15,4 @@ public class ImportResponse {
     private UUID id;
     @JsonProperty("total")
     private BigDecimal total;
-
-    @JsonProperty("Product list")
-    List<ImportItemResponse> importItemResponseList;
 }

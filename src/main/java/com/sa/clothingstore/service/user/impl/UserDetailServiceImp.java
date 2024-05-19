@@ -112,7 +112,7 @@ public class UserDetailServiceImp implements UserDetailService {
     @Override
     public User getProfile(UUID userId) {
         if(!userRepository.existsById(userId)){
-            new BusinessException(APIStatus.USER_NOT_FOUND);
+            throw new BusinessException(APIStatus.USER_NOT_FOUND);
         }
         return userRepository.getUserDetail(userId);
     }
@@ -125,7 +125,7 @@ public class UserDetailServiceImp implements UserDetailService {
                 .orElseThrow(() -> new BusinessException(APIStatus.OTP_INVALID));
         if(fp.getExpiryDate().before(Date.from(Instant.now()))){
             forgotPasswordRepository.delete(fp);
-            new BusinessException(APIStatus.OTP_EXPIRY);
+            throw new  BusinessException(APIStatus.OTP_EXPIRY);
         }
         return "OTP verified!";
     }
@@ -133,7 +133,7 @@ public class UserDetailServiceImp implements UserDetailService {
     @Override
     public String changePassword(ChangePasswordRequest changePasswordRequest, String email){
         if(!Objects.equals(changePasswordRequest.password(), changePasswordRequest.repeatPassword())){
-            new BusinessException(APIStatus.PASSWORD_INCORRECT);
+            throw new BusinessException(APIStatus.PASSWORD_INCORRECT);
         }
         userRepository.updatePassword(email, passwordEncoder.encode(changePasswordRequest.password()));
         return "Password has been changed!";

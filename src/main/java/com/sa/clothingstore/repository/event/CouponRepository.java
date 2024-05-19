@@ -1,5 +1,6 @@
 package com.sa.clothingstore.repository.event;
 
+import com.sa.clothingstore.model.category.Branch;
 import com.sa.clothingstore.model.event.Coupon;
 import com.sa.clothingstore.model.event.EventStatus;
 import jakarta.transaction.Transactional;
@@ -19,4 +20,7 @@ public interface CouponRepository extends JpaRepository<Coupon, UUID> {
     @Query("SELECT c FROM Coupon c ORDER BY CASE WHEN c.endDate >= CURRENT_DATE AND c.eventStatus = 'ACTIVE' THEN 0 ELSE 1 END, c.endDate ASC")
     List<Coupon> findAllSortedByEndDateAndStatus();
     List<Coupon> findByEventStatus(EventStatus eventStatus);
+
+    @Query("SELECT c FROM Coupon c WHERE LOWER(c.name) LIKE LOWER(CONCAT('%', ?1, '%'))")
+    List<Coupon> searchCoupon(String keyword);
 }
