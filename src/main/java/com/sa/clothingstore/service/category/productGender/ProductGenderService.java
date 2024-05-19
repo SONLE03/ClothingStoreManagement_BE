@@ -12,4 +12,5 @@ public interface ProductGenderService {
     ProductGenderResponse createProductGender(ProductGenderRequest productGenderRequest);
     ProductGender modifyProductGender(UUID id, ProductGenderRequest productGenderRequest);
     void deleteProductGender(UUID id);
+    List<ProductGender> searchProductGender(String keyword);
 }

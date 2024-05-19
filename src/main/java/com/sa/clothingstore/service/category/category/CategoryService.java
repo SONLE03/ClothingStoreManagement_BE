@@ -12,4 +12,5 @@ public interface CategoryService {
     CategoryResponse createCategory(CategoryRequest categoryRequest);
     Category modifyCategory(UUID id, CategoryRequest categoryRequest);
     void deleteCategory(UUID id);
+    List<CategoryResponse> searchCategory(String keyword);
 }

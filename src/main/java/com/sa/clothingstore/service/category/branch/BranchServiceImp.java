@@ -51,4 +51,9 @@ public class BranchServiceImp implements BranchService{
                 );
         branchRepository.delete(branch);
     }
+
+    @Override
+    public List<Branch> searchBranch(String keyword) {
+        return branchRepository.searchBranch(keyword);
+    }
 }

@@ -73,4 +73,9 @@ public class CategoryServiceImp implements CategoryService{
         }
         categoryRepository.deleteById(categoryId);
     }
+
+    @Override
+    public List<CategoryResponse> searchCategory(String keyword) {
+        return categoryRepository.searchCategory(keyword);
+    }
 }

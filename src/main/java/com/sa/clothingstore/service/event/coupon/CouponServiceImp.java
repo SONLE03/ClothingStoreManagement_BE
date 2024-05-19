@@ -89,4 +89,12 @@ public class CouponServiceImp implements CouponService{
         }
         couponRepository.deleteById(couponId);
     }
+
+    @Override
+    public List<CouponResponse> searchCoupon(String keyword) {
+        List<Coupon> coupons = couponRepository.searchCoupon(keyword);
+        return coupons.stream()
+                .map(coupon -> modelMapper.map(coupon, CouponResponse.class))
+                .collect(Collectors.toList());
+    }
 }

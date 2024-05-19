@@ -25,6 +25,10 @@ public class BranchController {
     public List<Branch> getAll() {
         return branchService.getAllBranch();
     }
+    @GetMapping(APIConstant.SEARCH)
+    public List<Branch> searchBranch(@RequestParam("keyword") String keyword){
+        return branchService.searchBranch(keyword);
+    }
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public String createBranch(@RequestBody @Valid BranchRequest branchRequest) {

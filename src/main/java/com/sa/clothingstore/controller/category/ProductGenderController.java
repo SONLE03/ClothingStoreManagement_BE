@@ -26,6 +26,10 @@ public class ProductGenderController {
     public List<ProductGender> getAll() {
         return productGenderService.getAllProductGender();
     }
+    @GetMapping(APIConstant.SEARCH)
+    public List<ProductGender> searchProductGender(@RequestParam("keyword") String keyword){
+        return productGenderService.searchProductGender(keyword);
+    }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public String createProductGender(@RequestBody @Valid ProductGenderRequest productGenderRequest) {
