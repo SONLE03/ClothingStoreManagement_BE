@@ -47,7 +47,7 @@ public class ProductGenderImp implements ProductGenderService {
         ProductGender productGender = productGenderRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(APIStatus.PRODUCT_GENDER_NOT_FOUND)
                 );
-        String newName = productGender.getName();
+        String newName = productGenderRequest.getName();
         if (productGender.getName().equals(newName)) {
             throw new BusinessException(APIStatus.PRODUCT_GENDER_ALREADY_EXISTED);
         }

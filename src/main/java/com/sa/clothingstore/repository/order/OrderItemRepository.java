@@ -17,11 +17,14 @@ import java.util.UUID;
 
 @Repository
 public interface OrderItemRepository extends JpaRepository<OrderItem, UUID> {
-    @Query("SELECT NEW com.sa.clothingstore.dto.response.order.OrderItemResponse(oi.productItem.id, oi.quantity, oi.price, oi.total) " +
+    @Query("SELECT NEW com.sa.clothingstore.dto.response.order.OrderItemResponse(oi.productItem.id, oi.productItem.product.product_Name, oi.quantity, oi.price, oi.total) " +
             "FROM OrderItem oi " +
             "WHERE oi.order = ?1")
     List<OrderItemResponse> getOrderDetail(Order order);
-
+    @Query("SELECT oi " +
+            "FROM OrderItem oi " +
+            "WHERE oi.order = ?1")
+    List<OrderItem> getOrderItemByOrder(Order order);
     @Query("SELECT NEW com.sa.clothingstore.dto.response.report.DailyRevenueResponse(" +
             "o.order.completedAt, " +
             "COUNT(DISTINCT o.order.customer.id), " +

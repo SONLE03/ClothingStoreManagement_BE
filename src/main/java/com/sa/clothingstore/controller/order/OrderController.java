@@ -40,7 +40,12 @@ public class OrderController {
     public List<OrderResponse> getOrderByCustomer(@PathVariable UUID customerId){
         return orderService.getAllOrderByCustomer(customerId);
     }
-
+    @PostMapping(APIConstant.ORDER_ID)
+    @ResponseStatus(HttpStatus.OK)
+    public String sendOrderToCustomer(@PathVariable UUID orderId){
+        orderService.sendOrder(orderId);
+        return "The order has been sent to the customer";
+    }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public String createOrder(@RequestBody @Valid OrderRequest orderRequest){
@@ -49,20 +54,8 @@ public class OrderController {
     }
     @PutMapping(APIConstant.ORDER_ID)
     @ResponseStatus(HttpStatus.OK)
-    public String updateOrderStatus(@PathVariable UUID orderId, @RequestBody OrderRequest orderRequest){
-        return orderService.updateOrderStatus(orderId, orderRequest);
+    public String updateOrderStatus(@PathVariable UUID orderId, @RequestBody Integer status){
+        orderService.updateOrderStatusByCash(orderId, status);
+        return "Order was modified successfully";
     }
-//    @PutMapping(APIConstant.ORDER_ID)
-//    @ResponseStatus(HttpStatus.OK)
-//    public String updateOrderStatusToDelivered(@PathVariable UUID orderId){
-//        orderService.updateOrderStatusToDelivered(orderId);
-//        return "Order was delivered successfully";
-//    }
-//    @PutMapping(APIConstant.ORDER_ID)
-//    @ResponseStatus(HttpStatus.OK)
-//    public String updateOrderStatusToCompleted(@PathVariable UUID orderId){
-//        orderService.updateOrderStatusToCompleted(orderId);
-//        return "Order was completed successfully";
-//    }
-
 }

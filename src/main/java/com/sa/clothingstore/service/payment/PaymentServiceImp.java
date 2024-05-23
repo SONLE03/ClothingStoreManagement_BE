@@ -7,7 +7,6 @@ import com.sa.clothingstore.exception.BusinessException;
 import com.sa.clothingstore.model.attribute.Image;
 import com.sa.clothingstore.model.payment.PaymentMethod;
 import com.sa.clothingstore.repository.attribute.ImageRepository;
-import com.sa.clothingstore.repository.payment.PaymentRepository;
 import com.sa.clothingstore.service.user.service.UserDetailService;
 import com.sa.clothingstore.util.fileUpload.FileUploadImp;
 import jakarta.transaction.Transactional;
@@ -25,7 +24,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PaymentServiceImp implements PaymentService{
     private final ModelMapper modelMapper;
-    private final PaymentRepository paymentRepository;
     private final ImageRepository imageRepository;
     private final UserDetailService userDetailService;
     private final FileUploadImp fileUploadImp;
@@ -42,57 +40,57 @@ public class PaymentServiceImp implements PaymentService{
     @Override
     @Transactional
     public void createPaymentMethod(PaymentRequest paymentRequest) throws IOException {
-        PaymentMethod paymentMethod = new PaymentMethod();
-        paymentMethod.setName(paymentMethod.getName());
-        var paymentImage = paymentRequest.getImage();
-        if(paymentImage != null){
-            BufferedImage bi = ImageIO.read(paymentImage.getInputStream());
-            if (bi == null) {
-                throw new BusinessException(APIStatus.IMAGE_NOT_FOUND);
-            }
-            Map result = fileUploadImp.upload(paymentImage, "payments");
-            Image image =  Image.builder()
-                    .name((String) result.get("original_filename"))
-                    .url((String) result.get("url"))
-                    .cloudinaryId((String) result.get("public_id"))
-                    .build();
-            imageRepository.save(image);
-            paymentMethod.setImage(image);
-        }
-        paymentMethod.setCommonCreate(userDetailService.getIdLogin());
-        paymentRepository.save(paymentMethod);
+//        PaymentMethod paymentMethod = new PaymentMethod();
+//        paymentMethod.setName(paymentMethod.getName());
+//        var paymentImage = paymentRequest.getImage();
+//        if(paymentImage != null){
+//            BufferedImage bi = ImageIO.read(paymentImage.getInputStream());
+//            if (bi == null) {
+//                throw new BusinessException(APIStatus.IMAGE_NOT_FOUND);
+//            }
+//            Map result = fileUploadImp.upload(paymentImage, "payments");
+//            Image image =  Image.builder()
+//                    .name((String) result.get("original_filename"))
+//                    .url((String) result.get("url"))
+//                    .cloudinaryId((String) result.get("public_id"))
+//                    .build();
+//            imageRepository.save(image);
+//            paymentMethod.setImage(image);
+//        }
+//        paymentMethod.setCommonCreate(userDetailService.getIdLogin());
+//        paymentRepository.save(paymentMethod);
     }
 
     @Override
     public void updatePaymentMethod(Integer paymentId, PaymentRequest paymentRequest) throws IOException {
-        PaymentMethod paymentMethod = paymentRepository.findById(paymentId).orElseThrow(
-                () -> new BusinessException(APIStatus.PAYMENT_NOT_FOUND));
-        paymentMethod.setName(paymentMethod.getName());
-        var paymentImage = paymentRequest.getImage();
-        if(paymentImage != null){
-            fileUploadImp.delete(paymentMethod.getImage().getCloudinaryId());
-            BufferedImage bi = ImageIO.read(paymentImage.getInputStream());
-            if (bi == null) {
-                throw new BusinessException(APIStatus.IMAGE_NOT_FOUND);
-            }
-            Map result = fileUploadImp.upload(paymentImage, "payments");
-            Image image =  Image.builder()
-                    .name((String) result.get("original_filename"))
-                    .url((String) result.get("url"))
-                    .cloudinaryId((String) result.get("public_id"))
-                    .build();
-            imageRepository.save(image);
-            paymentMethod.setImage(image);
-        }
-        paymentMethod.setCommonUpdate(userDetailService.getIdLogin());
-        paymentRepository.save(paymentMethod);
+//        PaymentMethod paymentMethod = paymentRepository.findById(paymentId).orElseThrow(
+//                () -> new BusinessException(APIStatus.PAYMENT_NOT_FOUND));
+//        paymentMethod.setName(paymentMethod.getName());
+//        var paymentImage = paymentRequest.getImage();
+//        if(paymentImage != null){
+//            fileUploadImp.delete(paymentMethod.getImage().getCloudinaryId());
+//            BufferedImage bi = ImageIO.read(paymentImage.getInputStream());
+//            if (bi == null) {
+//                throw new BusinessException(APIStatus.IMAGE_NOT_FOUND);
+//            }
+//            Map result = fileUploadImp.upload(paymentImage, "payments");
+//            Image image =  Image.builder()
+//                    .name((String) result.get("original_filename"))
+//                    .url((String) result.get("url"))
+//                    .cloudinaryId((String) result.get("public_id"))
+//                    .build();
+//            imageRepository.save(image);
+//            paymentMethod.setImage(image);
+//        }
+//        paymentMethod.setCommonUpdate(userDetailService.getIdLogin());
+//        paymentRepository.save(paymentMethod);
     }
 
     @Override
     public void deletePaymentMethod(Integer paymentId) {
-        if(!paymentRepository.existsById(paymentId)){
-            throw new BusinessException(APIStatus.PAYMENT_NOT_FOUND);
-        }
-        paymentRepository.deleteById(paymentId);
+//        if(!paymentRepository.existsById(paymentId)){
+//            throw new BusinessException(APIStatus.PAYMENT_NOT_FOUND);
+//        }
+//        paymentRepository.deleteById(paymentId);
     }
 }

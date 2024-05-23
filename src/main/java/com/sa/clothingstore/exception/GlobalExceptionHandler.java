@@ -1,5 +1,6 @@
 package com.sa.clothingstore.exception;
 
+import com.sa.clothingstore.config.LoggingAspect;
 import com.sa.clothingstore.dto.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.io.IOException;
 import org.springframework.validation.FieldError;
@@ -20,11 +22,12 @@ import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
+    private final Logger logger = Logger.getLogger(GlobalExceptionHandler.class.getName());
     // Global
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleException(Exception ex) {
+        logger.info("Exception: " + ex.getMessage());
         return "Unknow";
     }
 

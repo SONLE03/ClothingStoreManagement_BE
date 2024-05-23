@@ -72,7 +72,7 @@ public class AuthenticationController {
 
                         return ResponseEntity.ok()
                                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                                .body("Token is refreshed successfully!");
+                                .body(jwtCookie);
                     })
                     .orElseThrow(() -> new ExpressionException(refreshToken,
                             "Refresh token is not in database!"));

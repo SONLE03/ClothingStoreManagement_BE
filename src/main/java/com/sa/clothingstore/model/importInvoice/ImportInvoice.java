@@ -2,7 +2,6 @@ package com.sa.clothingstore.model.importInvoice;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sa.clothingstore.model.CommonModel;
-import com.sa.clothingstore.model.cart.CartItem;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -10,7 +9,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Getter

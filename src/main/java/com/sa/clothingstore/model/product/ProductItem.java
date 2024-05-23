@@ -3,7 +3,6 @@ package com.sa.clothingstore.model.product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sa.clothingstore.model.attribute.Color;
 import com.sa.clothingstore.model.attribute.Size;
-import com.sa.clothingstore.model.cart.CartItem;
 import com.sa.clothingstore.model.importInvoice.ImportItem;
 import com.sa.clothingstore.model.order.OrderItem;
 import jakarta.persistence.*;
@@ -37,9 +36,6 @@ public class ProductItem {
     private Color color;
     @Column(name = "quantity")
     private Integer quantity;
-    @JsonIgnore
-    @OneToMany(mappedBy = "productItem")
-    Set<CartItem> cartItems;
     @JsonIgnore
     @OneToMany(mappedBy = "productItem")
     Set<OrderItem> orderItems;

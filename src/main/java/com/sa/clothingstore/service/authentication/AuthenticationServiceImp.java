@@ -7,14 +7,12 @@ import com.sa.clothingstore.dto.response.authentication.AuthenticationResponse;
 import com.sa.clothingstore.dto.response.authentication.CookieResponse;
 import com.sa.clothingstore.dto.response.user.UserResponse;
 import com.sa.clothingstore.exception.BusinessException;
-import com.sa.clothingstore.exception.ObjectAlreadyExistsException;
-import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.user.RefreshToken;
 import com.sa.clothingstore.model.user.Role;
 import com.sa.clothingstore.model.user.User;
-import com.sa.clothingstore.model.user.customer.Customer;
+import com.sa.clothingstore.model.customer.Customer;
 import com.sa.clothingstore.repository.user.UserRepository;
-import com.sa.clothingstore.repository.user.customer.CustomerRepository;
+import com.sa.clothingstore.repository.customer.CustomerRepository;
 import com.sa.clothingstore.service.token.JwtService;
 import com.sa.clothingstore.service.token.RefreshTokenService;
 import com.sa.clothingstore.service.user.service.UserDetailService;
@@ -46,7 +44,6 @@ public class AuthenticationServiceImp implements AuthenticationService{
     private final ModelMapper modelMapper;
     private final AuthenticationManager authenticationManager;
     private final UserDetailService userDetailService;
-    private final CustomerRepository customerRepository;
 
     @Override
     @Transactional
@@ -63,10 +60,9 @@ public class AuthenticationServiceImp implements AuthenticationService{
         user.setFullName(registerRequest.getFullname());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setEnabled(true);
-        user.setRole(Role.CUSTOMER);
-        Customer customer = new Customer(user);
-        customer.setCommonCreate(userDetailService.getIdLogin());
-        customerRepository.save(customer);
+        user.setRole(Role.ADMIN);
+        user.setCommonCreate(userDetailService.getIdLogin());
+        userRepository.save(user);
         return user;
     }
 

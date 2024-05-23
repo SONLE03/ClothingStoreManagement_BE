@@ -25,9 +25,11 @@ public class ProductResponse {
     @JsonProperty
     private BigDecimal price;
     @JsonProperty
-    private Category category;
+    private String category;
     @JsonProperty
-    private Branch branch;
+    private String branch;
     @JsonProperty
     private ProductStatus productStatus;
+    @JsonProperty
+    private String image;
 }

@@ -2,10 +2,10 @@ package com.sa.clothingstore.model.order;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sa.clothingstore.model.CommonModel;
-import com.sa.clothingstore.model.user.customer.Address;
+import com.sa.clothingstore.model.customer.Address;
 import com.sa.clothingstore.model.event.Coupon;
-import com.sa.clothingstore.model.payment.PaymentMethod;
-import com.sa.clothingstore.model.user.customer.Customer;
+import com.sa.clothingstore.model.customer.Customer;
+import com.sa.clothingstore.model.product.ProductStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -32,8 +32,8 @@ public class Order extends CommonModel {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
-    @ManyToOne
-    @JoinColumn(name = "payment_method")
+    @Column(name = "payment_method")
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
     @ManyToOne
     @JoinColumn(name = "coupon")
@@ -41,14 +41,10 @@ public class Order extends CommonModel {
     @ManyToOne
     @JoinColumn(name = "shipping_address")
     private Address address;
-    @Column(name = "shipping_fee")
-    private BigDecimal shippingFee;
     @Column(name = "total")
     private BigDecimal total;
     @Column(name = "note")
     private String note;
-    @Column(name = "shipping_at")
-    private Date shippingAt;
     @Column(name = "completed_at")
     private Date completedAt;
     @Column(name = "payment_at")
@@ -58,7 +54,6 @@ public class Order extends CommonModel {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
-
     @JsonIgnore
     @OneToMany(mappedBy = "order")
     Set<OrderItem> orderItems;

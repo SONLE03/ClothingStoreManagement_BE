@@ -12,4 +12,5 @@ public interface UserService {
     List<User> getAllUsersByRole(Integer role);
     void createUser(UserRequest userRequest, Role role) throws IOException;
     void updateUser(UUID userId, UserRequest userRequest) throws IOException;
+    void deleteUser(UUID userId);
 }

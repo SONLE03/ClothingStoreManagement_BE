@@ -21,7 +21,4 @@ public class OrderItemRequest {
     @NotNull(message = "Missing quantity")
     @Min(value = 1, message = "Quantity must be greater than 0")
     private Integer quantity;
-//    @NotNull(message = "Missing price")
-//    @DecimalMin(value = "0.00", inclusive = false, message = "Price must be greater than 0")
-//    private BigDecimal price;
 }

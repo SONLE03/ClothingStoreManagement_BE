@@ -34,14 +34,14 @@ public class ProductGenderController {
     }
     @PutMapping(APIConstant.PRODUCT_GENDER_ID)
     @ResponseStatus(HttpStatus.OK)
-    public String modifyProductGender(@PathVariable UUID id, @RequestBody @Valid ProductGenderRequest productGenderRequest){
-        productGenderService.modifyProductGender(id, productGenderRequest);
+    public String modifyProductGender(@PathVariable UUID productGenderId, @RequestBody @Valid ProductGenderRequest productGenderRequest){
+        productGenderService.modifyProductGender(productGenderId, productGenderRequest);
         return "Product Gender was modified successfully";
     }
     @DeleteMapping(APIConstant.PRODUCT_GENDER_ID)
     @ResponseStatus(HttpStatus.OK)
-    public String deleteProductGender(@PathVariable UUID id){
-        productGenderService.deleteProductGender(id);
+    public String deleteProductGender(@PathVariable UUID productGenderId){
+        productGenderService.deleteProductGender(productGenderId);
         return "Product Gender was delete successfully";
     }
 }

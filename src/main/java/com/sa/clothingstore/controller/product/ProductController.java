@@ -1,6 +1,7 @@
 package com.sa.clothingstore.controller.product;
 
 import com.sa.clothingstore.constant.APIConstant;
+import com.sa.clothingstore.dto.request.product.ProductItemRequest;
 import com.sa.clothingstore.dto.request.product.ProductRequest;
 import com.sa.clothingstore.dto.response.product.ProductItemResponse;
 import com.sa.clothingstore.dto.response.product.ProductResponse;
@@ -37,6 +38,12 @@ public class ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     public String createProduct(@RequestParam("images") @Nullable List<MultipartFile> image, @Valid @ModelAttribute ProductRequest productRequest) throws IOException {
         productService.createProduct(image, productRequest);
+        return "Product was created successfully";
+    }
+    @PostMapping(APIConstant.PRODUCT_ID)
+    @ResponseStatus(HttpStatus.CREATED)
+    public String addExistedProduct(@PathVariable UUID productId, @RequestBody List<@Valid ProductItemRequest> productItemRequests) throws IOException {
+        productService.addProductExisted(productId, productItemRequests);
         return "Product was created successfully";
     }
     @PutMapping(APIConstant.PRODUCT_ID)

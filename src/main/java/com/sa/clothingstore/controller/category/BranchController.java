@@ -33,14 +33,14 @@ public class BranchController {
     }
     @PutMapping(APIConstant.BRANCH_ID)
     @ResponseStatus(HttpStatus.OK)
-    public String modifyBranch(@PathVariable UUID id, @RequestBody @Valid BranchRequest branchRequest){
-        branchService.modifyBranch(id, branchRequest);
+    public String modifyBranch(@PathVariable UUID branchId, @RequestBody @Valid BranchRequest branchRequest){
+        branchService.modifyBranch(branchId, branchRequest);
         return "Branch was modified successfully";
     }
     @DeleteMapping(APIConstant.BRANCH_ID)
     @ResponseStatus(HttpStatus.OK)
-    public String deleteBranch(@PathVariable UUID id){
-        branchService.deleteBranch(id);
+    public String deleteBranch(@PathVariable UUID branchId){
+        branchService.deleteBranch(branchId);
         return "Branch was delete successfully";
     }
 }

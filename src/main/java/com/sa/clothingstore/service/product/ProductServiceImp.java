@@ -1,6 +1,7 @@
 package com.sa.clothingstore.service.product;
 
 import com.sa.clothingstore.constant.APIStatus;
+import com.sa.clothingstore.dto.request.product.ProductItemRequest;
 import com.sa.clothingstore.dto.request.product.ProductRequest;
 import com.sa.clothingstore.dto.response.product.ProductItemResponse;
 import com.sa.clothingstore.dto.response.product.ProductResponse;
@@ -54,7 +55,6 @@ public class ProductServiceImp implements ProductService{
         List<Object[]> objects = productRepository.getAllProduct();
 
         List<ProductResponse> productResponseList = new ArrayList<>();
-
         for (Object[] objArray : objects) {
             UUID id = (UUID) objArray[0];
             String productName = (String) objArray[1];
@@ -64,7 +64,11 @@ public class ProductServiceImp implements ProductService{
             productResponse.setId(id);
             productResponse.setProduct_Name(productName);
             productResponse.setPrice(price);
-
+            productResponse.setCategory((String) objArray[3]);
+            productResponse.setBranch((String) objArray[4]);
+            productResponse.setDescription((String) objArray[5]);
+            productResponse.setProductStatus((ProductStatus) objArray[6]);
+            productResponse.setImage((String) objArray[7]);
             productResponseList.add(productResponse);
         }
         return productResponseList;
@@ -154,7 +158,23 @@ public class ProductServiceImp implements ProductService{
         stopWatch.stop();
         System.out.println(stopWatch.getTotalTimeMillis() + "ms");
     }
-
+    @Override
+    public void addProductExisted(UUID productId, List<ProductItemRequest> productItemRequests) {
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new BusinessException(APIStatus.PRODUCT_NOT_FOUND));
+        productItemRequests.forEach(item -> {
+            if(productItemRepository.getProductItemByProductAndAttribute(product, item.getSize(), item.getColor()) == null){
+                productItemRepository.save(
+                        ProductItem.builder()
+                                .product(product)
+                                .color(colorRepository.getById(item.getColor()))
+                                .size(sizeRepository.getById(item.getSize()))
+                                .build()
+                );
+            }
+        });
+        product.setCommonUpdate(userDetailService.getIdLogin());
+    }
     @Override
     @Transactional
     public void updateProduct(UUID productId, List<MultipartFile> multipartFiles, ProductRequest productRequest) throws IOException {
@@ -180,9 +200,9 @@ public class ProductServiceImp implements ProductService{
         product.setBranch(branch);
         productRepository.save(product);
 
-        List<Image> imageList = imageRepository.getImageByProduct(product);
-        for(Image image : imageList){
-            fileUploadImp.delete(image.getCloudinaryId());
+        List<String> imageList = imageRepository.getCloudinaryIdByProduct(product);
+        for(String cloudId : imageList){
+            fileUploadImp.delete(cloudId);
         }
         imageRepository.deleteByProduct(product);
 
@@ -213,27 +233,15 @@ public class ProductServiceImp implements ProductService{
                                 .build()
                 );
             } catch (Exception e) {
-                // Xử lý ngoại lệ khi có lỗi xảy ra trong tiến trình tải lên ảnh
             }
         }
-
         executorService.shutdown();
-
-        productRequest.getProductItemRequests().forEach(item -> {
-            if(productItemRepository.getProductItemByProductAndAttribute(product, item.getSize(), item.getColor()) == null){
-                productItemRepository.save(
-                        ProductItem.builder()
-                                .product(product)
-                                .color(colorRepository.getById(item.getColor()))
-                                .size(sizeRepository.getById(item.getSize()))
-                                .build()
-                );
-            }
-        });
         product.setCommonUpdate(userDetailService.getIdLogin());
         stopWatch.stop();
         System.out.println(stopWatch.getTotalTimeMillis() + "ms");
     }
+
+
 
     @Override
     public void deleteProduct(UUID productId) {

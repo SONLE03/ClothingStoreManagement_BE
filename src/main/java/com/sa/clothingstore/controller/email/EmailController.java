@@ -21,16 +21,14 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Random;
+import java.util.UUID;
 
 
 @RestController
 @RequestMapping(APIConstant.EMAIL)
 @AllArgsConstructor
 public class EmailController {
-    private final UserRepository userRepository;
     private final EmailService emailService;
-    private final ForgotPasswordRepository forgotPasswordRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @PostMapping(APIConstant.SEND_OTP)
     @ResponseStatus(HttpStatus.OK)

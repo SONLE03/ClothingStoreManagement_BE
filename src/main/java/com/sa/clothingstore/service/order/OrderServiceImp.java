@@ -1,41 +1,31 @@
 package com.sa.clothingstore.service.order;
 
 import com.sa.clothingstore.constant.APIStatus;
-import com.sa.clothingstore.dto.request.cart.CartRequest;
 import com.sa.clothingstore.dto.request.order.OrderItemRequest;
 import com.sa.clothingstore.dto.request.order.OrderRequest;
 import com.sa.clothingstore.dto.response.order.OrderItemResponse;
 import com.sa.clothingstore.dto.response.order.OrderResponse;
-import com.sa.clothingstore.dto.response.report.MonthlyRevenueResponse;
 import com.sa.clothingstore.exception.BusinessException;
-import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.CommonModel;
 import com.sa.clothingstore.model.event.Coupon;
-import com.sa.clothingstore.model.order.Order;
-import com.sa.clothingstore.model.order.OrderItem;
-import com.sa.clothingstore.model.order.OrderItemKey;
-import com.sa.clothingstore.model.order.OrderStatus;
+import com.sa.clothingstore.model.order.*;
 import com.sa.clothingstore.model.product.ProductItem;
-import com.sa.clothingstore.model.user.customer.Customer;
+import com.sa.clothingstore.model.customer.Customer;
 import com.sa.clothingstore.repository.event.CouponRepository;
 import com.sa.clothingstore.repository.order.OrderItemRepository;
 import com.sa.clothingstore.repository.order.OrderRepository;
-import com.sa.clothingstore.repository.payment.PaymentRepository;
 import com.sa.clothingstore.repository.product.ProductItemRepository;
-import com.sa.clothingstore.repository.user.customer.AddressRepository;
-import com.sa.clothingstore.repository.user.customer.CustomerRepository;
-import com.sa.clothingstore.service.cart.CartService;
+import com.sa.clothingstore.repository.customer.CustomerRepository;
+import com.sa.clothingstore.service.email.EmailService;
 import com.sa.clothingstore.service.user.service.UserDetailService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Or;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -44,13 +34,10 @@ public class OrderServiceImp implements OrderService{
     private final UserDetailService userDetailService;
     private final CustomerRepository customerRepository;
     private final ProductItemRepository productItemRepository;
-    private final AddressRepository addressRepository;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
-    private final ModelMapper modelMapper;
     private final CouponRepository couponRepository;
-    private final PaymentRepository paymentRepository;
-    private final CartService cartService;
+    private final EmailService emailService;
 
     @Override
     public List<OrderResponse> getAllOrder() {
@@ -83,11 +70,8 @@ public class OrderServiceImp implements OrderService{
     @Transactional
     @Override
     public void createOrder(OrderRequest orderRequest) {
-        var customer = orderRequest.getCustomerId();
-        var address = orderRequest.getAddressId();
-        if(!addressRepository.existsAddressForCustomer(customer, address)){
-            throw new BusinessException(APIStatus.CUSTOMER_ADDRESS_NOT_FOUND);
-        }
+        Customer customer = customerRepository.findById(orderRequest.getCustomerId()).orElseThrow(
+                () -> new BusinessException(APIStatus.CUSTOMER_NOT_FOUND));
         Coupon coupon;
         var couponId = orderRequest.getCoupon();
         if(couponId == null){
@@ -95,31 +79,30 @@ public class OrderServiceImp implements OrderService{
         }else{
             coupon = couponRepository.findById(couponId).orElse(null);
         }
-        BigDecimal _total = (coupon != null) ? coupon.getDiscountValue().negate() : BigDecimal.ZERO;
-        // Shipping fee
-        _total.add(new BigDecimal(35000));
-
+        BigDecimal _total;
+        if(coupon != null && coupon.getQuantity() > 0){
+            _total = coupon.getDiscountValue().negate();
+            coupon.setQuantity(coupon.getQuantity() - 1);
+            coupon.setCommonUpdate(userDetailService.getIdLogin());
+            couponRepository.save(coupon);
+        }else{
+            _total = BigDecimal.ZERO;
+        }
         Order order = Order.builder()
                 .note(orderRequest.getNote())
-                .orderStatus(OrderStatus.PENDING)
-                .address(addressRepository.findById(address).orElseThrow(
-                        () -> new BusinessException(APIStatus.ADDRESS_NOT_FOUND)))
-                .customer(customerRepository.findById(customer).orElseThrow(
-                        () -> new BusinessException(APIStatus.CUSTOMER_NOT_FOUND)))
-//                .paymentMethod(paymentRepository.findById(orderRequest.getPaymentMethod()).orElseThrow(
-//                        () -> new BusinessException(APIStatus.PAYMENT_NOT_FOUND)))
-                .shippingFee(new BigDecimal(35000))
+                .customer(customer)
                 .coupon(coupon)
-                .orderStatus(OrderStatus.PENDING)
                 .build();
         orderRepository.save(order);
-        List<CartRequest> cartList = orderRequest.getItems();
+        List<OrderItemRequest> orderItemList = orderRequest.getOrderItemRequestList();
         List<OrderItem> orderItems = new ArrayList<>();
-        for(CartRequest item : cartList){
+        for(OrderItemRequest item : orderItemList){
             ProductItem productItem = productItemRepository.findById(item.getProductItemId()).orElseThrow(
                     () -> new BusinessException(APIStatus.PRODUCT_ITEM_NOT_FOUND));
-
             Integer quantity = item.getQuantity();
+            if(productItem.getQuantity() < quantity){
+                throw new BusinessException(APIStatus.INSUFFICIENT_PRODUCT_QUANTITY);
+            }
             BigDecimal price = productItem.getProduct().getPrice();
             BigDecimal total = price.multiply(BigDecimal.valueOf(quantity));
 
@@ -142,81 +125,57 @@ public class OrderServiceImp implements OrderService{
 
             orderItems.add(orderItem);
         }
-        cartService.deleteProductInCart(customer, cartList);
+        orderItemRepository.saveAll(orderItems);
         order.setTotal(_total);
         order.setCommonCreate(userDetailService.getIdLogin());
-        orderItemRepository.saveAll(orderItems);
+        PaymentMethod paymentMethod = PaymentMethod.convertIntegerToPaymentMethod(orderRequest.getPaymentMethod());
+        if(paymentMethod == PaymentMethod.CASH){
+            order.setOrderStatus(OrderStatus.COMPLETED);
+            order.setCompletedAt(CommonModel.resultTimestamp());
+            sendOrder(order.getId());
+        }else{
+            order.setOrderStatus(OrderStatus.PENDING);
+        }
+        order.setPaymentMethod(paymentMethod);
+        orderRepository.save(order);
     }
 
     @Override
-    public String updateOrderStatus(UUID orderId, OrderRequest orderRequest) {
-        switch (orderRequest.getStatus()) {
-            case 1:
-                updateOrderStatusToCanceled(orderId);
-                return "Order status updated to Canceled";
-            case 2:
-                updateOrderStatusToDelivered(orderId);
-                return "Order status updated to Delivered";
-            case 3:
-                updateOrderStatusToCompleted(orderId);
-                return "Order status updated to Completed";
-            default:
-                return "Order status cannot be modified";
-        }
-    }
-
-
-    private void updateOrderStatusToCanceled(UUID orderId) {
+    @Transactional
+    public void updateOrderStatusByCash(UUID orderId, Integer status) {
         Order order = orderRepository.findById(orderId).orElseThrow(
                 () -> new BusinessException(APIStatus.ORDER_NOT_FOUND));
-        if(order.getOrderStatus() != OrderStatus.PENDING) {
-            throw new BusinessException(APIStatus.ORDER_NOT_CANCEL);
-        }
-        for(OrderItem items : order.getOrderItems()){
-            ProductItem productItem = productItemRepository.findById(items.getProductItem().getId()).orElseThrow(
-                    () -> new BusinessException(APIStatus.PRODUCT_ITEM_NOT_FOUND));
-            productItem.setQuantity(productItem.getQuantity() + items.getQuantity());
-            productItemRepository.save(productItem);
-        }
-        order.setOrderStatus(OrderStatus.CANCELED);
-        order.setCanceledAt(CommonModel.resultTimestamp());
-        order.setCommonUpdate(userDetailService.getIdLogin());
-        orderRepository.save(order);
-//        return "Order canceled successfully";
-    }
-
-
-    private void updateOrderStatusToDelivered(UUID orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(
-                () -> new BusinessException(APIStatus.ORDER_NOT_FOUND));
-        OrderStatus orderStatus = order.getOrderStatus();
-        if(orderStatus == OrderStatus.CANCELED || orderStatus == OrderStatus.COMPLETED){
-            throw new BusinessException(APIStatus.ORDER_NOT_SHIPPING);
-        }
-        order.setOrderStatus(OrderStatus.DELIVERED);
-        order.setShippingAt(CommonModel.resultTimestamp());
-        order.setCommonUpdate(userDetailService.getIdLogin());
-        orderRepository.save(order);
-//        return "Order delivered successfully";
-    }
-
-
-    private void updateOrderStatusToCompleted(UUID orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(
-                () -> new BusinessException(APIStatus.ORDER_NOT_FOUND));
-        OrderStatus orderStatus = order.getOrderStatus();
-        if(orderStatus == OrderStatus.CANCELED || orderStatus == OrderStatus.PENDING){
-            throw new BusinessException(APIStatus.ORDER_NOT_COMPLETE);
-        }
-        order.setOrderStatus(OrderStatus.COMPLETED);
+        order.setPaymentMethod(PaymentMethod.CASH);
         order.setCompletedAt(CommonModel.resultTimestamp());
+        order.setOrderStatus(OrderStatus.COMPLETED);
         order.setCommonUpdate(userDetailService.getIdLogin());
+        sendOrder(orderId);
         orderRepository.save(order);
-//        return "Order completed successfully";
     }
 
-//    @Override
-//    public List<MonthlyRevenueResponse> getMonthlyRevenue(int year){
-//        return orderItemRepository.getMonthlyReport(year);
-//    }
+    @Override
+    @Transactional
+    public void updateOrderStatusVNPay(UUID orderId, Integer status) {
+        final Integer paymentSuccess = 1;
+        final Integer paymentFail = 0;
+        Order order = orderRepository.findById(orderId).orElseThrow(
+                () -> new BusinessException(APIStatus.ORDER_NOT_FOUND));
+        if (status == paymentSuccess) {
+            order.setCompletedAt(CommonModel.resultTimestamp());
+            order.setOrderStatus(OrderStatus.COMPLETED);
+        } else {
+            order.setCanceledAt(CommonModel.resultTimestamp());
+            order.setOrderStatus(OrderStatus.CANCELED);
+        }
+        order.setCommonUpdate(userDetailService.getIdLogin());
+        sendOrder(orderId);
+        orderRepository.save(order);
+    }
+    @Override
+    @Transactional
+    public void sendOrder(UUID orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(
+                () -> new BusinessException(APIStatus.ORDER_NOT_FOUND));
+        emailService.sendOrder(order);
+    }
 }

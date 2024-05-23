@@ -12,6 +12,7 @@ import com.sa.clothingstore.model.user.User;
 import com.sa.clothingstore.dto.request.user.UserRequest;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class AdminServiceFatory extends UserServiceFactory{
@@ -28,6 +29,8 @@ public class AdminServiceFatory extends UserServiceFactory{
     protected User updateUser(User user, UserRequest userRequest) {
         return user;
     }
+
+
     @Override
     protected List<User> getAllUsersByRole(Integer role) { return getAllUsers(role); }
 }

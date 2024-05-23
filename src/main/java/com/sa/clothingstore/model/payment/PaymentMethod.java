@@ -8,23 +8,23 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.UUID;
 
-@Entity
-@Getter
-@Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
-@Table(name = "payment_method")
-public class PaymentMethod extends CommonModel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
-
-    @OneToOne
-    @JoinColumn(name = "image")
-    private Image image;
-    @Column(name = "name")
-    private String name;
+//@Entity
+//@Getter
+//@Setter
+//@Builder
+//@AllArgsConstructor
+//@NoArgsConstructor
+//@EntityListeners(AuditingEntityListener.class)
+//@Table(name = "payment_method")
+public class PaymentMethod{
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "id", nullable = false)
+//    private Integer id;
+//
+//    @OneToOne
+//    @JoinColumn(name = "image")
+//    private Image image;
+//    @Column(name = "name")
+//    private String name;
 }

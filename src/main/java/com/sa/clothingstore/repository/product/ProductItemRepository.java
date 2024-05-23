@@ -19,4 +19,6 @@ public interface ProductItemRepository extends JpaRepository<ProductItem, UUID> 
     List<ProductItemResponse> getDetailProduct(UUID productId);
     @Query("SELECT pi FROM ProductItem pi WHERE pi.product.id = ?1")
     List<ProductItem> getProductItemByProduct(UUID productId);
+    @Query("SELECT pi.id FROM ProductItem pi WHERE pi.product.id = ?1")
+    List<UUID> getProductItemIdByProduct(UUID productId);
 }

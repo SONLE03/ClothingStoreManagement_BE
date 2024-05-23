@@ -25,9 +25,5 @@ public class ProductRequest {
     private UUID category;
     @NotNull(message = "Missing branch")
     private UUID branch;
-//    @NotEmpty(message = "Missing image")
-//    private MultipartFile[] image;
-    private List<ImageRequest> imageRequests;
-    // Product Items
     private List<ProductItemRequest> productItemRequests;
 }

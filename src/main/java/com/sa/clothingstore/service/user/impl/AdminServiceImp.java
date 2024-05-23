@@ -1,6 +1,8 @@
 package com.sa.clothingstore.service.user.impl;
 
+import com.sa.clothingstore.constant.APIStatus;
 import com.sa.clothingstore.dto.request.user.UserRequest;
+import com.sa.clothingstore.exception.BusinessException;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
 import com.sa.clothingstore.model.user.Role;
 import com.sa.clothingstore.model.user.User;
@@ -33,6 +35,14 @@ public class AdminServiceImp implements AdminService {
     @Override
     public void updateUser(UUID userId, UserRequest userRequest) throws IOException {
         userRepository.save(adminServiceFatory.update(userId, userRequest));
+    }
+
+    @Override
+    public void deleteUser(UUID userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new BusinessException(APIStatus.USER_NOT_FOUND));
+        user.setEnabled(false);
+        userRepository.save(user);
     }
 
 }

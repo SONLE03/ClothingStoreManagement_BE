@@ -52,6 +52,7 @@ public enum APIStatus {
     COUPON_NOT_FOUND(404, "Coupon not found"),
     // Import product
     IMPORT_NOT_FOUND(404, "Import not found"),
+    IMPORT_PRODUCT_PRICE(400, "Selling price cannot be lower than purchase price."),
     // Payment
     PAYMENT_NOT_FOUND(404, "Payment not found"),
     // Review

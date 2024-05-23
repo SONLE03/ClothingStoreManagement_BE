@@ -1,6 +1,6 @@
-package com.sa.clothingstore.repository.user.customer;
+package com.sa.clothingstore.repository.customer;
 
-import com.sa.clothingstore.model.user.customer.Address;
+import com.sa.clothingstore.model.customer.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

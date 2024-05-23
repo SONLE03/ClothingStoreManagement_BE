@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class StaffServiceFactory extends UserServiceFactory{
@@ -29,6 +30,8 @@ public class StaffServiceFactory extends UserServiceFactory{
     protected User updateUser(User user, UserRequest userRequest) {
         return user;
     }
+
+
     @Override
     protected List<User> getAllUsersByRole(Integer role) { return getAllUsers(role); }
 }

@@ -1,5 +1,6 @@
 package com.sa.clothingstore.service.product;
 
+import com.sa.clothingstore.dto.request.product.ProductItemRequest;
 import com.sa.clothingstore.dto.request.product.ProductRequest;
 import com.sa.clothingstore.dto.response.product.ProductItemResponse;
 import com.sa.clothingstore.dto.response.product.ProductResponse;
@@ -16,5 +17,6 @@ public interface ProductService {
     List<ProductResponse> getAllProduct();
     void createProduct(List<MultipartFile> multipartFiles, ProductRequest productRequest) throws IOException;
     void updateProduct(UUID productId, List<MultipartFile> multipartFiles, ProductRequest productRequest) throws IOException;
+    void addProductExisted(UUID productId, List<ProductItemRequest> productItemRequests);
     void deleteProduct(UUID productId);
 }

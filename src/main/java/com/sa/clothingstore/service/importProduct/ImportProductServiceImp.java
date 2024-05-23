@@ -12,6 +12,7 @@ import com.sa.clothingstore.model.product.ProductItem;
 import com.sa.clothingstore.repository.importInvoice.ImportInvoiceRepository;
 import com.sa.clothingstore.repository.importInvoice.ImportItemRepository;
 import com.sa.clothingstore.repository.product.ProductItemRepository;
+import com.sa.clothingstore.service.email.EmailService;
 import com.sa.clothingstore.service.user.service.UserDetailService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -26,13 +27,11 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class ImportProductServiceImp implements ImportProductService{
-    private final EntityManager entityManager;
     private final UserDetailService userDetailsService;
     private final ProductItemRepository productItemRepository;
-
     private final ImportInvoiceRepository importInvoiceRepository;
     private final ImportItemRepository importItemRepository;
-    private final ModelMapper modelMapper;
+    private final EmailService emailService;
     @Override
     public List<ImportInvoice> getAllImport() {
         Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
@@ -66,6 +65,9 @@ public class ImportProductServiceImp implements ImportProductService{
             ProductItem productItem = productItemRepository.findById(productItemId)
                     .orElseThrow(() -> new BusinessException(APIStatus.PRODUCT_ITEM_NOT_FOUND));
             // Trigger giá nhập < giá bán
+            if (productItem.getProduct().getPrice().compareTo(request.getPrice()) < 0) {
+                throw new BusinessException(APIStatus.IMPORT_PRODUCT_PRICE);
+            }
             // Calculate total for each import request
             total = total.add(request.getTotal());
             Integer quantity = request.getQuantity();
@@ -94,6 +96,7 @@ public class ImportProductServiceImp implements ImportProductService{
 
         // Save ImportItems
         importItemRepository.saveAll(importItems);
+        emailService.sendImportProduct(importInvoice);
     }
 
     @Override
