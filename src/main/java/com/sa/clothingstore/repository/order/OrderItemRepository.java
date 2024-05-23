@@ -34,6 +34,20 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, UUID> {
             "FROM OrderItem o " +
             "WHERE o.order.orderStatus = 'COMPLETED' " +
             "AND o.order.completedAt BETWEEN :startDate AND :endDate " +
+            "AND o.order.updatedBy = :userId " +
+            "GROUP BY o.order.completedAt " +
+            "ORDER BY o.order.completedAt"
+    )
+    List<DailyRevenueResponse> getDailyRevenueByUser(UUID userId, Date startDate, Date endDate);
+    @Query("SELECT NEW com.sa.clothingstore.dto.response.report.DailyRevenueResponse(" +
+            "o.order.completedAt, " +
+            "COUNT(DISTINCT o.order.customer.id), " +
+            "COUNT(DISTINCT o.order.id), " +
+            "SUM(o.quantity), " +
+            "SUM(o.total)) " +
+            "FROM OrderItem o " +
+            "WHERE o.order.orderStatus = 'COMPLETED' " +
+            "AND o.order.completedAt BETWEEN :startDate AND :endDate " +
             "GROUP BY o.order.completedAt " +
             "ORDER BY o.order.completedAt"
     )

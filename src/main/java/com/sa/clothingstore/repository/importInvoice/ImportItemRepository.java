@@ -16,6 +16,18 @@ import java.util.UUID;
 
 public interface ImportItemRepository extends JpaRepository<ImportItem, UUID> {
     List<ImportItem> findByImportInvoice(ImportInvoice importInvoice);
+    @Query("SELECT NEW com.sa.clothingstore.dto.response.report.DailyExpenseResponse(" +
+            "i.importInvoice.createdAt, " +
+            "COUNT(DISTINCT i.importInvoice.id), " +
+            "SUM(i.quantity), " +
+            "SUM(i.total)) " +
+            "FROM ImportItem i " +
+            "WHERE  i.importInvoice.updatedBy = :userId " +
+            "AND i.importInvoice.createdAt BETWEEN :startDate AND :endDate " +
+            "GROUP BY i.importInvoice.createdAt " +
+            "ORDER BY i.importInvoice.createdAt"
+    )
+    List<DailyExpenseResponse> getDailyExpenseByUser(UUID userId, Date startDate, Date endDate);
 
     @Query("SELECT NEW com.sa.clothingstore.dto.response.report.DailyExpenseResponse(" +
             "i.importInvoice.createdAt, " +

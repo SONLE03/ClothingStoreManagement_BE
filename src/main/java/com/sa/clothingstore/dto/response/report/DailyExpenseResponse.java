@@ -5,8 +5,7 @@ import java.util.Date;
 
 public class DailyExpenseResponse {
     private Date date;
-    private long totalCustomers;
-    private long totalOrders;
-    private long totalProductsSold;
-    private BigDecimal totalRevenue;
+    private long totalInvoices;
+    private long totalProducts;
+    private BigDecimal totalExpense;
 }

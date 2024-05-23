@@ -10,13 +10,25 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(APIConstant.REPORTS)
 @AllArgsConstructor
 public class ReportController {
     private final ReportService reportService;
+    @GetMapping(APIConstant.USER_DAILY_REVENUE)
+    @ResponseStatus(HttpStatus.OK)
+    public List<DailyRevenueResponse> getDailyRevenueByUser(@PathVariable UUID userId, @RequestBody Date startDate){
+        return reportService.getDailyRevenueByUser(userId, startDate);
+    }
+    @GetMapping(APIConstant.USER_DAILY_EXPENSE)
+    @ResponseStatus(HttpStatus.OK)
+    public List<DailyExpenseResponse> getDailyExpenseByUser(@PathVariable UUID userId, @RequestBody Date startDate ){
+        return reportService.getDailyExpenseByUser(userId, startDate);
+    }
 
     @GetMapping(APIConstant.DAILY_REVENUE)
     @ResponseStatus(HttpStatus.OK)

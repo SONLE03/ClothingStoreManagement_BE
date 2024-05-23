@@ -88,9 +88,11 @@ public class APIConstant {
     public static final String PAYMENT_ID = "/{paymentId}";
     // Report
     public static final String REPORTS = VERSION + "/reports";
+    public static final String USER_DAILY_REVENUE = "/daily-revenue/{userId}";
     public static final String DAILY_REVENUE = "/daily-revenue";
     public static final String MONTHLY_REVENUE = "/monthly-report";
     public static final String YEARLY_REVENUE = "/yearly-revenue";
+    public static final String USER_DAILY_EXPENSE = "/daily-expense/{userId}";
     public static final String DAILY_EXPENSE = "/daily-expense";
     public static final String MONTHLY_EXPENSE = "/monthly-expense";
     public static final String YEARLY_EXPENSE = "/yearly-expense";
