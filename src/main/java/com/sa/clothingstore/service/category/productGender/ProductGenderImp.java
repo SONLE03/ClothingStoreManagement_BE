@@ -62,4 +62,9 @@ public class ProductGenderImp implements ProductGenderService {
                 );
         productGenderRepository.delete(productGender);
     }
+
+    @Override
+    public List<ProductGender> searchProductGender(String keyword) {
+        return productGenderRepository.searchProductGender(keyword);
+    }
 }

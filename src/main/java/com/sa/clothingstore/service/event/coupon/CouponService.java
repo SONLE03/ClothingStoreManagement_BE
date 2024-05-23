@@ -14,4 +14,5 @@ public interface CouponService {
     void createCoupon(CouponRequest couponRequest);
     void updateCoupon(UUID couponId, CouponRequest couponRequest);
     void deleteCoupon(UUID couponId);
+    List<CouponResponse> searchCoupon(String keyword);
 }

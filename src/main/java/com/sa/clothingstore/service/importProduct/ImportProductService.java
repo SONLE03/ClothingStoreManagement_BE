@@ -1,6 +1,7 @@
 package com.sa.clothingstore.service.importProduct;
 
 import com.sa.clothingstore.dto.request.importProduct.ImportRequest;
+import com.sa.clothingstore.dto.request.report.DailyRequest;
 import com.sa.clothingstore.dto.response.importProduct.ImportResponse;
 import com.sa.clothingstore.model.importInvoice.ImportInvoice;
 import com.sa.clothingstore.model.importInvoice.ImportItem;
@@ -13,4 +14,5 @@ public interface ImportProductService {
     List<ImportItem> getImportById(UUID importId);
     void createImport(List<ImportRequest> importRequests);
     void printImport(UUID importId);
+    List<ImportResponse> filterImportByDate(DailyRequest dailyRequest);
 }

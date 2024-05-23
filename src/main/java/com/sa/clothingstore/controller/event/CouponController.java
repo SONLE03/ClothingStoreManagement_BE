@@ -23,6 +23,10 @@ public class CouponController {
     public List<Coupon> getAllCoupon(){
         return couponService.getAllCoupon();
     }
+    @GetMapping(APIConstant.SEARCH)
+    public List<CouponResponse> searchCoupon(@RequestParam("keyword") String keyword){
+        return couponService.searchCoupon(keyword);
+    }
     @GetMapping(APIConstant.COUPON_STATUS)
     public List<CouponResponse> getCouponByStatus(@PathVariable Integer status){
         return couponService.getCouponByStatus(status);

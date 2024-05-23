@@ -2,6 +2,7 @@ package com.sa.clothingstore.controller.importProduct;
 
 import com.sa.clothingstore.constant.APIConstant;
 import com.sa.clothingstore.dto.request.importProduct.ImportRequest;
+import com.sa.clothingstore.dto.request.report.DailyRequest;
 import com.sa.clothingstore.dto.response.importProduct.ImportResponse;
 import com.sa.clothingstore.model.importInvoice.ImportInvoice;
 import com.sa.clothingstore.model.importInvoice.ImportItem;
@@ -23,6 +24,10 @@ public class ImportProductController {
     @GetMapping()
     public List<ImportInvoice> getAllImport(){
         return importService.getAllImport();
+    }
+    @GetMapping(APIConstant.SEARCH)
+    public List<ImportResponse> filterImportByDate(@RequestBody @Valid DailyRequest dailyRequest){
+        return importService.filterImportByDate(dailyRequest);
     }
 
     @GetMapping(APIConstant.IMPORT_ID)
