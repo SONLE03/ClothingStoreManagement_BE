@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    volumes:
+      - ./data:/data
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0.35
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=lhs00000
+      - MYSQL_DATABASE=clothing
+      - MYSQL_USER=clothing
+      - MYSQL_PASSWORD=lhs00000
+    volumes:
+      - ./mysql-data:/var/lib/mysql

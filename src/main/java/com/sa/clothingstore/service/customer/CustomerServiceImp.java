@@ -67,7 +67,7 @@ public class CustomerServiceImp implements CustomerService {
         Customer customer = customerRepository.findById(customerId).orElseThrow(
                 () -> new BusinessException(APIStatus.CUSTOMER_NOT_FOUND));
         Customer customerRequest = customerRepository.findByPhone(newPhone);
-        if(customer.getId() != customerRequest.getId() && newPhone != customer.getPhone()){
+        if(customerRequest != null && customer.getId() != customerRequest.getId() && newPhone != customer.getPhone()){
             throw new BusinessException(APIStatus.PHONE_ALREADY_EXISTED);
         }
         customer.setPhone(newPhone);
