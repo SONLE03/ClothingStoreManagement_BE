@@ -9,8 +9,6 @@ import java.util.UUID;
 @Getter
 @Setter
 public class ProductItemRequest {
-    @NotNull(message = "Product item not null")
-    private UUID productItemId;
     @NotNull(message = "Size item not null")
     private int size;
     @NotNull(message = "Color item not null")

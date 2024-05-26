@@ -23,6 +23,10 @@ public class CustomerController {
     public List<Customer> getAllCustomer(){
         return customerService.getAllCustomer();
     }
+    @GetMapping(APIConstant.SEARCH)
+    public List<Customer> searchCustomer(@RequestParam("keyword") String keyword){
+        return customerService.searchCustomer(keyword);
+    }
     @GetMapping(APIConstant.CUSTOMER_ID)
     public Customer getCustomerById(@PathVariable UUID customerId){
         return customerService.getCustomerById(customerId);

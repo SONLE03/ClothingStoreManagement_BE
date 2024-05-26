@@ -13,6 +13,7 @@ import java.util.UUID;
 public interface CustomerService{
     List<Address> getAddressByCustomer(UUID customerId);
     List<Customer> getAllCustomer();
+    List<Customer> searchCustomer(String keyword);
     Customer getCustomerById(UUID customerId);
     void createCustomer(CustomerRequest customerRequest);
     void updateCustomer(UUID customerId, CustomerRequest customerRequest);

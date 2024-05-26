@@ -42,6 +42,11 @@ public class CustomerServiceImp implements CustomerService {
     }
 
     @Override
+    public List<Customer> searchCustomer(String keyword) {
+        return customerRepository.searchCustomer(keyword);
+    }
+
+    @Override
     public Customer getCustomerById(UUID customerId) {
         return customerRepository.findById(customerId).orElseThrow(
                 () -> new BusinessException(APIStatus.CUSTOMER_NOT_FOUND));
