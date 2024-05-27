@@ -119,7 +119,7 @@ public class AuthenticationServiceImp implements AuthenticationService{
         ResponseCookie jwtCookie = jwtService.generateJwtCookie(user);
         RefreshToken refreshToken = refreshTokenService.generateRefreshToken(user.getId());
         ResponseCookie jwtRefreshCookie = jwtService.generateRefreshJwtCookie(refreshToken.getToken());
-        AuthenticationResponse authenticationResponse = new AuthenticationResponse(jwtCookie, jwtRefreshCookie, user.getRole().toString(), Arrays.asList(user.getAuthorities().toArray()));
+        AuthenticationResponse authenticationResponse = new AuthenticationResponse(user.getId(), jwtCookie, jwtRefreshCookie, user.getRole().toString(), Arrays.asList(user.getAuthorities().toArray()));
         return authenticationResponse;
     }
 
