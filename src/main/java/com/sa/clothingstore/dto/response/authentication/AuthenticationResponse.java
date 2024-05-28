@@ -19,11 +19,17 @@ public class AuthenticationResponse extends CookieResponse {
     private String role;
     @JsonProperty("authority")
     private List<?> authorities;
+    @JsonProperty("access")
+    private String access;
+    @JsonProperty("refresh")
+    private String refresh;
 
-    public AuthenticationResponse(UUID userId, Object accessCookie, Object refreshCookie, String role, List<?> authorities){
+    public AuthenticationResponse(UUID userId, Object accessCookie, Object refreshCookie, String role, List<?> authorities, String access, String refresh){
         super(accessCookie, refreshCookie);
         this.userId = userId;
         this.role = role;
         this.authorities = authorities;
+        this.access = access;
+        this.refresh = refresh;
     }
 }
