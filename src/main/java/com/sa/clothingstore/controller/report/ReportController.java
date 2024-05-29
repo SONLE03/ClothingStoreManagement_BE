@@ -3,6 +3,7 @@ package com.sa.clothingstore.controller.report;
 import com.sa.clothingstore.constant.APIConstant;
 import com.sa.clothingstore.dto.request.report.DailyRequest;
 import com.sa.clothingstore.dto.request.report.MonthlyRequest;
+import com.sa.clothingstore.dto.request.report.YearlyRequest;
 import com.sa.clothingstore.dto.response.report.*;
 import com.sa.clothingstore.service.report.ReportService;
 import jakarta.validation.Valid;
@@ -54,12 +55,12 @@ public class ReportController {
 
     @GetMapping(APIConstant.YEARLY_REVENUE)
     @ResponseStatus(HttpStatus.OK)
-    public List<YearlyRevenueResponse> getYearlyRevenue(){
-        return reportService.getYearlyRevenue();
+    public List<YearlyRevenueResponse> getYearlyRevenue(@RequestBody @Valid YearlyRequest yearlyRequest){
+        return reportService.getYearlyRevenue(yearlyRequest);
     }
     @GetMapping(APIConstant.YEARLY_EXPENSE)
     @ResponseStatus(HttpStatus.OK)
-    public List<YearlyExpenseResponse> getYearlyExpense(){
-        return reportService.getYearlyExpense();
+    public List<YearlyExpenseResponse> getYearlyExpense(@RequestBody @Valid YearlyRequest yearlyRequest){
+        return reportService.getYearlyExpense(yearlyRequest);
     }
 }

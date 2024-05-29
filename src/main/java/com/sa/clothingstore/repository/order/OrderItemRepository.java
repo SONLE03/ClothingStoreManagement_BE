@@ -8,6 +8,7 @@ import com.sa.clothingstore.model.order.Order;
 import com.sa.clothingstore.model.order.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -74,8 +75,9 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, UUID> {
             "SUM(o.total)) " +
             "FROM OrderItem o " +
             "WHERE o.order.orderStatus = 'COMPLETED' " +
+            "AND YEAR(o.order.completedAt) BETWEEN :startYear AND :endYear " +
             "GROUP BY YEAR(o.order.completedAt) " +
             "ORDER BY YEAR(o.order.completedAt) DESC"
     )
-    List<YearlyRevenueResponse> getYearlyRevenue();
+    List<YearlyRevenueResponse> getYearlyRevenue(@Param("startYear") Integer startYear, @Param("endYear") Integer endYear);
 }

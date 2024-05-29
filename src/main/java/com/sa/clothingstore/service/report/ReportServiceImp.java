@@ -3,6 +3,7 @@ package com.sa.clothingstore.service.report;
 import com.sa.clothingstore.constant.APIStatus;
 import com.sa.clothingstore.dto.request.report.DailyRequest;
 import com.sa.clothingstore.dto.request.report.MonthlyRequest;
+import com.sa.clothingstore.dto.request.report.YearlyRequest;
 import com.sa.clothingstore.dto.response.report.*;
 import com.sa.clothingstore.exception.BusinessException;
 import com.sa.clothingstore.repository.importInvoice.ImportItemRepository;
@@ -57,8 +58,8 @@ public class ReportServiceImp implements ReportService{
     }
 
     @Override
-    public List<YearlyRevenueResponse> getYearlyRevenue() {
-        return orderRepository.getYearlyRevenue();
+    public List<YearlyRevenueResponse> getYearlyRevenue(YearlyRequest years) {
+        return orderRepository.getYearlyRevenue(years.getStartYear(), years.getEndYear());
     }
 
     @Override
@@ -67,7 +68,7 @@ public class ReportServiceImp implements ReportService{
     }
 
     @Override
-    public List<YearlyExpenseResponse> getYearlyExpense() {
-        return importItemRepository.getYearlyExpense();
+    public List<YearlyExpenseResponse> getYearlyExpense(YearlyRequest years) {
+        return importItemRepository.getYearlyExpense(years.getStartYear(), years.getEndYear());
     }
 }

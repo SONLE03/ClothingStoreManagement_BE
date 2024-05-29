@@ -9,6 +9,7 @@ import com.sa.clothingstore.model.importInvoice.ImportItem;
 import com.sa.clothingstore.model.importInvoice.ImportItemKey;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -61,9 +62,9 @@ public interface ImportItemRepository extends JpaRepository<ImportItem, UUID> {
             "SUM(i.quantity), " +
             "SUM(i.total)) " +
             "FROM ImportItem i " +
+            "WHERE YEAR(i.importInvoice.createdAt) BETWEEN :startYear AND :endYear " +
             "GROUP BY YEAR(i.importInvoice.createdAt) " +
-            "ORDER BY YEAR(i.importInvoice.createdAt) DESC"
-    )
-    List<YearlyExpenseResponse> getYearlyExpense();
+            "ORDER BY YEAR(i.importInvoice.createdAt) DESC")
+    List<YearlyExpenseResponse> getYearlyExpense(@Param("startYear") Integer startYear, @Param("endYear") Integer endYear);
 
 }

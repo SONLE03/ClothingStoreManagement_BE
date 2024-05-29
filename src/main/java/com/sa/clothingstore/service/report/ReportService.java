@@ -2,6 +2,7 @@ package com.sa.clothingstore.service.report;
 
 import com.sa.clothingstore.dto.request.report.DailyRequest;
 import com.sa.clothingstore.dto.request.report.MonthlyRequest;
+import com.sa.clothingstore.dto.request.report.YearlyRequest;
 import com.sa.clothingstore.dto.response.report.*;
 
 import java.util.Date;
@@ -17,7 +18,7 @@ public interface ReportService {
 
     List<MonthlyRevenueResponse> getMonthlyRevenue(MonthlyRequest year);
     List<MonthlyExpenseResponse> getMonthlyExpense(MonthlyRequest year);
-    List<YearlyRevenueResponse> getYearlyRevenue();
-    List<YearlyExpenseResponse> getYearlyExpense();
+    List<YearlyRevenueResponse> getYearlyRevenue(YearlyRequest years);
+    List<YearlyExpenseResponse> getYearlyExpense(YearlyRequest years);
 
 }
