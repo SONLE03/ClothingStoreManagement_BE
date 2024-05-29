@@ -15,11 +15,9 @@ import java.util.Date;
 public class DailyRequest {
     @JsonProperty("startDate")
     @NotNull(message = "Start date must not be null")
-    @FutureOfDateFormat(message = "Start date must be in the future or today")
     private Date startDate;
     @JsonProperty("endDate")
     @NotNull(message = "End date must not be null")
-    @FutureOfDateFormat(message = "End date must be in the future or today")
     private Date endDate;
 
     @AssertTrue(message = "End date must be after start date")
