@@ -17,6 +17,8 @@ public class OrderResponse {
     private UUID orderId;
     private Date orderDate;
     private BigDecimal total;
+    private UUID customerId;
     private String customerName;
+    private String customerPhone;
     private OrderStatus status;
 }

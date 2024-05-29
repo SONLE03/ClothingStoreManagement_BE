@@ -13,16 +13,16 @@ import java.util.List;
 import java.util.UUID;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, UUID> {
-    @Query("SELECT NEW com.sa.clothingstore.dto.response.order.OrderResponse(o.id, o.createdAt, o.total, o.customer.fullName, o.orderStatus) " +
+    @Query("SELECT NEW com.sa.clothingstore.dto.response.order.OrderResponse(o.id, o.createdAt, o.total, o.customer.id,  o.customer.fullName, o.customer.phone,  o.orderStatus) " +
             "FROM Order o " +
             "ORDER BY o.createdAt DESC")
     List<OrderResponse> getAllOrder();
-    @Query("SELECT NEW com.sa.clothingstore.dto.response.order.OrderResponse(o.id, o.createdAt, o.total, o.customer.fullName, o.orderStatus) " +
+    @Query("SELECT NEW com.sa.clothingstore.dto.response.order.OrderResponse(o.id, o.createdAt, o.total, o.customer.id,  o.customer.fullName, o.customer.phone, o.orderStatus) " +
             "FROM Order o " +
             "WHERE o.orderStatus = ?1 " +
             "ORDER BY o.createdAt DESC")
     List<OrderResponse> getOrderByStatus(OrderStatus orderStatus);
-    @Query("SELECT NEW com.sa.clothingstore.dto.response.order.OrderResponse(o.id, o.completedAt, o.total, o.customer.fullName, o.orderStatus) " +
+    @Query("SELECT NEW com.sa.clothingstore.dto.response.order.OrderResponse(o.id, o.completedAt, o.total, o.customer.id,  o.customer.fullName, o.customer.phone, o.orderStatus) " +
             "FROM Order o " +
             "WHERE o.customer = ?1 " +
             "AND o.orderStatus = 'COMPLETED'" +
