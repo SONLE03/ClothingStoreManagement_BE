@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.2'
 
 services:
   app:
@@ -16,8 +16,6 @@ services:
 
   db:
     image: mysql:8.0.35
-    ports:
-      - "3307:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=lhs00000
       - MYSQL_DATABASE=clothing

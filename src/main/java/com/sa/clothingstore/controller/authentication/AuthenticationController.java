@@ -46,17 +46,18 @@ public class AuthenticationController {
     @PostMapping(APIConstant.LOGIN)
     public ResponseEntity<?> authenticate(@RequestBody @Valid AuthenticationRequest authenticationRequest) {
         AuthenticationResponse authenticationResponse = authenticationService.authenticate(authenticationRequest);
+        System.out.println(authenticationResponse.getAccess());
         return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, authenticationResponse.getAccessCookie().toString())
-                .header(HttpHeaders.SET_COOKIE, authenticationResponse.getRefreshCookie().toString())
+//                .header(HttpHeaders.SET_COOKIE, authenticationResponse.getAccessCookie().toString())
+//                .header(HttpHeaders.SET_COOKIE, authenticationResponse.getRefreshCookie().toString())
                 .body(authenticationResponse);
     }
     @PostMapping(APIConstant.LOGOUT)
     public ResponseEntity<?> logoutUser() {
         CookieResponse cookieResponse = authenticationService.signout();
         return ResponseEntity.ok()
-            .header(HttpHeaders.SET_COOKIE, cookieResponse.getAccessCookie().toString())
-            .header(HttpHeaders.SET_COOKIE, cookieResponse.getRefreshCookie().toString())
+    //            .header(HttpHeaders.SET_COOKIE, cookieResponse.getAccessCookie().toString())
+    //            .header(HttpHeaders.SET_COOKIE, cookieResponse.getRefreshCookie().toString())
             .body("You've been signed out!");
     }
     @PostMapping(APIConstant.REFRESH_TOKEN)
