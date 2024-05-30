@@ -169,9 +169,8 @@ public class OrderServiceImp implements OrderService{
             order.setCanceledAt(CommonModel.resultTimestamp());
             order.setOrderStatus(OrderStatus.CANCELED);
         }
-        order.setCommonUpdate(userDetailService.getIdLogin());
-        sendOrder(orderId);
         orderRepository.save(order);
+        sendOrder(orderId);
     }
     @Override
     @Transactional

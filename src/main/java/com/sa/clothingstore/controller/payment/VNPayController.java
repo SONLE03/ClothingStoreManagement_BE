@@ -20,7 +20,7 @@ public class VNPayController {
     @PostMapping(APIConstant.SUBMIT_ORDER)
     public String submitOrder(@RequestParam("amount") int orderTotal,
                               @RequestParam("orderInfo") String orderInfo,
-                              @RequestParam("orderId") UUID orderId,
+                              @RequestParam("orderId") String orderId,
                               HttpServletRequest request){
         String orderInfoWithUUID = orderInfo + " " + orderId.toString();
         String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();

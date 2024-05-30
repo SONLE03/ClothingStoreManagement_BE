@@ -80,7 +80,7 @@ public class EmailServiceImp implements EmailService {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
         try {
-            User user = userRepository.findById(order.getUpdatedBy()).orElseThrow(
+            User user = userRepository.findById(order.getCreatedBy()).orElseThrow(
                     () -> new BusinessException(APIStatus.USER_NOT_FOUND));
             List<OrderItem> orderItem = orderItemRepository.getOrderItemByOrder(order);
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
