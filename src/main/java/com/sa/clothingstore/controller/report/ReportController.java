@@ -20,45 +20,50 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ReportController {
     private final ReportService reportService;
-    @GetMapping(APIConstant.USER_DAILY_REVENUE)
+    @PostMapping(APIConstant.USER_DAILY_REVENUE)
     @ResponseStatus(HttpStatus.OK)
     public List<DailyRevenueResponse> getDailyRevenueByUser(@PathVariable UUID userId, @RequestBody Date startDate){
         return reportService.getDailyRevenueByUser(userId, startDate);
     }
-    @GetMapping(APIConstant.USER_DAILY_EXPENSE)
+    @PostMapping(APIConstant.USER_DAILY_EXPENSE)
     @ResponseStatus(HttpStatus.OK)
     public List<DailyExpenseResponse> getDailyExpenseByUser(@PathVariable UUID userId, @RequestBody Date startDate ){
         return reportService.getDailyExpenseByUser(userId, startDate);
     }
 
-    @GetMapping(APIConstant.DAILY_REVENUE)
+    @PostMapping(APIConstant.DAILY_REVENUE)
     @ResponseStatus(HttpStatus.OK)
     public List<DailyRevenueResponse> getDailyRevenue(@RequestBody @Valid DailyRequest request){
+        if(request == null) {
+            System.out.println(11);
+        }
+        System.out.println(request.getStartDate());
+        System.out.println(request.getEndDate());
         return reportService.getDailyRevenue(request);
     }
-    @GetMapping(APIConstant.DAILY_EXPENSE)
+    @PostMapping(APIConstant.DAILY_EXPENSE)
     @ResponseStatus(HttpStatus.OK)
     public List<DailyExpenseResponse> getDailyExpense(@RequestBody @Valid DailyRequest request){
         return reportService.getDailyExpense(request);
     }
 
-    @GetMapping(APIConstant.MONTHLY_REVENUE)
+    @PostMapping(APIConstant.MONTHLY_REVENUE)
     @ResponseStatus(HttpStatus.OK)
     public List<MonthlyRevenueResponse> getMonthlyRevenue(@RequestBody @Valid MonthlyRequest request){
         return reportService.getMonthlyRevenue(request);
     }
-    @GetMapping(APIConstant.MONTHLY_EXPENSE)
+    @PostMapping(APIConstant.MONTHLY_EXPENSE)
     @ResponseStatus(HttpStatus.OK)
     public List<MonthlyExpenseResponse> getMonthlyExpense(@RequestBody @Valid MonthlyRequest request){
         return reportService.getMonthlyExpense(request);
     }
 
-    @GetMapping(APIConstant.YEARLY_REVENUE)
+    @PostMapping(APIConstant.YEARLY_REVENUE)
     @ResponseStatus(HttpStatus.OK)
     public List<YearlyRevenueResponse> getYearlyRevenue(@RequestBody @Valid YearlyRequest yearlyRequest){
         return reportService.getYearlyRevenue(yearlyRequest);
     }
-    @GetMapping(APIConstant.YEARLY_EXPENSE)
+    @PostMapping(APIConstant.YEARLY_EXPENSE)
     @ResponseStatus(HttpStatus.OK)
     public List<YearlyExpenseResponse> getYearlyExpense(@RequestBody @Valid YearlyRequest yearlyRequest){
         return reportService.getYearlyExpense(yearlyRequest);
