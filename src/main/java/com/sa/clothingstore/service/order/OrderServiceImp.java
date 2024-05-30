@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -69,7 +70,7 @@ public class OrderServiceImp implements OrderService{
 
     @Transactional
     @Override
-    public void createOrder(OrderRequest orderRequest) {
+    public UUID createOrder(OrderRequest orderRequest) {
         Customer customer = customerRepository.findById(orderRequest.getCustomerId()).orElseThrow(
                 () -> new BusinessException(APIStatus.CUSTOMER_NOT_FOUND));
         Coupon coupon;
@@ -138,11 +139,12 @@ public class OrderServiceImp implements OrderService{
         }
         order.setPaymentMethod(paymentMethod);
         orderRepository.save(order);
+        return order.getId();
     }
 
     @Override
     @Transactional
-    public void updateOrderStatusByCash(UUID orderId, Integer status) {
+    public void updateOrderStatusByCash(UUID orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(
                 () -> new BusinessException(APIStatus.ORDER_NOT_FOUND));
         order.setPaymentMethod(PaymentMethod.CASH);
@@ -177,5 +179,22 @@ public class OrderServiceImp implements OrderService{
         Order order = orderRepository.findById(orderId).orElseThrow(
                 () -> new BusinessException(APIStatus.ORDER_NOT_FOUND));
         emailService.sendOrder(order);
+    }
+
+    @Override
+    public void cancelOrder(UUID orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(
+                () -> new BusinessException(APIStatus.ORDER_NOT_FOUND));
+        Set<OrderItem> orderItemSet = order.getOrderItems();
+        for(OrderItem item : orderItemSet){
+            ProductItem productItem = productItemRepository.findById(item.getProductItem().getId()).orElseThrow(
+                    () -> new BusinessException(APIStatus.PRODUCT_ITEM_NOT_FOUND));
+            productItem.setQuantity(productItem.getQuantity() + item.getQuantity());
+            productItemRepository.save(productItem);
+        }
+        order.setCanceledAt(CommonModel.resultTimestamp());
+        order.setOrderStatus(OrderStatus.CANCELED);
+        order.setCommonUpdate(userDetailService.getIdLogin());
+        orderRepository.save(order);
     }
 }

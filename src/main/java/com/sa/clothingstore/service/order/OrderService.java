@@ -14,9 +14,10 @@ public interface OrderService {
     List<OrderResponse> getOrderByStatus(Integer status);
     List<OrderResponse> getAllOrderByCustomer(UUID customerId);
     List<OrderItemResponse> getOrderDetail(UUID orderId);
-    void createOrder(OrderRequest orderRequest);
-    void updateOrderStatusByCash(UUID orderId, Integer status);
+    UUID createOrder(OrderRequest orderRequest);
+    void updateOrderStatusByCash(UUID orderId);
     void updateOrderStatusVNPay(UUID orderId, Integer status);
     void sendOrder(UUID orderId);
+    void cancelOrder(UUID orderId);
 }
 

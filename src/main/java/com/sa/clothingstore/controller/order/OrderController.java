@@ -48,14 +48,21 @@ public class OrderController {
     }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public String createOrder(@RequestBody @Valid OrderRequest orderRequest){
-        orderService.createOrder(orderRequest);
-        return "Order was created successfully";
+    public UUID createOrder(@RequestBody @Valid OrderRequest orderRequest){
+        return orderService.createOrder(orderRequest);
+//        return "Order was created successfully";
     }
     @PutMapping(APIConstant.ORDER_ID)
     @ResponseStatus(HttpStatus.OK)
-    public String updateOrderStatus(@PathVariable UUID orderId, @RequestBody Integer status){
-        orderService.updateOrderStatusByCash(orderId, status);
+    public String updateOrderStatus(@PathVariable UUID orderId){
+        orderService.updateOrderStatusByCash(orderId);
         return "Order was modified successfully";
+    }
+
+    @DeleteMapping(APIConstant.ORDER_ID)
+    @ResponseStatus(HttpStatus.OK)
+    public String cancelOrder(@PathVariable UUID orderId){
+        orderService.cancelOrder(orderId);
+        return "Order was canceled successfully";
     }
 }

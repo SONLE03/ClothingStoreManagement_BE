@@ -34,11 +34,6 @@ public class ReportController {
     @PostMapping(APIConstant.DAILY_REVENUE)
     @ResponseStatus(HttpStatus.OK)
     public List<DailyRevenueResponse> getDailyRevenue(@RequestBody @Valid DailyRequest request){
-        if(request == null) {
-            System.out.println(11);
-        }
-        System.out.println(request.getStartDate());
-        System.out.println(request.getEndDate());
         return reportService.getDailyRevenue(request);
     }
     @PostMapping(APIConstant.DAILY_EXPENSE)
