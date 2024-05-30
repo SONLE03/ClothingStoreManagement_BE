@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 @Getter
 @Setter
@@ -15,6 +16,7 @@ public class ProductItemResponse {
     private String sizeName;
     private String colorName;
     private int quantity;
+    private BigDecimal price;
 
     // Constructors, getters, and setters
 }

@@ -15,7 +15,7 @@ public interface ProductItemRepository extends JpaRepository<ProductItem, UUID> 
     @Query("SELECT pi.id FROM ProductItem pi WHERE pi.product = ?1 AND pi.size.id = ?2 AND pi.color.id = ?3")
     UUID getProductItemByProductAndAttribute(Product product, int sizeId, int colorId);
 
-    @Query("SELECT NEW com.sa.clothingstore.dto.response.product.ProductItemResponse(pi.id, sz.name, clr.name, pi.quantity) FROM ProductItem pi JOIN pi.size sz JOIN pi.color clr WHERE pi.product.id = ?1")
+    @Query("SELECT NEW com.sa.clothingstore.dto.response.product.ProductItemResponse(pi.id, sz.name, clr.name, pi.quantity, pi.product.price) FROM ProductItem pi JOIN pi.size sz JOIN pi.color clr WHERE pi.product.id = ?1")
     List<ProductItemResponse> getDetailProduct(UUID productId);
     @Query("SELECT pi FROM ProductItem pi WHERE pi.product.id = ?1")
     List<ProductItem> getProductItemByProduct(UUID productId);
