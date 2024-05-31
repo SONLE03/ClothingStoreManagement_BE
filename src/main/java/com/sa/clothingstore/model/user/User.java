@@ -1,5 +1,6 @@
 package com.sa.clothingstore.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sa.clothingstore.model.CommonModel;
 
 import com.sa.clothingstore.model.attribute.Image;
@@ -46,11 +47,12 @@ public class User extends CommonModel implements UserDetails {
     @JdbcTypeCode(SqlTypes.INTEGER)
     @Enumerated(EnumType.ORDINAL)
     private Role role;
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "image_id")
     private Image image;
     private boolean enabled;
-
+    @JsonIgnore
     @OneToOne(mappedBy = "user")
     private ForgotPassword passwordResetToken;
 
