@@ -1,5 +1,6 @@
 package com.sa.clothingstore.repository.importInvoice;
 
+import com.sa.clothingstore.dto.response.importProduct.ImportItemResponse;
 import com.sa.clothingstore.dto.response.report.DailyExpenseResponse;
 import com.sa.clothingstore.dto.response.report.MonthlyExpenseResponse;
 import com.sa.clothingstore.dto.response.report.YearlyExpenseResponse;
@@ -17,6 +18,11 @@ import java.util.UUID;
 
 public interface ImportItemRepository extends JpaRepository<ImportItem, UUID> {
     List<ImportItem> findByImportInvoice(ImportInvoice importInvoice);
+
+    @Query("SELECT NEW com.sa.clothingstore.dto.response.importProduct.ImportItemResponse(" +
+            "i.productItem.id, i.quantity, i.price, i.total) " +
+            "FROM ImportItem i WHERE i.importInvoice.id = :importId")
+    List<ImportItemResponse> getImportItem(UUID importId);
     @Query("SELECT NEW com.sa.clothingstore.dto.response.report.DailyExpenseResponse(" +
             "i.importInvoice.createdAt, " +
             "COUNT(DISTINCT i.importInvoice.id), " +

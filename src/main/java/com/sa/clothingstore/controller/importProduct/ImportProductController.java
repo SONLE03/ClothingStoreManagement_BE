@@ -3,6 +3,7 @@ package com.sa.clothingstore.controller.importProduct;
 import com.sa.clothingstore.constant.APIConstant;
 import com.sa.clothingstore.dto.request.importProduct.ImportRequest;
 import com.sa.clothingstore.dto.request.report.DailyRequest;
+import com.sa.clothingstore.dto.response.importProduct.ImportDetailResponse;
 import com.sa.clothingstore.dto.response.importProduct.ImportResponse;
 import com.sa.clothingstore.model.importInvoice.ImportInvoice;
 import com.sa.clothingstore.model.importInvoice.ImportItem;
@@ -30,9 +31,13 @@ public class ImportProductController {
         return importService.filterImportByDate(dailyRequest);
     }
 
+//    @GetMapping(APIConstant.IMPORT_ID)
+//    public List<ImportItem> getImportById(@PathVariable UUID importId){
+//        return importService.getImportById(importId);
+//    }
     @GetMapping(APIConstant.IMPORT_ID)
-    public List<ImportItem> getImportById(@PathVariable UUID importId){
-        return importService.getImportById(importId);
+    public ImportDetailResponse getImportById(@PathVariable UUID importId){
+        return importService.getImportDetail(importId);
     }
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)

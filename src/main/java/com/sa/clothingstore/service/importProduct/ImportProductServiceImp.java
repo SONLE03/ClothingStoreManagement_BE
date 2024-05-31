@@ -3,6 +3,8 @@ package com.sa.clothingstore.service.importProduct;
 import com.sa.clothingstore.constant.APIStatus;
 import com.sa.clothingstore.dto.request.importProduct.ImportRequest;
 import com.sa.clothingstore.dto.request.report.DailyRequest;
+import com.sa.clothingstore.dto.response.importProduct.ImportDetailResponse;
+import com.sa.clothingstore.dto.response.importProduct.ImportItemResponse;
 import com.sa.clothingstore.dto.response.importProduct.ImportResponse;
 import com.sa.clothingstore.exception.BusinessException;
 import com.sa.clothingstore.exception.ObjectNotFoundException;
@@ -108,6 +110,16 @@ public class ImportProductServiceImp implements ImportProductService{
     @Override
     public List<ImportResponse> filterImportByDate(DailyRequest dailyRequest) {
         return importInvoiceRepository.filterImportByDate(dailyRequest.getStartDate(), dailyRequest.getEndDate());
+    }
+
+    @Override
+    public ImportDetailResponse getImportDetail(UUID importId) {
+        ImportInvoice importInvoice = importInvoiceRepository.findById(importId)
+                .orElseThrow(() -> new BusinessException(APIStatus.IMPORT_NOT_FOUND));
+        ImportResponse importResponse = importInvoiceRepository.getImportById(importId);
+        List<ImportItemResponse> importItemResponseList = importItemRepository.getImportItem(importId);
+        ImportDetailResponse importDetailResponse = new ImportDetailResponse(importResponse, importItemResponseList);
+        return importDetailResponse;
     }
 
 }

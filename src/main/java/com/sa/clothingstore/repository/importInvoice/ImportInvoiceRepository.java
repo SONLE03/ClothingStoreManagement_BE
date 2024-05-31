@@ -16,4 +16,10 @@ public interface ImportInvoiceRepository extends JpaRepository<ImportInvoice, UU
             "WHERE i.createdAt BETWEEN :startDate AND :endDate "
     )
     List<ImportResponse> filterImportByDate(Date startDate, Date endDate);
+
+    @Query("SELECT NEW com.sa.clothingstore.dto.response.importProduct.ImportResponse(i.id, i.total) " +
+            " FROM ImportInvoice i " +
+            "WHERE i.id = :importId"
+    )
+    ImportResponse getImportById(UUID importId);
 }
