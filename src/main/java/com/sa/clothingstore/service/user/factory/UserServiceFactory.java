@@ -43,7 +43,7 @@ public abstract class UserServiceFactory  {
             throw new BusinessException(APIStatus.PHONE_ALREADY_EXISTED);
         });
         User user = User.builder()
-                .fullName(userRequest.getFullname())
+                .fullName(userRequest.getFullName())
                 .email(userRequest.getEmail())
                 .phone(userRequest.getPhone())
                 .password(passwordEncoder.encode(userRequest.getPassword()))
@@ -91,7 +91,7 @@ public abstract class UserServiceFactory  {
             }
         });
         user.setEmail(userRequest.getEmail());
-        user.setFullName(userRequest.getFullname());
+        user.setFullName(userRequest.getFullName());
         user.setPhone(userRequest.getPhone());
         user.setDateOfBirth(userRequest.getDateOfBirth());
         user.setEnabled(userRequest.getEnable() == Status.ACTIVE.ordinal());

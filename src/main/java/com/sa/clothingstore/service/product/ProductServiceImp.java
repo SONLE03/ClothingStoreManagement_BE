@@ -169,6 +169,7 @@ public class ProductServiceImp implements ProductService{
                                 .product(product)
                                 .color(colorRepository.getById(item.getColor()))
                                 .size(sizeRepository.getById(item.getSize()))
+                                .quantity(0)
                                 .build()
                 );
             }

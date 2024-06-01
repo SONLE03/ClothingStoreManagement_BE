@@ -23,7 +23,7 @@ public class UserRequest{
     @PhoneNumberFormat(message = "Invalid phone number")
     private String phone;
     @NotEmpty(message = "Missing user full name")
-    private String fullname;
+    private String fullName;
     @NotEmpty(message = "Missing password")
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$", message = "Password must contain at least one digit, one lowercase letter, one uppercase letter")
     private String password;
