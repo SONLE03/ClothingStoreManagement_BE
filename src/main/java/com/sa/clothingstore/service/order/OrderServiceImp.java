@@ -75,7 +75,6 @@ public class OrderServiceImp implements OrderService{
                 () -> new BusinessException(APIStatus.CUSTOMER_NOT_FOUND));
         Coupon coupon;
         var couponId = orderRequest.getCoupon();
-        System.out.println(couponId == null);
         if(couponId == null){
             coupon = null;
         }else{
