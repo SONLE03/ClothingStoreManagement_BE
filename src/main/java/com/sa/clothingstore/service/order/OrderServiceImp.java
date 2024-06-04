@@ -75,19 +75,21 @@ public class OrderServiceImp implements OrderService{
                 () -> new BusinessException(APIStatus.CUSTOMER_NOT_FOUND));
         Coupon coupon;
         var couponId = orderRequest.getCoupon();
+        System.out.println(couponId == null);
         if(couponId == null){
             coupon = null;
         }else{
             coupon = couponRepository.findById(couponId).orElse(null);
         }
-        BigDecimal _total;
+        BigDecimal _total = BigDecimal.ZERO;;
+        BigDecimal couponValue = BigDecimal.ZERO;
         if(coupon != null && coupon.getQuantity() > 0){
-            _total = coupon.getDiscountValue().negate();
+            couponValue = coupon.getDiscountValue().negate();
             coupon.setQuantity(coupon.getQuantity() - 1);
             coupon.setCommonUpdate(userDetailService.getIdLogin());
             couponRepository.save(coupon);
         }else{
-            _total = BigDecimal.ZERO;
+//            _total = BigDecimal.ZERO;
         }
         Order order = Order.builder()
                 .note(orderRequest.getNote())
@@ -127,6 +129,7 @@ public class OrderServiceImp implements OrderService{
             orderItems.add(orderItem);
         }
         orderItemRepository.saveAll(orderItems);
+        _total = _total.add(_total.multiply(couponValue.divide(BigDecimal.valueOf(100))));
         order.setTotal(_total);
         order.setCommonCreate(userDetailService.getIdLogin());
         PaymentMethod paymentMethod = PaymentMethod.convertIntegerToPaymentMethod(orderRequest.getPaymentMethod());
